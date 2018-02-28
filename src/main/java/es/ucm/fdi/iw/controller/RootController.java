@@ -45,4 +45,9 @@ public class RootController {
 	public String upload() {
 		return "upload";
 	}
+	
+	@GetMapping("/gallery")
+	public String gallery() {
+		return "gallery";
+	}
 }
