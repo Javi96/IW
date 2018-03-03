@@ -68,7 +68,7 @@
                         <td>3</td>
                     </tr>
                      <tr>
-                        <th scope="row">5</th>
+                        <th scope="row">6</th>
                         <td>Quimicas</td>
                         <td>0</td>
                         <td>1</td>

@@ -30,9 +30,9 @@ public class RootController {
 		return "login";
 	}
 	
-	@GetMapping("/hola")
-	public String hola() {
-		return "hola";
+	@GetMapping("/classification")
+	public String classification() {
+		return "classification";
 	}
 	
 	@GetMapping("/logout")
