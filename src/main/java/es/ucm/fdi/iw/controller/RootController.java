@@ -24,7 +24,6 @@ public class RootController {
 		// org.springframework.security.core.userdetails.User
 		return "home";
 	}
-
 	
 	@GetMapping("/login")
 	public String login() {

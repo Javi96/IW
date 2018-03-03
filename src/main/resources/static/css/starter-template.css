@@ -8,5 +8,6 @@ body {
 table td, table th {
   padding: 2px;
   spacing: 0;
-  border: 1px solid gray;
+  border: 1px solid black;
+  text-align: center;  
 }

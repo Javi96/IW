@@ -1,0 +1,52 @@
+body {
+    padding-top: 50px;
+}
+.starter-template {
+    padding: 40px 15px;
+    text-align: center;
+}
+
+table td, table th {
+    text-align: center;  
+}
+#classificationHead {
+    background-color:#168CBA;
+    color: white;
+}
+
+#classificationTitle{
+    color: black;
+    font-family: "Times New Roman", Times, serif;
+}
+
+#searchTeamDiv{
+    padding-top: 20px;
+    width: 300px;
+}
+
+#searchTeam{
+    background-color: #168CBA;
+}
+
+#searchTeam.form-control::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+    color: white;
+    opacity: 1; /* Firefox */
+}
+
+input[type=text] {
+    padding: 12px 20px;
+    margin: 8px 0;
+    color: white;
+}
+
+#classificationImage{
+    margin-left: 20%;
+    margin-bottom: 5%;
+}
+
+#classificationHeader{
+   display: flex;
+   flex-direction: row;
+   justify-content: flex-start;
+}
+

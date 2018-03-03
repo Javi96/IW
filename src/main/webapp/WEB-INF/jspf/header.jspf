@@ -4,27 +4,27 @@
 <!DOCTYPE html>
 <!-- saved from url=(0023)https://www.ucm.es/ssii -->
 <html lang="es">
-   <head>
-      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-      <meta http-equiv="X-UA-Compatible" content="IE=edge">
-      <meta name="viewport" content="width=device-width, initial-scale=1">
-      <title>UCM-Area de deportes</title>
-      <meta name="description" content="La Universidad Complutense de Madrid es una institución de larga trayectoria y amplio reconocimiento social que aspira a situarse entre las primeras universidades de Europa y a consolidarse como centro de referencia para el continente latinoamericano">
-      <meta name="keywords" content="Universidad Complutense de Madrid, Complutense, UCM, Educación, Innovación, Universidad de excelencia, Formación, Grado, Máster, Doctorado, Postgrado, Deportes, Futbol, Baloncesto, Rugby, Volley, Balonmano">
-      <link rel="apple-touch-icon" href="https://www.ucm.es/themes/ucm16/media/img/logoucm.ico">
-      <link rel="shortcut icon" href="https://www.ucm.es/themes/ucm16/media/img/logoucm.ico">
-      <link rel="icon" href="https://www.ucm.es/themes/ucm16/media/img/logoucm.ico">
-      <link type="text/css" media="all" rel="stylesheet" href="https://www.ucm.es/themes/ucm16/css/font-awesome.min.css">
-      <link type="text/css" media="print" rel="stylesheet" href="https://www.ucm.es/themes/ucm16/css/print.css">
-      <link rel="stylesheet" href="styles.css">
-      <link type="text/css" media="screen" rel="stylesheet" href="https://www.ucm.es/themes/ucm16/css/ucm.css" />
-      <link type="text/css" media="screen" rel="stylesheet" href="https://www.ucm.es/themes/ucm16/css/ucm-wg.css" />
-      <link type="text/css" media="screen" rel="stylesheet" href="https://www.ucm.es/themes/ucm16/css/bootstrap.css" />
-      <link type="text/css" media="screen" rel="stylesheet" href="https://www.ucm.es/themes/ucm16/css/ucm-theme.css" />
-      
-	      
-      <style></style>
-   </head>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>UCM-Area de deportes</title>
+		<meta name="description" content="La Universidad Complutense de Madrid es una institución de larga trayectoria y amplio reconocimiento social que aspira a situarse entre las primeras universidades de Europa y a consolidarse como centro de referencia para el continente latinoamericano">
+		<meta name="keywords" content="Universidad Complutense de Madrid, Complutense, UCM, Educación, Innovación, Universidad de excelencia, Formación, Grado, Máster, Doctorado, Postgrado, Deportes, Futbol, Baloncesto, Rugby, Volley, Balonmano">
+		<link rel="apple-touch-icon" href="https://www.ucm.es/themes/ucm16/media/img/logoucm.ico">
+		<link rel="shortcut icon" href="https://www.ucm.es/themes/ucm16/media/img/logoucm.ico">
+		<link rel="icon" href="https://www.ucm.es/themes/ucm16/media/img/logoucm.ico">
+		<link type="text/css" media="all" rel="stylesheet" href="https://www.ucm.es/themes/ucm16/css/font-awesome.min.css">
+		<link type="text/css" media="print" rel="stylesheet" href="https://www.ucm.es/themes/ucm16/css/print.css">
+		<link rel="stylesheet" href="styles.css">
+		<link type="text/css" media="screen" rel="stylesheet" href="https://www.ucm.es/themes/ucm16/css/ucm.css" />
+		<link type="text/css" media="screen" rel="stylesheet" href="https://www.ucm.es/themes/ucm16/css/ucm-wg.css" />
+		<link type="text/css" media="screen" rel="stylesheet" href="https://www.ucm.es/themes/ucm16/css/bootstrap.css" />
+		<link type="text/css" media="screen" rel="stylesheet" href="https://www.ucm.es/themes/ucm16/css/ucm-theme.css" />
+		
+		<script src="../../../static/js//jquery.min.js"></script>
+		
+	</head>
    <body style="">
       <header>
          <div id="barra">
