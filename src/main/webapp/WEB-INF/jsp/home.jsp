@@ -3,14 +3,32 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="sec"
 	uri="http://www.springframework.org/security/tags"%>
+	
 
 <%@ include file="../jspf/header.jspf"%>
-
-<div class="starter-template">
-	<h1>Home</h1>
-	<p class="lead">Bienvenido a casa</p>
-
-	<%@ include file="../jspf/authinfo.jspf"%>		
-</div>
+<link type="text/css" media="screen" rel="stylesheet" href="static/css/home.css" />
+	<h1>Bienvenido a U-SPORTS</h1>
+	
+	<nav class="navbar navbar-default"  >
+		<ul class="nav nav-justified">
+			<li ><a href="" >Equipo 1</a></li>
+			<li >
+			<li >
+			<li >
+		</ul>			
+	</nav>
+	<div class="row">
+	   	<div class="col-sm-4 col-xs-12" >
+			<div class="column">	
+				<div class="_4bl9">
+					<p>&nbsp;</p>
+					<ul>
+						<li><a  target="_blank"  title="" href="">Reservar pista</a></li>
+						<li><a  target="_blank"  title="" href="">Ver Clasificacion</a></li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
 
 <%@ include file="../jspf/footer.jspf"%>

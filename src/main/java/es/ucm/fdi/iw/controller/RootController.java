@@ -30,6 +30,11 @@ public class RootController {
 		return "login";
 	}
 	
+	@GetMapping("/home")
+	public String home() {
+		return "home";
+	}
+	
 	@GetMapping("/classification")
 	public String classification() {
 		return "classification";
