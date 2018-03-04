@@ -1,0 +1,77 @@
+<%@ page pageEncoding="UTF-8"%>
+<%@ taglib prefix="s" uri="http://www.springframework.org/tags"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<!DOCTYPE html>
+<!-- saved from url=(0023)https://www.ucm.es/ssii -->
+<html lang="es">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>UCM-Area de deportes</title>
+		<meta name="description" content="La Universidad Complutense de Madrid es una institución de larga trayectoria y amplio reconocimiento social que aspira a situarse entre las primeras universidades de Europa y a consolidarse como centro de referencia para el continente latinoamericano">
+		<meta name="keywords" content="Universidad Complutense de Madrid, Complutense, UCM, Educación, Innovación, Universidad de excelencia, Formación, Grado, Máster, Doctorado, Postgrado, Deportes, Futbol, Baloncesto, Rugby, Volley, Balonmano">
+		<link rel="apple-touch-icon" href="https://www.ucm.es/themes/ucm16/media/img/logoucm.ico">
+		<link rel="shortcut icon" href="https://www.ucm.es/themes/ucm16/media/img/logoucm.ico">
+		<link rel="icon" href="https://www.ucm.es/themes/ucm16/media/img/logoucm.ico">
+		<link type="text/css" media="all" rel="stylesheet" href="https://www.ucm.es/themes/ucm16/css/font-awesome.min.css">
+		<link type="text/css" media="print" rel="stylesheet" href="https://www.ucm.es/themes/ucm16/css/print.css">
+		<link rel="stylesheet" href="styles.css">
+		<link type="text/css" media="screen" rel="stylesheet" href="https://www.ucm.es/themes/ucm16/css/ucm.css" />
+		<link type="text/css" media="screen" rel="stylesheet" href="https://www.ucm.es/themes/ucm16/css/ucm-wg.css" />
+		<link type="text/css" media="screen" rel="stylesheet" href="https://www.ucm.es/themes/ucm16/css/bootstrap.css" />
+		<link type="text/css" media="screen" rel="stylesheet" href="https://www.ucm.es/themes/ucm16/css/ucm-theme.css" />
+		
+		<script src="../../../static/js//jquery.min.js"></script>
+		
+	</head>
+   <body style="">
+      <header>
+         <div id="barra">
+            <div class="container">
+               <ul class="ul-menu">
+                  <li>
+                     <div id="buscador">
+                        <form action="https://www.ucm.es/ssii/buscador" method="get" class="posicion_buscar form-inline" id="formbuscador">
+                           <label for="search" class="hidden">Buscar en la web</label>
+                           <input type="search" id="search" name="search" placeholder="Buscar en la web" required="">
+                           <button type="submit" class="botonbusca" id="btsearch" title="Buscar en la web" aria-label="Buscar en la web"><span class="fa fa-search" aria-hidden="true" title="Buscar en la web"></span></button>
+                        </form>
+                        <button class="botoncerrar" id="cerrar_buscador" aria-label="Cerrar buscador"><span class="fa fa-times" aria-hidden="true" title="Cerrar buscador"></span></button>
+                     </div>
+                  </li>
+                  <li>
+                     <nav class="navbar" role="navigation" id="menusuperior">
+                        <div class="navbar-header">
+                           <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-sup-collapse" id="collapse-personal">
+                           <span class="sr-only">Desplegar navegación</span>
+                           <span class="fa fa-user fa-2x"></span>
+                           </button>
+                        </div>
+                        <div id="contenido-menusuperior" class="collapse navbar-collapse navbar-sup-collapse">
+                           <ul class="nav navbar-nav">
+                              <li class="iniciasesion"><a href="https://www.ucm.es/login_sso/" title="Navegar identificado">Navegar identificado</a></li>
+                           </ul>
+                        </div>
+                     </nav>
+                  </li>
+                  <li>
+                     <ul id="lg_items">
+                     </ul>
+                  </li>
+               </ul>
+            </div>
+         </div>
+         <div class="container" id="cabecera">
+            <div class="row">
+               <div class="col-lg-5 col-sm-5 col-xs-12" id="logo">
+                  <a href="https://www.ucm.es/" title="Universidad Complutense de Madrid">
+                  <img src="${s}/img/logo.png" alt="ucm" title="Universidad Complutense de Madrid">
+                  </a>
+               </div>
+               <div class="col-lg-7 col-sm-7 col-xs-12" id="titulo_website">
+                  <h1 class="web_title" style="font-size: 2.1em;"><a href="http://www.ucm.es/ssii/" title="Portada - Servicios Informáticos">Deportes UCM</a></h1>
+               </div>
+            </div>
+         </div>
+		</header>
