@@ -40,6 +40,11 @@ public class RootController {
 		return "classification";
 	}
 	
+	@GetMapping("/playerTab")
+	public String playerTab() {
+		return "playerTab";
+	}
+	
 	@GetMapping("/logout")
 	public String logout() {
 		return "logout";
