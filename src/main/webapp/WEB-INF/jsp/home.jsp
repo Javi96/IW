@@ -10,20 +10,12 @@
 
 <div class = "container">
 	<h1>Bienvenido a U-SPORTS</h1>
-<<<<<<< HEAD
 	<nav class="navbar navbar-default"  >
 		<div class="navbar-collapse collapse">
     		<ul class="nav navbar-justified navbar-left">
        			 <li><a href="#">Equipo 1</a></li>
     		</ul>
     	</div>	
-=======
-	
-	<nav class="container navbar navbar-default"  >
-		<ul class="nav nav-justified">
-			<li ><a href="" >Equipo 1</a></li>
-		</ul>			
->>>>>>> 7498cbcc3c8c1e8e366898de9e8b2df605085cbc
 	</nav>
 	<div class="row">
 	   	<div class="col-sm-4 col-xs-12" >
