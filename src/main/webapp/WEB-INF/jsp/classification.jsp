@@ -9,11 +9,24 @@
 	<link type="text/css" media="screen" rel="stylesheet" href="${s}/css/classification.css" />
 	<script src = "${s}/js/classificationSearchTeam.js"></script>
     
+<<<<<<< HEAD
 <div class = "container">
     <h1 id = "classificationTitle">La liga <small>Rugby</small></h1>
     <div id = "classificationHeader">
         <div id = "searchTeamDiv">
             <input id = "searchTeam" class="form-control" type="text" placeholder="Buscar equipo" onclick="search()" >
+=======
+    <div class = "container">
+        <h1 id = "classificationTitle">La liga <small>Rugby</small></h1>
+        <div id = "classificationHeader">
+            <div id = "searchTeamDiv">
+                <input id = "searchTeam" class="form-control" type="text" placeholder="Buscar equipo" onclick="search()" >
+            </div>
+            <div >
+            <!-- src="${s}/img/logo.png -->
+                <img id = "classificationImage" src="static/img/imgRugby.jpg" alt="logo pagina clasificacion">
+            </div>
+>>>>>>> 7498cbcc3c8c1e8e366898de9e8b2df605085cbc
         </div>
         <div >
             <img id = "classificationImage" src="${s}/img/imgRugby.jpg" alt="logo pagina clasificacion">
