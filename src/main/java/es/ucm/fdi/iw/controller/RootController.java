@@ -59,4 +59,9 @@ public class RootController {
 	public String gallery() {
 		return "gallery";
 	}
+	
+	@GetMapping("/images")
+	public String images() {
+		return "images";
+	}
 }
