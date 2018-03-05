@@ -9,12 +9,9 @@
 <link type="text/css" media="screen" rel="stylesheet" href="static/css/home.css" />
 	<h1>Bienvenido a U-SPORTS</h1>
 	
-	<nav class="navbar navbar-default"  >
+	<nav class="container navbar navbar-default"  >
 		<ul class="nav nav-justified">
 			<li ><a href="" >Equipo 1</a></li>
-			<li >
-			<li >
-			<li >
 		</ul>			
 	</nav>
 	<div class="row">

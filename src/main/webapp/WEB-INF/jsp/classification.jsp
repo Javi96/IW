@@ -16,6 +16,7 @@
                 <input id = "searchTeam" class="form-control" type="text" placeholder="Buscar equipo" onclick="search()" >
             </div>
             <div >
+            <!-- src="${s}/img/logo.png -->
                 <img id = "classificationImage" src="static/img/imgRugby.jpg" alt="logo pagina clasificacion">
             </div>
         </div>
