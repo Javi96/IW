@@ -6,7 +6,13 @@
 
 <%@ include file="../jspf/header.jspf"%>
 
-<script src = "static/js/playerTab.js"></script>
+<script>
+	
+	function confirmTabs(){
+		window.open("/delegatedTeam");
+	}
+
+</script>
 
 <style>
         .playerslist {
