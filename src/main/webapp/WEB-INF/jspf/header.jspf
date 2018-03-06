@@ -15,14 +15,12 @@
 		<link rel="apple-touch-icon" href="https://www.ucm.es/themes/ucm16/media/img/logoucm.ico">
 		<link rel="shortcut icon" href="https://www.ucm.es/themes/ucm16/media/img/logoucm.ico">
 		<link rel="icon" href="https://www.ucm.es/themes/ucm16/media/img/logoucm.ico">
-
-		<link href="${s}/css/gallery.css" rel="stylesheet">
-		<link href="${s}/css/font-awesome.min.css" rel="stylesheet">
-		<link href="${s}/css/ucm.css" rel="stylesheet">
-		<link href="${s}/css/ucm-wg.css" rel="stylesheet">
-		<link href="${s}/css/bootstrap.css" rel="stylesheet">
-		<link href="${s}/css/ucm-theme.css" rel="stylesheet">
-
+		<link type="text/css" media="all" rel="stylesheet" href="https://www.ucm.es/themes/ucm16/css/font-awesome.min.css">
+		<link type="text/css" media="print" rel="stylesheet" href="https://www.ucm.es/themes/ucm16/css/print.css">
+		<link type="text/css" media="screen" rel="stylesheet" href="https://www.ucm.es/themes/ucm16/css/ucm.css" />
+		<link type="text/css" media="screen" rel="stylesheet" href="https://www.ucm.es/themes/ucm16/css/ucm-wg.css" />
+		<link type="text/css" media="screen" rel="stylesheet" href="https://www.ucm.es/themes/ucm16/css/bootstrap.css" />
+		<link type="text/css" media="screen" rel="stylesheet" href="https://www.ucm.es/themes/ucm16/css/ucm-theme.css" />
 		<link href="${s}/css/gallery.css" rel="stylesheet">
 	</head>
    <body style="">
