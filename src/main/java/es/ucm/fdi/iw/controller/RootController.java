@@ -65,6 +65,11 @@ public class RootController {
 		return "contact";
 	}
 	
+	@GetMapping("/request")
+	public String request() {
+		return "request";
+	}
+	
 	@GetMapping("/logout")
 	public String logout() {
 		return "logout";

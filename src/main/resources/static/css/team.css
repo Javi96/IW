@@ -3,6 +3,8 @@ div ul {
 }
 
 .botones li{
+	display: flex;
+    justify-content: center;
 	line-height: 30px;	
 	font-family: Arial;
 	font-size: 16px;
@@ -12,10 +14,9 @@ div ul {
 } 
 
 .photoData{
-	display: flex;
+	display:flex;
 	height: 50%;
-	background-color: #6A737C;
-	
+	justify-content: center;
 }
 
 #ucmFoto{
@@ -29,6 +30,10 @@ div ul {
   padding-bottom:20px;
 }
 
+.centrado{
+	width:250px;
+  margin: auto;
+}
 
 .lista li{
 	list-style:none;

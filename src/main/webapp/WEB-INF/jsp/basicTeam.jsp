@@ -14,6 +14,10 @@
 		window.open("/contact");
 	}
 	
+	function request(){
+		window.open("/request");
+	}
+	
 </script>
 
 <div class="starter-template">
@@ -40,7 +44,7 @@
 			 </li>
 			 
 			 <li>
-				<button type="submit" onClick = "sent()"> Enviar solicitud</button>
+				<button type="submit" onClick = "request()"> Enviar solicitud</button>
 			 </li>
 			 
 			 <li>

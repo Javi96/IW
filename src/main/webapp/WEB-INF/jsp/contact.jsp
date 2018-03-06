@@ -21,7 +21,7 @@
 
 	<h1>Contactar con el delegado</h1>
 	
-	<div>
+	<div class="photoData">
 		
 		<textarea   class="msjArea" name="test"> </textarea>
 		<button  onClick = "sent()" type="submit"> Enviar</button>
