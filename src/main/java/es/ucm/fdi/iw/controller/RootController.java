@@ -84,4 +84,9 @@ public class RootController {
 	public String images() {
 		return "images";
 	}
+	
+	@GetMapping("/calendar")
+	public String calendar() {
+		return "calendar";
+	}
 }
