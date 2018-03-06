@@ -45,6 +45,26 @@ public class RootController {
 		return "playerTab";
 	}
 	
+	@GetMapping("/basicTeam")
+	public String basicTeam() {
+		return "basicTeam";
+	}
+	
+	@GetMapping("/delegatedTeam")
+	public String delegatedTeam() {
+		return "delegatedTeam";
+	}
+	
+	@GetMapping("/actas")
+	public String actas() {
+		return "actas";
+	}
+	
+	@GetMapping("/contact")
+	public String contact() {
+		return "contact";
+	}
+	
 	@GetMapping("/logout")
 	public String logout() {
 		return "logout";
