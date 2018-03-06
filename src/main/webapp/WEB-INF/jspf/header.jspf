@@ -22,7 +22,8 @@
 		<link href="${s}/css/ucm-wg.css" rel="stylesheet">
 		<link href="${s}/css/bootstrap.css" rel="stylesheet">
 		<link href="${s}/css/ucm-theme.css" rel="stylesheet">
-		
+
+		<link href="${s}/css/gallery.css" rel="stylesheet">
 	</head>
    <body style="">
       <header>
