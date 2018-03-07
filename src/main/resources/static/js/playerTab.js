@@ -1,6 +1,7 @@
  function confirmTabs(){
 	window.open("/delegatedTeam");
 }
+
 function rmPlayer(){
     console.log("remove tab");
 }
