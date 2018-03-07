@@ -1,16 +1,8 @@
-body {
-    padding-top: 50px;
-}
-.starter-template {
-    padding: 40px 15px;
-    text-align: center;
-}
-
 table td, table th {
     text-align: center;  
 }
 #classificationHead {
-    background-color:#168CBA;
+    background-color: #A00E19;
     color: white;
 }
 
@@ -25,7 +17,7 @@ table td, table th {
 }
 
 #searchTeam{
-    background-color: #168CBA;
+    background-color: #A00E19;
 }
 
 #searchTeam.form-control::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
@@ -49,4 +41,5 @@ input[type=text] {
    flex-direction: row;
    justify-content: flex-start;
 }
+
 
