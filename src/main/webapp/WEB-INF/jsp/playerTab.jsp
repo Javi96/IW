@@ -9,19 +9,30 @@
 <script src = "static/js/playerTab.js"></script>
 
 <style>
-        .playerslist {
-            margin-left:30%;
+         .playerslist {
+            margin-left:25%;
+            min-height: 250px;
+            max-width: 550px;
+            margin-bottom: 2px;
+            border: 2px solid red
             
         }
         .playertabout {
         	float:left;
+        	min-height: 250px;
+            width: 550px;
+            border: 2px solid red;
         }	
         .playertabin {
         	float:left;
-        	margin-right:30%;
+            margin-right: 2px;
+        	min-height: 250px;
+            border: 2px solid red;
+            width: 550px;
         }
         li{
             cursor:pointer;
+            padding: 6px;
         }
         li:hover{
             color:blue;
@@ -30,24 +41,29 @@
         	float:right;
         	margin-right: 300px;
         }
+        h1 #cabeceraInOut{
+            margin-left: 80px;
+        }
+     
      
 
 </style>
 
 <div class="container" id="tabs">
         
-        <div id="IN/OUT" class="playerslist" >
-            <h1>Cambios en la plantilla</h1>
+        <div class="playerslist" >
+       		<h1 class="cabeceraInOut">Cambios en la plantilla</h1>
+        	<ol id="INOUT"></ol>
         </div>
 
         
         <div class="playertabin">
-            <h1>Fichas activas</h1>
+            <h1 class="cabeceraIn">Fichas activas</h1>
             <ol id="IN"></ol>
         </div>
         
         <div class="playertabout">
-            <h1>Fichas no activas</h1>
+            <h1 class="cabeceraOut">Fichas no activas</h1>
             <ol id="OUT"></ol>
         </div>    
 </div>
@@ -58,36 +74,54 @@
 </div>
 <script>
     
-    let playersTab = [];
+var playerIn = ["Pedro David Gonzalez", "Javier Cortes Tejada", "Javier Anton Alonso", "Biel Selles Salvás"];
+var playerOut = [];
+var playerInOut = [];
 
-    let domInOut = document.getElementById("IN/OUT");
-    let domIn = document.getElementById("IN");
-    let domOut = document.getElementById("OUT");
+function render(id, array, target) {
+  $("#" + id).empty();
+  console.log(array);
+  for(let jaja = 0; jaja < array.length; jaja++) {
+	  console.log("aqui");
+    let el = $("<li>" + array[jaja] + "</li>");
+    $("#" + id).append(el);
+    el.click(function(o) {
+      move(this, array, target);
+    })
+  }
+}
 
-    for(let i = 0; i < 14; i++){
-        let persona = {name:"name"+i, forename1:"forename1_"+i, forename2:"forename2_"+i, id:i, state:"in", haschanged:false};
-        playersTab.push(persona);
-        let para = document.createElement("li");
-        para.id = "li_" + i;
-        let node = document.createTextNode(playersTab[i].name + " " + playersTab[i].forename1 + " " + playersTab[i].forename2 + "\n");
-        para.appendChild(node);
-        domIn.appendChild(para);
+function move(el, src, tgt) {
+	//elimina el elemento de la lista
+  let x = $(el).text();
+   const i = src.indexOf(x);
+  if (i === -1) return;
+  src.splice(i, 1);
+  
+  if(tgt === undefined){
+  	let indexA = playerIn.indexOf(x);
+    if(indexA === -1){
+    	playerOut.splice(playerOut.indexOf(x), 1);
+    	tgt = playerIn;
+    }else{
+      playerIn.splice(indexA, 1);
+      tgt = playerOut; 
+  	}
+  }
+  else if(playerInOut.indexOf(x)===-1){
+  	playerInOut.push(x);
+  }else{
+  	playerInOut.splice(x.indexOf(x), 1);
+  }
+  tgt.push(x);
+  regen();
+}
 
-        para.onclick = function(){
-            console.log(playersTab[persona.id]);
-            let _rmLi = document.getElementById("li_"+persona.id);
-            persona.haschanged = !persona.haschanged;
-            if(persona.state == "in"){
-                persona.state = "out";
-                domIn.removeChild(_rmLi);
-                domOut.appendChild(_rmLi);
-            }
-            else if(persona.state == "out"){
-                persona.state= "in";
-                domOut.removeChild(_rmLi);
-                domIn.appendChild(_rmLi);
-            }
-        };
-    }
+function regen() {
+  render("IN", playerIn, playerOut);
+  render("OUT", playerOut, playerIn);
+  render("INOUT", playerInOut);
+}
+regen();
+    
 </script>
-
