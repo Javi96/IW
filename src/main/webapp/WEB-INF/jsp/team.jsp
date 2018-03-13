@@ -8,6 +8,7 @@
 
 <link type="text/css" media="screen" rel="stylesheet" href="${s}/css/home.css" />
 <div class = "container">
+	<h1 class = "redColor">Rugby</h1>
 	<div class="jumbotron">
     	<div class="row">
 	        <div class="col-md-4 col-xs-12 col-sm-6 col-lg-4">
@@ -23,11 +24,19 @@
 	               <li><p><span class="glyphicon glyphicon-map-marker one space"></span>Instalaciones: Paraninfo Norte</p></li>
 	               <li><p><span class="glyphicon glyphicon-user one space"></span>Delegado: Juan Antonio</p></li>
 	            </ul>
-	            <div class="btn-group teamButtonsStyle">
-					<button type="button" class="btn btn-primary">Contactar delegado</button>
-					<button type="button" class="btn btn-primary">Enviar solicitud</button>
-					<button type="button" class="btn btn-primary">Ver fotos</button>
-					<button type="button" class="btn btn-primary">Ver clasificacion</button>
+	            <div>
+	            	<form action = "/contact" method="get" class="btn-group teamButtonsStyle">
+						<button type="submit" class="btn btn-primary">Contactar delegado</button>
+					</form>
+					<form action = "/joinTeam" method="get"  class="btn-group teamButtonsStyle">
+						<button type="submit" class="btn btn-primary">Enviar solicitud</button>
+					</form>
+					<form action = "/gallery" method="get"  class="btn-group teamButtonsStyle">
+						<button type="submit" class="btn btn-primary">Ver fotos</button>
+					</form>
+					<form action = "/classification" method="get" class="btn-group teamButtonsStyle">
+						<button type="submit" class="btn btn-primary">Ver clasificacion</button>
+					</form>
 				</div>
         	</div>
     	</div>

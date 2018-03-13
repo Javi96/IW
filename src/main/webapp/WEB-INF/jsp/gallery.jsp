@@ -5,6 +5,7 @@
 	uri="http://www.springframework.org/security/tags"%>
 
 <%@ include file="../jspf/header.jspf"%>
+<link href="${s}/css/gallery.css" rel="stylesheet">
 
 <div class="starter-template">
 	<p class="lead">Hi, this is the gallery</p>

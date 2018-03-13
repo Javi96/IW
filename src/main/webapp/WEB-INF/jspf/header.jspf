@@ -16,14 +16,13 @@
 		<link rel="shortcut icon" href="https://www.ucm.es/themes/ucm16/media/img/logoucm.ico">
 		<link rel="icon" href="https://www.ucm.es/themes/ucm16/media/img/logoucm.ico">
 
-		<link href="${s}/css/gallery.css" rel="stylesheet">
 		<link href="${s}/css/font-awesome.min.css" rel="stylesheet">
 		<link href="${s}/css/ucm.css" rel="stylesheet">
 		<link href="${s}/css/ucm-wg.css" rel="stylesheet">
 		<link href="${s}/css/bootstrap.css" rel="stylesheet">
 		<link href="${s}/css/ucm-theme.css" rel="stylesheet">
 
-		<link href="${s}/css/gallery.css" rel="stylesheet">
+		
 	</head>
    <body style="">
       <header>

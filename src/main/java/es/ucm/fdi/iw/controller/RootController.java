@@ -65,9 +65,9 @@ public class RootController {
 		return "contact";
 	}
 	
-	@GetMapping("/request")
-	public String request() {
-		return "request";
+	@GetMapping("/joinTeam")
+	public String joinTeam() {
+		return "joinTeam";
 	}
 	
 	@GetMapping("/logout")

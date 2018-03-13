@@ -10,25 +10,23 @@
 
 <div class = "container">
 	<h1 class = "redColor" >Bienvenido a U-SPORTS</h1>
-	<nav class="container navbar navbar-default" role="navigation"  >
+	<nav class="container navbar navbar-default" role="navigation" id="menu">
 		<div class="collapse navbar-collapse navbar-ex1-collapse">
-    		<ul class="nav nav-justified">
+    		<ul class="nav nav-justified" id="contenidomenu">
     		 	<li class="dropdown resalte lead">
-					<a title="UCM" href="" class="dropdown-toggle" data-toggle="dropdown">Tu</a>
+					<a class="dropdown-toggle" data-toggle="dropdown">Tú</a>
 					<ul class="dropdown-menu" role="menu">
 						<li><a  href="">Reservar pista</a></li>
 						<li><a  href="">Horario deportivo</a></li>
 						<li><a  href="">Otros deportes</a></li>
 					</ul>
 				</li>
-       			<li><a href="/basicTeam">Rugby Fisicas</a></li>
-       			<li></li>
-       			<li></li>
+       			<li class="dropdown-resalte lead"><a href="/team">Rugby Fisicas</a></li>
     		</ul>
     	</div>	
 	</nav>
 	
-    <div class="jumbotron">
+<div class="jumbotron">
     	<div class="row">
 	        <div class="col-md-4 col-xs-12 col-sm-6 col-lg-4">
 	             <img id = "logoEquipo" src="${s}/img/rugbyFisicas.jpeg" alt="stack photo" class="img">
@@ -43,15 +41,22 @@
 	               <li><p><span class="glyphicon glyphicon-map-marker one space"></span>Instalaciones: Paraninfo Norte</p></li>
 	               <li><p><span class="glyphicon glyphicon-user one space"></span>Delegado: Juan Antonio</p></li>
 	            </ul>
-	            <div class="btn-group teamButtonsStyle">
-					<button type="button" class="btn btn-primary">Contactar delegado</button>
-					<button type="button" class="btn btn-primary">Enviar solicitud</button>
-					<button type="button" class="btn btn-primary">Ver fotos</button>
-					<button type="button" class="btn btn-primary">Ver clasificacion</button>
+	            <div>
+	            	<form action = "/contact" method="get" class="btn-group teamButtonsStyle">
+						<button type="submit" class="btn btn-primary">Contactar delegado</button>
+					</form>
+					<form action = "/joinTeam" method="get"  class="btn-group teamButtonsStyle">
+						<button type="submit" class="btn btn-primary">Enviar solicitud</button>
+					</form>
+					<form action = "/gallery" method="get"  class="btn-group teamButtonsStyle">
+						<button type="submit" class="btn btn-primary">Ver fotos</button>
+					</form>
+					<form action = "/classification" method="get" class="btn-group teamButtonsStyle">
+						<button type="submit" class="btn btn-primary">Ver clasificacion</button>
+					</form>
 				</div>
         	</div>
     	</div>
 	</div>
-
 </div>
 <%@ include file="../jspf/footer.jspf"%>
