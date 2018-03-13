@@ -45,9 +45,9 @@ public class RootController {
 		return "playerTab";
 	}
 	
-	@GetMapping("/basicTeam")
-	public String basicTeam() {
-		return "basicTeam";
+	@GetMapping("/team")
+	public String team() {
+		return "team";
 	}
 	
 	@GetMapping("/delegatedTeam")
