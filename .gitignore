@@ -19,3 +19,6 @@ hs_err_pid*
 .classpath
 README.md
 /.metadata/
+src/main/webapp/WEB-INF/jspf/header.jspf
+src/main/webapp/WEB-INF/jspf/header.jspf
+*.jspf

@@ -94,4 +94,9 @@ public class RootController {
 	public String calendar() {
 		return "calendar";
 	}
+	
+	@GetMapping("/calendarSport")
+	public String calendarSport() {
+		return "calendarSport";
+	}
 }
