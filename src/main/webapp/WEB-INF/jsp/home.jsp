@@ -17,7 +17,7 @@
 					<a class="dropdown-toggle" data-toggle="dropdown">Tú</a>
 					<ul class="dropdown-menu" role="menu">
 						<li><a  href="">Reservar pista</a></li>
-						<li><a  href="/calendarSport">Horario deportivo</a></li>
+						<li><a  href="/calendarPrueba">Horario deportivo</a></li>
 						<li><a  href="">Otros deportes</a></li>
 					</ul>
 				</li>
