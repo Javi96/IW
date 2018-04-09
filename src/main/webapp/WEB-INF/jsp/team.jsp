@@ -16,13 +16,13 @@
 	        </div>
          	<div id = "teamInfo" class="col-md-8 col-xs-12 col-sm-6 col-lg-8">
 	            <div id = "teamName">
-	               <h2>Rugby Fisicas</h2>
+	               <h2>${team.name}</h2>
 	            </div>
 	            <ul class="container details teamInfoStyle">
-	               <li><p><span class="glyphicon glyphicon-calendar one space" ></span>Entrenamientos: Lunes y Miercoles / 14:00 - 15:30 h </p></li>
-	               <li><p><span class="glyphicon glyphicon-calendar one space" ></span>Siguiente partido: Viernes / 13:30 - 15:30</p></li>
-	               <li><p><span class="glyphicon glyphicon-map-marker one space"></span>Instalaciones: Paraninfo Norte</p></li>
-	               <li><p><span class="glyphicon glyphicon-user one space"></span>Delegado: Juan Antonio</p></li>
+	               <li><p><span class="glyphicon glyphicon-calendar one space" ></span> Entrenamientos: ${team.trainingSchedule} </p></li>
+	               <li><p><span class="glyphicon glyphicon-calendar one space" ></span> Siguiente partido: ${team.nextMatchSchedule} </p></li>
+	               <li><p><span class="glyphicon glyphicon-map-marker one space"></span> Instalaciones: ${team.nextMatchFacilities} </p></li>
+	               <li><p><span class="glyphicon glyphicon-user one space"></span>Delegado: ${team.deputy}</p></li>
 	            </ul>
 	            <div>
 	            	<form action = "/contact" method="get" class="btn-group teamButtonsStyle">

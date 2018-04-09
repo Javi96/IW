@@ -7,23 +7,23 @@
 
 <%@ include file="../jspf/header.jspf"%>
 
-	<link type="text/css" media="screen" rel="stylesheet" href="${s}/css/classification.css" />
-	<script src = "${s}/js/classificationSearchTeam.js"></script>
+	<link type="text/css" media="screen" rel="stylesheet" href="${s}/css/ranking.css" />
+	<script src = "${s}/js/rankingSearchTeam.js"></script>
     
  <div class = "container">
-     <h1 id = "classificationTitle">La liga <small>Rugby</small></h1>
-     <div id = "classificationHeader">
+     <h1 id = "rankingTitle">La liga <small>Rugby</small></h1>
+     <div id = "rankingHeader">
          <div id = "searchTeamDiv">
              <input id = "searchTeam" class="form-control" type="text" placeholder="Buscar equipo" onclick="search()" >
          </div>
          <div >
-             <img id = "classificationImage" src="${s}/img/imgRugby.jpg" alt="logo pagina clasificacion">
+             <img id = "rankingImage" src="${s}/img/imgRugby.jpg" alt="logo pagina clasificacion">
          </div>
      </div>
           
      <div>
          <table class="table">
-             <thead id = "classificationHead">
+             <thead id = "rankingHead">
                  <tr>
                      <th scope="col">Puesto</th>
                      <th scope="col">Club</th>
@@ -33,14 +33,17 @@
                  </tr>
              </thead>
              <tbody>
-                 <tr>
-                     <th scope="row">1</th>
-                     <td>Fisicas</td>
-                     <td >3</td>
-                     <td>0</td>
-                     <td>3</td>
+             <c:forEach var="team" items = "${ranking}" varStatus="status">
+             	<tr>
+                     <th scope="row">${status.count}</th>
+                     <td>${team.name}</td>
+                     <td >${team.wins}</td>
+                     <td>${team.draws}</td>
+                     <td>${team.defeats}</td>
                  </tr>
-                 <tr>
+             </c:forEach>
+                 
+             <!--<tr>
                      <th scope="row">2</th>
                      <td>Matematicas</td>
                      <td>2</td>
@@ -74,7 +77,7 @@
                      <td>0</td>
                      <td>1</td>
                      <td>4</td>
-                 </tr>
+                 </tr> -->
              </tbody>
          </table>
      </div>
