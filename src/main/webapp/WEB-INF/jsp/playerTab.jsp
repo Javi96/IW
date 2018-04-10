@@ -13,37 +13,33 @@
                 align-self: center;
             }
             .playerslist {
-            border: 1px solid red;
+            min-height: 250px;
             }
             .playertabout {
-            border: 1px solid red;
             float: right;
-            width: 40%;
+            width: 45%;
+            min-height: 250px;
         }   
-        .changesIn{
-            border: 1px solid red;
-
-
+        .tittle{
+			background: radial-gradient(white, #c3c1c1, #8f8686);
+            text-align: center;
+            font-size: 30px;
+            color: #b60f0f;
+            
+            
         }
-        .changesOut{
-            border: 1px solid red;
-
-        }
-        .changesMix{
-            border: 1px solid red;
-
-        }
+        
             .playertabin {
-            border: 1px solid red;
             float: left;
-            width: 40%;
+            width: 45%;
+            min-height: 250px;
             }
             .cabeceraInOut{
             }
             li{
             cursor:pointer;
             padding: 6px;
-            color: red;
+            color: black;
             }
             li:hover{
             color:blue;
@@ -53,7 +49,7 @@
             margin-right: 300px;
             }
             ol #person{
-            color: red;
+            color: black;
             }
         .text{
             font-style: oblique;
@@ -61,7 +57,6 @@
             color: gray;
             display: table-row;
         }
-
         </style>
         <div class="container" id="tabs">
             <div class="playerslist" >
