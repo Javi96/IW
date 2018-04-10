@@ -1,9 +1,12 @@
 package es.ucm.fdi.iw.model;
 
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 
 @Entity
 public class User {
@@ -12,6 +15,9 @@ public class User {
 	private String password;
 	private String roles; // split by , to separate roles
 	private byte enabled;
+	
+	@ManyToMany(mappedBy = "players")
+	private List<Team> teams;
 	
 	@Id
 	@GeneratedValue

@@ -11,7 +11,7 @@
 	<script src = "${s}/js/rankingSearchTeam.js"></script>
     
  <div class = "container">
-     <h1 id = "rankingTitle">La liga <small>Rugby</small></h1>
+     <h1 id = "rankingTitle">La liga <small>${league.name}</small></h1>
      <div id = "rankingHeader">
          <div id = "searchTeamDiv">
              <input id = "searchTeam" class="form-control" type="text" placeholder="Buscar equipo" onclick="search()" >
@@ -33,51 +33,15 @@
                  </tr>
              </thead>
              <tbody>
-             <c:forEach var="team" items = "${ranking}" varStatus="status">
-             	<tr>
-                     <th scope="row">${status.count}</th>
-                     <td>${team.name}</td>
-                     <td >${team.wins}</td>
-                     <td>${team.draws}</td>
-                     <td>${team.defeats}</td>
-                 </tr>
-             </c:forEach>
-                 
-             <!--<tr>
-                     <th scope="row">2</th>
-                     <td>Matematicas</td>
-                     <td>2</td>
-                     <td>1</td>
-                     <td>3</td>
-                 </tr>
-                 <tr>
-                     <th scope="row">3</th>
-                     <td>Geologia</td>
-                     <td>1</td>
-                     <td>2</td>
-                     <td>3</td>
-                 </tr>
-                 <tr>
-                     <th scope="row">4</th>
-                     <td>Farmacia</td>
-                     <td>0</td>
-                     <td>3</td>
-                     <td>3</td>
-                 </tr>
-                 <tr>
-                     <th scope="row">5</th>
-                     <td>Veterinaria</td>
-                     <td>0</td>
-                     <td>2</td>
-                     <td>3</td>
-                 </tr>
-                  <tr>
-                     <th scope="row">6</th>
-                     <td>Quimicas</td>
-                     <td>0</td>
-                     <td>1</td>
-                     <td>4</td>
-                 </tr> -->
+	             <c:forEach var="team" items = "${ranking}" varStatus="status">
+	             	<tr>
+	                     <th scope="row">${status.count}</th>
+	                     <td>${team.name}</td>
+	                     <td >${team.wins}</td>
+	                     <td>${team.draws}</td>
+	                     <td>${team.defeats}</td>
+	                 </tr>
+	             </c:forEach>
              </tbody>
          </table>
      </div>

@@ -1,11 +1,15 @@
 package es.ucm.fdi.iw.model;
 
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 
 @Entity
@@ -40,8 +44,12 @@ public class Team {
 	@ManyToOne(fetch=FetchType.EAGER) 
 	@JoinColumn(name="league_id")
 	private League league;
-	//private List<Player> players; 
-	//private byte enabled;
+	
+	@ManyToMany
+	@JoinTable(name = "team_players", joinColumns = @JoinColumn(name = "team_id"), inverseJoinColumns = @JoinColumn(name = "player_id"))
+	private List<User> players; 
+	
+//	private byte enabled; // esto que es? 
 	
 	public Team(String name, String sport, String school, String deputy, String trainingSchedule,String nextMatchSchedule, String nextMatchFacilities) {
 		this.name = name;

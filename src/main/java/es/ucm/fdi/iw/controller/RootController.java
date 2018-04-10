@@ -49,8 +49,8 @@ public class RootController {
 	
 	@RequestMapping(path = "/home",method = RequestMethod.GET)
 	public String home(Model model) {
-		/*Team fisicasTeam = new Team("Rugby Fisicas","Rugby", "Facultad de Fisicas", "Juan Antonio","Lunes y Miercoles / 14:00 - 15:30 h","Viernes / 13:30 - 15:30","Paraninfo Norte");
-		model.addAttribute("team", fisicasTeam);*/
+		Team fisicasTeam = new Team("Rugby Fisicas","Rugby", "Facultad de Fisicas", "Juan Antonio","Lunes y Miercoles / 14:00 - 15:30 h","Viernes / 13:30 - 15:30","Paraninfo Norte");
+		model.addAttribute("team", fisicasTeam);
 		return "home";
 	}
 	
@@ -117,6 +117,7 @@ public class RootController {
 			ranking.addTeamInfo(info);
 		}							
 		model.addAttribute("ranking",ranking.getRanking());
+		model.addAttribute("league", l);
 		return "ranking";
 	}
 	
