@@ -32,9 +32,11 @@ public class RootController {
 	public String root(Model model, Principal principal) {
 		log.info(principal.getName() + " de tipo " + principal.getClass());		
 		// org.springframework.security.core.userdetails.User
+    
 		Team fisicasTeam = new Team("Rugby Fisicas","Rugby", "Facultad de Fisicas", "Juan Antonio","Lunes y Miercoles / 14:00 - 15:30 h","Viernes / 13:30 - 15:30","Paraninfo Norte");
 		model.addAttribute("team", fisicasTeam);
 		return "home";
+
 	}
 	
 	@GetMapping("/login")
