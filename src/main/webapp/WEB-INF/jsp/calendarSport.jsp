@@ -29,6 +29,7 @@
 		</thead>
 		
 		<tbody>
+			<!-- ${horas} -->
 			<!-- filas -->
 			<tr>
 				<td class="time">09:00 - 10:00</td>

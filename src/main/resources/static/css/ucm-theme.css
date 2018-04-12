@@ -143,7 +143,7 @@ margin-bottom: 2px;
 		margin: 0;
 	}
 	.carousel .item { 
-//	    max-height: 250px; 
+/*	    max-height: 250px; */
 	}
 	.carousel-indicators{
 		right:0;
@@ -173,7 +173,7 @@ margin-bottom: 2px;
 		margin-right: 0;
 	}
 	.carousel .item {
-//	    max-height: 130px; 
+/*	    max-height: 130px; */
 	}	
 }
 
