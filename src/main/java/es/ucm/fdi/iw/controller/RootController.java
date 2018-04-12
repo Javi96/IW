@@ -22,7 +22,8 @@ public class RootController {
 	public String root(Model model, Principal principal) {
 		log.info(principal.getName() + " de tipo " + principal.getClass());		
 		// org.springframework.security.core.userdetails.User
-		return "home";
+		//return "home";
+		return "delegatedTeam";
 	}
 	
 	@GetMapping("/login")

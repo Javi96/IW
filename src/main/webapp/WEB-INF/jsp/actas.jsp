@@ -5,35 +5,33 @@
 	uri="http://www.springframework.org/security/tags"%>
 
 <%@ include file="../jspf/header.jspf"%>
+<link type="text/css" media="screen" rel="stylesheet" href="${s}/css/actas.css" />
 
-<link type="text/css" media="screen" rel="stylesheet" href="${s}/css/team.css" />
+<div class="container">
 
- <script>
-	
-	function sent(){
-		window.close();
-	}
-	
-</script>
-	
-<div class="starter-template">
+	<h1 class = "redColor" >Firma de actas</h1>
 
-	<h1>Enviar acta del partido</h1>
-	
-	<div class="actas">
-	
-		<ul class="lista">
-			<li> Equipo local: </li>
-			<li> Equipo visitante:  </li>
-			<li> Puntos local: </li>
-			<li> Puntos local: </li>
-		</ul>
-		
-	</div>	
-	
-	<div class="actas">
-		<button onClick = "sent()" type="submit"> Enviar</button>
-	</div>	
+    <form action = "/delegatedTeam" method="get" class="form-area"  id = "centrado"> 
+    
+  			<div class="form-group">
+   				<label> Equipo local:</label>
+				<input class="form-control" id="nameLocal"type="text">
+			</div>
+			<div class="form-group">
+				<label> Puntos local:</label>
+				<input class="form-control" id="pointLocal"type="text">
+			</div>
+			<div class="form-group">
+				<label> Equipo visitante:</label>
+				<input class="form-control" id="nameVisti" type="text">
+			</div>
+			<div class="form-group">
+				<label> Puntos local:</label>
+				<input class="form-control" id="pointsVisi" type="text">
+			</div>
+					
+            	<button  type="submit" class="btn btn-primary pull-right">Enviar</button>
+    </form>
 	
 </div>
 
