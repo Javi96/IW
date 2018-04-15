@@ -49,6 +49,11 @@ public class Team {
 	@JoinTable(name = "team_players", joinColumns = @JoinColumn(name = "team_id"), inverseJoinColumns = @JoinColumn(name = "player_id"))
 	private List<User> players; 
 	
+	@ManyToMany
+	@JoinTable(name = "team-accords", joinColumns = @JoinColumn(name = "team_id"), inverseJoinColumns = @JoinColumn(name = "accord_id"))
+	private List<Accord> accords;
+	
+	
 //	private byte enabled; // esto que es? 
 	
 	public Team(String name, String sport, String school, String deputy, String trainingSchedule,String nextMatchSchedule, String nextMatchFacilities) {
