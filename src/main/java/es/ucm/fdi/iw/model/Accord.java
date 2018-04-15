@@ -10,12 +10,8 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
 
 @Entity
-public class accord {
+public class Accord {
 	
-	@OneToOne //match
-	@ManyToMany(mappedBy = "team")
-	
-	private List<Team> teams;
 	
 	
 	@Id
@@ -23,7 +19,7 @@ public class accord {
 	private long id;
 	
 	@Column
-	private Match match; //objeto partido
+	private int matchId; //objeto partido
 	
 	@Column
 	private int homeTeamId;
@@ -31,7 +27,11 @@ public class accord {
 	@Column
 	private int awayTeamId;
 	
-	private int matchId; 
+	//@OneToOne(mappedBy = "match")
+	
+	@ManyToMany(mappedBy = "accords")
+	private List<Team> teams;
+	
 	private int homeTeamPoints;
 	private int awayTeamPoints;
 	private String homeTeam;
@@ -43,7 +43,7 @@ public class accord {
 	 *  equipoLocal equipoVisitante para obtener el id (que sera guardado en la tabla)
 	 */
 	
-	public accord(String homeTeam, String awayTeam, int homeTeamPoints, int awayTeamPoints) {
+	public Accord(String homeTeam, String awayTeam, int homeTeamPoints, int awayTeamPoints) {
 		
 		//por parametro
 		this.homeTeam = homeTeam; 
@@ -54,7 +54,6 @@ public class accord {
 		//consultas BBDD
 		//this.homeTeamId = ;
 		//this.awayTeamId = ;
-		//this.match = //consulta con los id de equipos para obtener idPartido
 		//this.matchId =  //consulta sobre el partido devuelto
 		
 	}
@@ -114,14 +113,6 @@ public class accord {
 	
 	public void setHomeTeamId(int homeTeamId) {
 		this.homeTeamId = homeTeamId;
-	}
-	
-	public Match getMatch() {
-		return this.match;
-	}
-	
-	public void setMatch(Match match) {
-		this.match = match;
 	}
 	
 	public int getMathId() {
