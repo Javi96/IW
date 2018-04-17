@@ -22,3 +22,6 @@ README.md
 src/main/webapp/WEB-INF/jspf/header.jspf
 src/main/webapp/WEB-INF/jspf/header.jspf
 *.jspf
+src/main/java/es/.DS_Store
+src/main/java/es/ucm/.DS_Store
+src/main/java/es/ucm/fdi/.DS_Store
