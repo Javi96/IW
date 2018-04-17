@@ -22,3 +22,9 @@ README.md
 src/main/webapp/WEB-INF/jspf/header.jspf
 src/main/webapp/WEB-INF/jspf/header.jspf
 *.jspf
+src/main/java/es/.DS_Store
+src/main/java/es/ucm/.DS_Store
+.settings/org.eclipse.wst.common.component
+.settings/org.eclipse.wst.common.component
+src/main/java/es/ucm/fdi/.DS_Store
+.DS_Store

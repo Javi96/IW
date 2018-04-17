@@ -4,7 +4,7 @@
 <%@ taglib prefix="sec"
 	uri="http://www.springframework.org/security/tags"%>
 
-<%@ include file="../jspf/header.jspf"%>
+<%@ include file="../../jspf/header.jspf"%>
 
 <div class="starter-template">
 	<h1>Admin</h1>
@@ -38,7 +38,7 @@
 	</tbody>
 	</table>
 
-	<%@ include file="../jspf/authinfo.jspf"%>		
+	<%@ include file="../../jspf/authinfo.jspf"%>		
 </div>
 
-<%@ include file="../jspf/footer.jspf"%>
+<%@ include file="../../jspf/footer.jspf"%>

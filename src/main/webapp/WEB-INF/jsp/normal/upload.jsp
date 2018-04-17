@@ -4,7 +4,7 @@
 <%@ taglib prefix="sec"
 	uri="http://www.springframework.org/security/tags"%>
 
-<%@ include file="../jspf/header.jspf"%>
+<%@ include file="../../jspf/header.jspf"%>
 
 <div class="starter-template">
 	<h1>Upload</h1>
@@ -30,4 +30,4 @@
 	<img class="photo" src="admin/photo/5">
 </div>
 
-<%@ include file="../jspf/footer.jspf"%>
+<%@ include file="../../jspf/footer.jspf"%>

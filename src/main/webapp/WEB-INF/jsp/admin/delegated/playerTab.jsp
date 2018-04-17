@@ -4,7 +4,7 @@
 <%@ taglib prefix="sec"
 	uri="http://www.springframework.org/security/tags"%>
 
-<%@ include file="../jspf/header.jspf"%>
+<%@ include file="../../../jspf/header.jspf"%>%>
 
 <script src = "static/js/playerTab.js"></script>
 

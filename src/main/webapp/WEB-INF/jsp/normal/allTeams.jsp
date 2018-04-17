@@ -5,7 +5,7 @@
 	uri="http://www.springframework.org/security/tags"%>
 	
 
-<%@ include file="../jspf/header.jspf"%>
+<%@ include file="../../jspf/header.jspf"%>
 <link type="text/css" media="screen" rel="stylesheet" href="${s}/css/home.css" />
 
 <div class = "container">
@@ -32,4 +32,4 @@
     	</div>	
 	</nav>
 </div>
-<%@ include file="../jspf/footer.jspf"%>
+<%@ include file="../../jspf/footer.jspf"%>
