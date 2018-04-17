@@ -11,29 +11,29 @@
 <div class = "container">
 	<div class="panel panel-default" >
 		<h1 class="col-sm-12 text-center">Rugby</h1>
-		<div class="panel-body form-horizontal" id = "matchRecord" >
+		<form class="panel-body form-horizontal" name="matchrecord" id = "matchRecord" method="POST" action = "/addRecord" >
 			<div class="form-group">
 				<label for="concept" class="col-sm-3 control-label">Equipo Local</label>
 				<div class="col-sm-7">
-					<input type="text" class="form-control" id="localTeam" name="concept">
+					<input type="text" class="form-control" id="localTeam" name="id">
 				</div>
 			</div>
 			<div class="form-group">
-				<label for="description" class="col-sm-3 control-label">Equipo Visitante</label>
+				<label for="description"  class="col-sm-3 control-label">Equipo Visitante</label>
 				<div class="col-sm-7">
-					<input type="text" class="form-control" id="awayTeam" name="description">
+					<input type="text"  class="form-control" id="awayTeam" >
 				</div>
 			</div> 
 		    <div class="form-group">
-			    <label for="amount" class="col-sm-3 control-label">Puntos Local</label>
+			    <label for="amount"  class="col-sm-3 control-label">Puntos Local</label>
 			    <div class="col-sm-7">
-			    	<input type="number" class="form-control" id="localPoints" name="amount">
+			    	<input type="number" name="homeTeamPoints" class="form-control" id="localPoints" >
 			    </div>
 		    </div>
 			<div class="form-group">
-				<label for="amount" class="col-sm-3 control-label">Puntos Visitante</label>
+				<label for="amount"  class="col-sm-3 control-label">Puntos Visitante</label>
 			    <div class="col-sm-7">
-			    	<input type="number" class="form-control" id="awayPoints" name="amount">
+			    	<input type="number" name="awayTeamPoints" class="form-control" id="awayPoints" >
 			    </div>
 			</div> 
 			 
@@ -44,7 +44,7 @@
 		    	</button>
 			</div>
 			</div>
-		</div>
+		</form>
 	</div>
 </div>
 <%@ include file="../jspf/footer.jspf"%>

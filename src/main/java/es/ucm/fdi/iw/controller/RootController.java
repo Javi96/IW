@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import es.ucm.fdi.iw.model.League;
 import es.ucm.fdi.iw.model.Match;
+import es.ucm.fdi.iw.model.MatchRecord;
 import es.ucm.fdi.iw.model.Ranking;
 import es.ucm.fdi.iw.model.RankingInfoByTeam;
 import es.ucm.fdi.iw.model.Team;
@@ -62,6 +63,14 @@ public class RootController {
 		entityManager.persist(t);
 		entityManager.flush();
 		return "prueba";
+	}
+	
+	@RequestMapping(path = "/addRecord",method = RequestMethod.POST)
+	@Transactional
+	public String delegateCreateRecord(@ModelAttribute("matchrecord") MatchRecord matchRecord) {
+		entityManager.persist(matchRecord);
+		entityManager.flush();
+		return "addRecord test";
 	}
 	
 	@RequestMapping(path = "/t",method = RequestMethod.GET)
