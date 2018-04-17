@@ -4,7 +4,7 @@
 <%@ taglib prefix="sec"
 	uri="http://www.springframework.org/security/tags"%>
 
-<%@ include file="../../jspf/header.jspf"%>
+<%@ include file="../jspf/header.jspf"%>
 
 <div class="container">
 	<div class="row" style = "padding-top: 60px">
@@ -40,4 +40,4 @@
 	</div>
 </div>
 
-<%@ include file="../../jspf/footer.jspf"%>
+<%@ include file="../jspf/footer.jspf"%>

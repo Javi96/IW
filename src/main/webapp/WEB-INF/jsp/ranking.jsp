@@ -5,7 +5,7 @@
 	uri="http://www.springframework.org/security/tags"%>
 
 
-<%@ include file="../../jspf/header.jspf"%>
+<%@ include file="../jspf/header.jspf"%>
 
 	<link type="text/css" media="screen" rel="stylesheet" href="${s}/css/ranking.css" />
 	<script src = "${s}/js/rankingSearchTeam.js"></script>
@@ -47,4 +47,4 @@
      </div>
  </div>
 
-<%@ include file="../../jspf/footer.jspf"%>
+<%@ include file="../jspf/footer.jspf"%>

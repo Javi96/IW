@@ -4,7 +4,7 @@
 <%@ taglib prefix="sec"
 	uri="http://www.springframework.org/security/tags"%>
 
-<%@ include file="../../jspf/header.jspf"%>
+<%@ include file="../jspf/header.jspf"%>
 
 <link type="text/css" media="screen" rel="stylesheet" href="${s}/css/calendarSport.css" />
 <script src = "${s}/js/calendarSport.js"></script>
@@ -179,5 +179,5 @@
 </div>
 
 
-<%@ include file="../../jspf/footer.jspf"%>
+<%@ include file="../jspf/footer.jspf"%>
 

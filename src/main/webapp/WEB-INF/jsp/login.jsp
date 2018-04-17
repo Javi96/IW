@@ -4,7 +4,7 @@
 <%@ taglib prefix="sec"
 	uri="http://www.springframework.org/security/tags"%>
 	
-<%@ include file="../../jspf/header.jspf"%>
+<%@ include file="../jspf/header.jspf"%>
 <script type="text/javascript" src="${s}/js/script.js"></script>
 
 <link rel="icon" type="image/icon" href="https://sso.ucm.es/simplesaml/resources/icons/favicon.ico" />
@@ -53,4 +53,4 @@
 	</form>
 	</div>
 </div>
-<%@ include file="../../jspf/footer.jspf"%>
+<%@ include file="../jspf/footer.jspf"%>
