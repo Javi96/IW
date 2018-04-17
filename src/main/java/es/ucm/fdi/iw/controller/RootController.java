@@ -57,6 +57,16 @@ public class RootController {
 		return "adminFormTeam";
 	}
 	
+	@GetMapping("/showFormAddDelegated")
+	public String adminFormDelegated() {
+		return "adminFormDelegated";
+	}
+	
+	@GetMapping("/showFormAddLeague")
+	public String adminFormLeague() {
+		return "adminFormLeague";
+	}
+	
 	@RequestMapping(path = "/addTeam",method = RequestMethod.POST)
 	@Transactional
 	public String adminCreateTeam(@ModelAttribute("team") Team t) {
