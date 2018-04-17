@@ -6,7 +6,6 @@
 
 <%@ include file="../jspf/header.jspf"%>
 
-
 <style>
 
             /* width */

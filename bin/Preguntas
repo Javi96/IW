@@ -1,0 +1,5 @@
+1º - RootController, preguntar lo del metodo de las n+1 consultas
+2º - Preguntar lo del index si puede ser un request o un get
+3º - Preguntar diferencia del mapeado en los get o en los atributos
+4º - Como hago para incluir el contenido del team en el home sin repetir lo mismo? Creo un fichero con el contenido y lo voy incluyendo por ahi?
+los atributos del modelo se destruyen por cada map? 

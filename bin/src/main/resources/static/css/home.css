@@ -1,0 +1,37 @@
+.redColor{
+    color: #A00E19;
+}
+
+#logoEquipo{
+	width: 300px;
+	height: 300px;
+}
+
+#teamName{
+	border-bottom:1px solid black;
+	text-align: center;
+}
+.teamInfoStyle{
+	text-align: left;
+}
+
+.space{
+	width: 50px;
+}
+.teamButtonsStyle{
+	padding-top: 1.5rem;
+}
+
+#teamInfo{
+	text-align: center;
+	font: oblique bold 120% cursive;
+}
+
+#joinTeamStyle .col-md-12 {
+    width: 50%;
+    margin-left: 25%;
+}
+
+#joinTeamStyle .btn.btn-info{
+    margin-left: 40%;
+}
