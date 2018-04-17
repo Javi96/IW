@@ -4,7 +4,7 @@
  * Universidad Complutense de Madrid
  *
  * Fichero:             ucm.css
- * Finalidad:           VisualizaciÃ³n normal.
+ * Finalidad:           VisualizaciÃƒÂ³n normal.
  * Fecha actualizacion: 04/10/2016
  *
  *****************************************************************************************************************************
@@ -1370,7 +1370,7 @@ nav#pie_1 ul li a, nav#pie_2 ul li a{
 	height: 100%;
 	min-height: 50em;
 }
-/* estilos para pÃ¡gina de estilos*/
+/* estilos para pÃƒÂ¡gina de estilos*/
 .wg_txt ul.submenu {
     list-style: none;
 	list-style-image:none;
@@ -1395,7 +1395,7 @@ nav#pie_1 ul li a, nav#pie_2 ul li a{
 }
 .wg_txt  ul.submenu li::before{
 	list-style: none;
-	content:"";
+	content: ' ';
 }
 .wg_txt ul.submenu li a:hover{
 	 	color:#fff;
@@ -1449,5 +1449,30 @@ nav#pie_1 ul li a, nav#pie_2 ul li a{
     font-weight: normal;
     text-decoration: none;
 }
-/*fin estilos para pÃ¡gina de estilos*/
+
+.h2sub {
+	background-color: #ECECEC;
+	border-bottom: 2px solid #AAA;
+	border-top: 2px solid #AAA;
+	padding: 3px 10px;
+    margin-bottom: 0.5em;
+}
+
+#content {
+	background-color: #FFF;
+    margin-bottom: 0px;
+    margin-top: 0px;
+    padding: 1em;
+}
+
+#img-llaves {
+	background-color: #f1eded;
+    border: 1px solid #999;
+    padding: 1.4em;
+    margin: 1.8em auto;
+}
+
+
+
+/*fin estilos para pÃƒÂ¡gina de estilos*/
 

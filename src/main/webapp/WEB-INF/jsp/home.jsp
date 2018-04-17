@@ -13,6 +13,27 @@
 	<nav class="container navbar navbar-default" role="navigation" id="menu">
 		<div class="collapse navbar-collapse navbar-ex1-collapse">
     		<ul class="nav nav-justified" id="contenidomenu">
+       			<li class="dropdown resalte lead">
+					<a class="dropdown-toggle" data-toggle="dropdown">Rugby</a>
+					<ul class="dropdown-menu" role="menu">
+						<li><a  href="/rugbyTeams">Masculino</a></li>
+						<li><a  href="">Femenino</a></li>
+						<li></li>
+					</ul>
+				</li>
+       			<li class="dropdown resalte lead"> <a >Volveivol</a></li>
+       			<li class="dropdown-resalte lead"><a href="">Futbol</a></li>
+       			<li class="dropdown-resalte lead"><a href="">Balonmano</a></li>
+       			<li class="dropdown-resalte lead"><a href="">Tenis</a></li>
+       			<li class="dropdown-resalte lead"><a href="">Padel</a></li>
+       			<li class="dropdown-resalte lead"><a href="">Baloncesto</a></li>
+       			<li class="dropdown-resalte lead"><a href="">Futbol Sala</a></li>
+    		</ul>
+    	</div>	
+	</nav>
+	<nav class="container navbar navbar-default" role="navigation" id="menu">
+		<div class="collapse navbar-collapse navbar-ex1-collapse">
+    		<ul class="nav nav-justified" id="contenidomenu">
     		 	<li class="dropdown resalte lead">
 					<a class="dropdown-toggle" data-toggle="dropdown">Tú</a>
 					<ul class="dropdown-menu" role="menu">
