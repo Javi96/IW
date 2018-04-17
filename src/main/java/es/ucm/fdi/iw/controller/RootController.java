@@ -29,6 +29,9 @@ public class RootController {
 
 	private static Logger log = Logger.getLogger(RootController.class);
 	
+	@Autowired
+	private EntityManager entityManager;
+	
     @ModelAttribute
     public void addAttributes(Model model) {
         model.addAttribute("s", "/static");
@@ -47,14 +50,6 @@ public class RootController {
 	public String login() {
 		return "login";
 	}
-	
-	/*@GetMapping("/home")
-	public String home() {
-		return "home";
-	}*/
-	
-	@Autowired
-	private EntityManager entityManager;
 	
 	@RequestMapping(path = "/t",method = RequestMethod.GET)
 	@Transactional
@@ -94,7 +89,6 @@ public class RootController {
 		Match m2 = new Match(1, 2, 3, 1); //Geo vs Filo gana Geo
 		Match m3 = new Match(0,2,3,2); // Fisicas vs Filo gana fisicas
 	
-		
 		List<Match> listOfGames = new ArrayList<Match>();
 		listOfGames.add(m1);
 		listOfGames.add(m2);
