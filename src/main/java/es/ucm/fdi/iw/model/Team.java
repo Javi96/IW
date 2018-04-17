@@ -27,6 +27,17 @@ public class Team {
 	
 //	private byte enabled; // esto que es? 
 	
+	public Team() {
+		// TODO Auto-generated constructor stub
+	}
+	
+	public Team(String name, String sport, String school, String deputy) {
+		this.name = name;
+		this.sport = sport;
+		this.school = school;
+		this.deputy = deputy;
+	}
+	
 	public Team(String name, String sport, String school, String deputy, String trainingSchedule,String nextMatchSchedule, String nextMatchFacilities) {
 		this.name = name;
 		this.sport = sport;
@@ -36,8 +47,6 @@ public class Team {
 		this.nextMatchSchedule = nextMatchSchedule;
 		this.nextMatchFacilities = nextMatchFacilities;
 	}
-
-	public Team() {}
 	
 	@Id
 	@GeneratedValue

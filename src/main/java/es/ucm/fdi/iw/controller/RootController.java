@@ -51,6 +51,19 @@ public class RootController {
 		return "login";
 	}
 	
+	@GetMapping("/showFormAddTeam")
+	public String adminFormTeam() {
+		return "adminFormTeam";
+	}
+	
+	@RequestMapping(path = "/addTeam",method = RequestMethod.POST)
+	@Transactional
+	public String adminCreateTeam(@ModelAttribute("team") Team t) {
+		entityManager.persist(t);
+		entityManager.flush();
+		return "prueba";
+	}
+	
 	@RequestMapping(path = "/t",method = RequestMethod.GET)
 	@Transactional
 	@ResponseBody
@@ -60,7 +73,6 @@ public class RootController {
 		entityManager.flush();
 		return "" + t.getId();
 	}
-	
 	
 	@RequestMapping(path = "/eq",method = RequestMethod.GET)
 	public String eq(@RequestParam long id,Model model) {
@@ -144,11 +156,7 @@ public class RootController {
 		model.addAttribute("team", fisicasTeam);
 		return "team";
 	}
-	/*@GetMapping("/team")
-	public String team() {
-		return "team";
-	}
-	*/
+
 	@GetMapping("/playerTab")
 	public String playerTab() {
 		return "playerTab";
@@ -213,6 +221,7 @@ public class RootController {
 	public String allTeams() {
 		return "allTeams";
 	}
+	
 	@GetMapping("/rugbyTeams")
 	public String rugbyTeams() {
 		return "rugbyTeams";
