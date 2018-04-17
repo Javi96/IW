@@ -34,7 +34,7 @@
 					<form action = "/gallery" method="get"  class="btn-group teamButtonsStyle">
 						<button type="submit" class="btn btn-primary">Ver fotos</button>
 					</form>
-					<form action = "/classification" method="get" class="btn-group teamButtonsStyle">
+					<form action = "/ranking" method="get" class="btn-group teamButtonsStyle">
 						<button type="submit" class="btn btn-primary">Ver clasificacion</button>
 					</form>
 				</div>
