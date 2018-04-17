@@ -13,37 +13,33 @@ import javax.persistence.OneToMany;
 @Entity
 public class League {
 	
-	@Id
-	@GeneratedValue
 	private long id;
-
-	@Column(unique=true)
 	private String name;
-	
-	@OneToMany(mappedBy = "league" )
 	private List<Team> teams;
-	
-	//private String photo;
 	
 	public League(String name) {
 		this.name = name;
 		this.teams = new ArrayList<Team>();
 	}
 
+	@Id
+	@GeneratedValue
 	public long getId() {
 		return id;
-	}
-	
-	public void setId(long id) {
-		this.id = id;
 	}	
 
+	@Column(unique=true)
 	public String getName() {
 		return name;
 	}
 	
+	@OneToMany(mappedBy = "league" )
 	public List<Team> getTeams() {
 		return teams;
+	}
+	
+	public void setId(long id) {
+		this.id = id;
 	}
 	
 	public void setName(String name) {

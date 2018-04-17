@@ -4,13 +4,13 @@
 <%@ taglib prefix="sec"
 	uri="http://www.springframework.org/security/tags"%>
 
-<%@ include file="../jspf/header.jspf"%>
+<%@ include file="../../jspf/header.jspf"%>
 <link type="text/css" media="screen" rel="stylesheet" href="${s}/css/home.css" />
 
 <div class="container">
 	<div class="row" id = "joinTeamStyle">
 		<div class="col-md-12" >
-			<small><i></i>Las alertas las muestro pero se deben utilizar una vez pulsado el boton</i></small>
+			<small><i>Las alertas las muestro pero se deben utilizar una vez pulsado el boton</i></small>
 			<div class="alert alert-success"><strong><span class="glyphicon glyphicon-send"></span> Success! Message sent. (If form ok!)</strong></div>	  
 			<div class="alert alert-danger"><span class="glyphicon glyphicon-alert"></span><strong> Error! Please check the inputs. (If form error!)</strong></div>
 		</div>
@@ -40,4 +40,4 @@
 	</div>
 </div>
 
-<%@ include file="../jspf/footer.jspf"%>
+<%@ include file="../../jspf/footer.jspf"%>

@@ -15,8 +15,6 @@ public class User {
 	private String password;
 	private String roles; // split by , to separate roles
 	private byte enabled;
-	
-	@ManyToMany(mappedBy = "players")
 	private List<Team> teams;
 	
 	@Id
@@ -34,6 +32,11 @@ public class User {
 		return login;
 	}
 
+	@ManyToMany(mappedBy = "players")
+	public List<Team> getTeams() {
+		return teams;
+	}
+	
 	public void setLogin(String login) {
 		this.login = login;
 	}
@@ -60,5 +63,9 @@ public class User {
 
 	public void setEnabled(byte enabled) {
 		this.enabled = enabled;
+	}
+	
+	public void setTeams(List<Team> teams) {
+		this.teams = teams;
 	}
 }

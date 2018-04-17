@@ -106,8 +106,8 @@ div.marco_widget{
 	list-style: none;
 }
 .wg_txt ul li::before, ul.menu_pag li::before{
-	list-style: none;
-	font-family: FontAwesome;
+    list-style: none;
+    font-family: FontAwesome;
     font-feature-settings: normal;
     font-kerning: auto;
     font-language-override: normal;
@@ -121,7 +121,7 @@ div.marco_widget{
     line-height: 2;
     text-rendering: auto;
     color: #a00d17;
-    content: "Ã¯Æ’Ë†";
+    content: "";
     font-size: 0.6em;
     padding: 0 8px 0 0;
     vertical-align: 2px;
@@ -178,7 +178,7 @@ div.marco_widget{
 .wg_img .img_r{
 	float: right;
 }
-/* Widget ÃƒÂ�rbol */
+/* Widget ÃƒÆ’Ã‚ï¿½rbol */
 ul.menu_pag{
 	margin-top: 10px;
 	list-style: none;
@@ -220,7 +220,7 @@ ul.menu_pag li ul li a{
 ul.menu_pag li ul li::before{
     content: none;
 }
-/* Widget NavegaciÃƒÂ³n */
+/* Widget NavegaciÃƒÆ’Ã‚Â³n */
 .wg_nav ul.menu_pag li.enlaces_float{
 	display: inline-block;
 	margin-right: 30px;
@@ -495,7 +495,7 @@ ul.menu_pag li ul li::before{
 	font-size: 1.2em;
 }
 
-/* Widget GalerÃƒÂ­a */
+/* Widget GalerÃƒÆ’Ã‚Â­a */
 .wg_gal{
 	width: 100%;
 }

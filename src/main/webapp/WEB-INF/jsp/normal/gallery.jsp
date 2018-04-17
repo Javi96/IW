@@ -4,7 +4,7 @@
 <%@ taglib prefix="sec"
 	uri="http://www.springframework.org/security/tags"%>
 
-<%@ include file="../jspf/header.jspf"%>
+<%@ include file="../../jspf/header.jspf"%>
 <link href="${s}/css/gallery.css" rel="stylesheet">
 <script type="text/javascript">
 
@@ -179,4 +179,4 @@ jQuery(document).ready(function($) {
 </div>
 </body>
 
-<%@ include file="../jspf/footer.jspf"%>
+<%@ include file="../../jspf/footer.jspf"%>

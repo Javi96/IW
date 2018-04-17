@@ -7,52 +7,23 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 
 @Entity
 public class Team {
 	
-	@Id
-	@GeneratedValue
+
 	private long id;
-	
-	@Column(unique = true)
 	private String name;
-	
-	@Column
 	private String school;
-	
-	@Column
 	private String sport;
-	
-	@Column(unique = true)
 	private String deputy;
-	
-	@Column
 	private String trainingSchedule;
-	
-	@Column
 	private String nextMatchSchedule;
-	
-	@Column
 	private String nextMatchFacilities;
-	
-	//OR LAZY
-	@ManyToOne(fetch=FetchType.EAGER) 
-	@JoinColumn(name="league_id")
 	private League league;
-	
-	@ManyToMany
-	@JoinTable(name = "team_players", joinColumns = @JoinColumn(name = "team_id"), inverseJoinColumns = @JoinColumn(name = "player_id"))
 	private List<User> players; 
-	
-	@ManyToMany
-	@JoinTable(name = "team-accords", joinColumns = @JoinColumn(name = "team_id"), inverseJoinColumns = @JoinColumn(name = "accord_id"))
-	private List<Accord> accords;
-	
 	
 //	private byte enabled; // esto que es? 
 	
@@ -66,56 +37,77 @@ public class Team {
 		this.nextMatchFacilities = nextMatchFacilities;
 	}
 
+	public Team() {}
+	
+	@Id
+	@GeneratedValue
 	public long getId() {
 		return id;
-	}
-	
-	public void setId(long id) {
-		this.id = id;
 	}	
 	
+	@Column(unique = true)
 	public String getName() {
 		return name;
+	}
+	
+	@Column
+	public String getSchool() {
+		return school;
+	}
+	
+	@Column
+	public String getSport() {
+		return sport;
+	}
+	
+	@Column(unique = true)
+	public String getDeputy() {
+		return deputy;
+	}
+	
+	@Column
+	public String getNextMatchFacilities() {
+		return nextMatchFacilities;
+	}
+	
+	@Column
+	public String getNextMatchSchedule() {
+		return nextMatchSchedule;
+	}
+	
+	@Column
+	public String getTrainingSchedule() {
+		return trainingSchedule;
+	}
+	
+	@ManyToMany(targetEntity = User.class)
+	public List<User> getPlayers() {
+		return players;
+	}
+	
+	@ManyToOne(fetch=FetchType.EAGER)
+	public League getLeague() {
+		return league;
 	}
 	
 	public void setName(String name) {
 		this.name = name;
 	}
 	
-	public String getSchool() {
-		return school;
+	public void setId(long id) {
+		this.id = id;
 	}
-	
+		
 	public void setSchool(String school) {
 		this.school = school;
-	}
-	
-	public String getSport() {
-		return sport;
 	}
 	
 	public void setSport(String sport) {
 		this.sport = sport;
 	}
 	
-	public String getDeputy() {
-		return deputy;
-	}
-	
 	public void setDeputy(String deputy) {
 		this.deputy = deputy;
-	}
-	
-	public String getNextMatchFacilities() {
-		return nextMatchFacilities;
-	}
-	
-	public String getNextMatchSchedule() {
-		return nextMatchSchedule;
-	}
-	
-	public String getTrainingSchedule() {
-		return trainingSchedule;
 	}
 	
 	public void setNextMatchFacilities(String nextMatchFacilities) {
@@ -130,5 +122,12 @@ public class Team {
 		this.trainingSchedule = trainingSchedule;
 	}
 	
+	public void setLeague(League league) {
+		this.league = league;
+	}
+	
+	public void setPlayers(List<User> players) {
+		this.players = players;
+	}
 	
 }
