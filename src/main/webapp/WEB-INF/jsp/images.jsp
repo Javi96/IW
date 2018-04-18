@@ -5,92 +5,91 @@
 	uri="http://www.springframework.org/security/tags"%>
 
 <%@ include file="../jspf/header.jspf"%>
+<link type="text/css" media="screen" rel="stylesheet" href="${s}/css/images.css" />
+<link type="text/js" media="screen" rel="stylesheet" href="${s}/js/images.js" />
 
-<div class="starter-template">
-	<p class="lead">Hi, this is the image page</p>
+<body>
+<h2 style="text-align:center">Galleria de imagenes</h2>
+
+
+
+
+<div id="images" class="row">
+  
 </div>
 
-<div>
-  <button class="add">ADD IMAGE</button> 
-  <button class="add">DEL IMAGE</button> 
-  <h2 >Images from folder (insert here folder name)</h2>
-</div>
 
-<div class="responsive">
-  <div class="gallery">
-    <a target="_blank" href="${s}/img/image-alignment-300x200.jpg">
-      <img src="${s}/img/image-alignment-300x200.jpg" alt="Trolltunga Norway" width="300" height="400">
-    </a>
-    <div class="desc">Add a description of the image here</div>
+
+<div id="mycarousel" class="modal"> <!--carousel imagenes-->
+  <span class="close cursor" onclick="closeModal()">&times;</span>
+  <div class="modal-content">
+
   </div>
 </div>
 
-<div class="responsive">
-  <div class="gallery">
-    <a target="_blank" href="${s}/img/image-alignment-300x200.jpg">
-      <img src="${s}/img/image-alignment-300x200.jpg" alt="Forest" width="600" height="400">
-    </a>
-    <div class="desc">Add a description of the image here</div>
-  </div>
-</div>
+<script>
+    var slideIndex = 0;
+    var slides = ['static/img/card.svg',
+                    'static/img/card.svg',
+                    'static/img/card.svg',
+                    'static/img/card.svg',
+                    'static/img/card.svg',
+                    'static/img/card.svg',
+                    'static/img/card.svg',
+                    'static/img/card.svg',
+                    'static/img/card.svg',
+                    'static/img/card.svg',
+                    'static/img/card.svg',
+                    'static/img/card.svg',
+                    'static/img/card.svg',
+                    'static/img/card.svg'];
 
-<div class="responsive">
-  <div class="gallery">
-    <a target="_blank" href="${s}/img/image-alignment-300x200.jpg">
-      <img src="${s}/img/image-alignment-300x200.jpg" alt="Northern Lights" width="600" height="400">
-    </a>
-    <div class="desc">Add a description of the image here</div>
-  </div>
-</div>
+function openModal() {
+  document.getElementById('mycarousel').style.display = "block";
+}
 
-<div class="responsive">
-  <div class="gallery">
-    <a target="_blank" href="${s}/img/image-alignment-300x200.jpg">
-      <img src="${s}/img/image-alignment-300x200.jpg" alt="Mountains" width="600" height="400">
-    </a>
-    <div class="desc">Add a description of the image here</div>
-  </div>
-</div>
-
-<div class="responsive">
-  <div class="gallery">
-    <a target="_blank" href="${s}/img/image-alignment-300x200.jpg">
-      <img src="${s}/img/image-alignment-300x200.jpg" alt="Trolltunga Norway" width="600" height="400">
-    </a>
-    <div class="desc">Add a description of the image here</div>
-  </div>
-</div>
-
-<div class="responsive">
-  <div class="gallery">
-    <a target="_blank" href="${s}/img/image-alignment-300x200.jpg">
-      <img src="${s}/img/image-alignment-300x200.jpg" alt="Forest" width="600" height="400">
-    </a>
-    <div class="desc">Add a description of the image here</div>
-  </div>
-</div>
-
-<div class="responsive">
-  <div class="gallery">
-    <a target="_blank" href="${s}/img/image-alignment-300x200.jpg">
-      <img src="${s}/img/image-alignment-300x200.jpg" alt="Northern Lights" width="600" height="400">
-    </a>
-    <div class="desc">Add a description of the image here</div>
-  </div>
-</div>
-
-<div class="responsive">
-  <div class="gallery">
-    <a target="_blank" href="${s}/img/image-alignment-300x200.jpg">
-      <img src="${s}/img/image-alignment-300x200.jpg" alt="Mountains" width="600" height="400">
-    </a>
-    <div class="desc">Add a description of the image here</div>
-  </div>
-</div>
-<div class="clearfix"></div>
+function closeModal() {
+  document.getElementById('mycarousel').style.display = "none";
+}
 
 
-<h2>Images page</h2>
+function plusSlides(n) {
+  showSlides(slideIndex += n);
+}
+
+function currentSlide(n) {
+  showSlides(slideIndex = n);
+}
+
+
+
+function loadSlices() {
+    $("#images").empty();
+    for(i=0; i<slides.length; i++){
+        let data = $('<div class="column"><img src="'+slides[i]+'" style="width:100%; max-height: 320px;" onclick="openModal();currentSlide('+i+')" class="hover-shadow cursor"></div>');
+        $("#images").append(data);
+    }
+    
+}
+
+function loadCarousel() {
+    $("#mycarousel").empty();
+    for(i=0; i<slides.length; i++){
+        //console.log('mycarousel'+i);
+        let data = $('<div class="mySlides"><div class="numbertext">'+ i +' / '+slides.length+'</div><img src="'+slides[i]+'" style="width:100%"></div>');
+        $("#mycarousel").append(data);
+
+    }   
+    $("#mycarousel").append('<a class="prev" onclick="plusSlides(-1)">&#10094;</a><a class="next" onclick="plusSlides(1)">&#10095;</a><div class="caption-container"><p id="caption"></p></div>');
+}
+
+$(document).ready(function(){
+    loadSlices();
+
+});
+
+
+</script>
 
 
 

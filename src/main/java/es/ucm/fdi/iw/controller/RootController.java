@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -169,8 +170,9 @@ public class RootController {
 		return "ranking";
 	}
 	
-	@RequestMapping(path = "/team",method = RequestMethod.GET)
-	public String team(Model model) {
+	@RequestMapping(path = "/team/{idTeam}",method = RequestMethod.GET)
+	public String team(@PathVariable("id") String idTeam, Model model) {
+		
 		Team fisicasTeam = new Team("Rugby Fisicas","Rugby", "Facultad de Fisicas", "Juan Antonio","Lunes y Miercoles / 14:00 - 15:30 h","Viernes / 13:30 - 15:30","Paraninfo Norte");
 		model.addAttribute("team", fisicasTeam);
 		return "team";
