@@ -7,14 +7,14 @@
 <%@ include file="../jspf/header.jspf"%>
 
 <div class = "container">
-	<form class = "form-horizontal" name = "team" method="POST" action = "/addLeague">
+	<form class = "form-horizontal" name = "league" method="POST" action = "/addLeague">
 		<!-- Form Name -->
 		<h1 class = "col-sm-12 text-center">Crear liga de deporte</h1>
 		
 		<div class="form-group">
 			<label class="col-md-4 control-label" >Nombre deporte:</label>
 			<div class="col-md-4">
-				<input id = "teamName" name = "name" type="text" class = "from-control-text">
+				<input  name = "sport" type="text" class = "from-control-text">
 			</div>
 		</div>
 		    
@@ -26,10 +26,10 @@
 		</div>
 		
 		<div class="form-group">
-			<label class="col-md-4 control-label" >Tipo liga:</label>
+			<label class="col-md-4 control-label" >Categoria:</label>
 			<div class="col-md-4">
-				<input id = "sport" name = "sport" type="Radio" class = "from-control">Masculino
-				<input id = "sport" name = "sport" type="Radio" class = "from-control">Femenino
+				<input id = "sport" name = "gender" type="Radio" class = "from-control">Masculino
+				<input id = "sport" name = "gender" type="Radio" class = "from-control">Femenino
 			</div>
 		</div>
 		

@@ -15,10 +15,18 @@ public class League {
 	
 	private long id;
 	private String name;
+	private String sport;
+	private String gender;
 	private List<Team> teams;
 	
-	public League(String name) {
+	public League() {
+		// TODO Auto-generated constructor stub
+	}
+	
+	public League(String name, String sport, String gender) {
 		this.name = name;
+		this.sport = sport;
+		this.gender = gender;
 		this.teams = new ArrayList<Team>();
 	}
 
@@ -36,6 +44,24 @@ public class League {
 	@OneToMany(mappedBy = "league" )
 	public List<Team> getTeams() {
 		return teams;
+	}
+	
+	@Column(unique = true)
+	public String getSport() {
+		return sport;
+	}
+	
+	@Column
+	public String getGender() {
+		return gender;
+	}
+	
+	public void setGender(String gender) {
+		this.gender = gender;
+	}
+	
+	public void setSport(String sport) {
+		this.sport = sport;
 	}
 	
 	public void setId(long id) {
