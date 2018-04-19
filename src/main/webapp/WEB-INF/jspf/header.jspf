@@ -21,7 +21,6 @@
 		<link href="${s}/css/ucm-wg.css" rel="stylesheet">
 		<link href="${s}/css/bootstrap.css" rel="stylesheet">
 		<link href="${s}/css/ucm-theme.css" rel="stylesheet">
-
 		<script type="text/javascript">
 			$(document).ready(function(){
 				let popularSports = ["Rugby", "Fútbol Sala", "Fútbol", "Voleibol", "Balonmano"];

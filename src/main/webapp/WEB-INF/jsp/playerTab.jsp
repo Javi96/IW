@@ -366,7 +366,7 @@
                 addToVector('inout', playerInOut);
             };
             launch();
-                
         </script>
         
 <%@ include file="../jspf/footer.jspf"%>
+
