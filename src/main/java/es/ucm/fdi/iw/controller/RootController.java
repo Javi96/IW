@@ -130,6 +130,8 @@ public class RootController {
 	@RequestMapping(path = "/eq",method = RequestMethod.GET)
 	public String eq(@RequestParam long id,Model model) {
 		model.addAttribute("team", entityManager.find(Team.class, id));
+		return "home";
+	}
     
     //preguntar como hacer esto para que se pueda configurar el html con esta informacion
 	@RequestMapping(path = "/home",method = RequestMethod.GET)
