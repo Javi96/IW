@@ -7,82 +7,103 @@
 
 <%@ include file="../jspf/header.jspf"%>
 <link type="text/css" media="screen" rel="stylesheet" href="${s}/css/home.css" />
-<link type="text/css" media="screen" rel="stylesheet" href="${s}/css/team.css" />
 
-<div class = "container">
-	<h1 class = "redColor" >Bienvenido a U-SPORTS</h1>
-	<nav class="container navbar navbar-default" role="navigation"  >
-		<div class="collapse navbar-collapse navbar-ex1-collapse">
-    		<ul class="nav nav-justified">
-    		 	<li class="dropdown resalte lead">
-					<a title="UCM" href="" class="dropdown-toggle" data-toggle="dropdown">Tu</a>
-					<ul class="dropdown-menu" role="menu">
-						<li><a  href="">Reservar pista</a></li>
-						<li><a  href="">Horario deportivo</a></li>
-						<li><a  href="">Otros deportes</a></li>
-					</ul>
-				</li>
-       			<li><a href="/basicTeam">Rugby Fisicas</a></li>
-       			<li></li>
-       			<li></li>
-    		</ul>
-    	</div>	
-	</nav>
+<script type="text/javascript">
+	$(document).ready(function(){
+			loadSport();
+	});
 	
-	
-<script>
-	
-	function sent(){
-		window.open("/contact");
+	//fill the list with elements
+	loadSport = function(){
+		sports = getSports();
+		for(let s of sports){
+			let el = $("<p></p>");
+			el.click(function(){
+				$("#Genre").empty();
+				$("#Genre").append($("<h1>Genre</h1>"));
+				$("#Teams").empty();
+				$("#Teams").append($("<h1>Teams</h1>"));
+				$("#Sports").children().css("color", "black");
+				$(this).css("color", "red");
+				loadGenre(s);
+			});
+			el.text(s);
+			$("#Sports").append(el);
+		}
 	}
 	
-	function request(){
-		window.open("/request");
+	loadGenre = function(sport){
+		genres = getGenre(sport);
+		for(let g of genres){
+			let el = $("<p></p>");
+			el.text(g);
+			el.click( function(){
+				$("#Teams").empty();
+				$("#Teams").append($("<h1>Teams</h1>"));
+				$("#Genre").children().css("color", "black");
+				$(this).css("color", "red");
+				loadTeams(sport, g);
+			});
+			$("#Genre").append(el);
+		}
 	}
 	
-	function classification(){
-		window.open("/classification");
+	loadTeams = function(sport, genre){
+		teams = getTeams(sport);
+		for(let t of teams){
+			let el = $("<p></p>");
+			let route = "/team/" +  t + "/" + sport + "/" + genre;
+			let ref = $("<a href=" + route + "></a>");
+			el.append(ref);
+			ref.text(t);
+			
+			$("#Teams").append(el);
+		}
+	}
+	
+	//implement here the comunication with de database
+	getSports = function(){
+		return ["Balonmano", "Rugby", "Remo"];
+	} 
+	
+	getGenre = function(sport){
+		return ["male", "female"];
+	}
+	
+	getTeams = function(){
+		return ["Fisicas", "mates", "Biologicas"];
 	}
 </script>
 
-<div class="starter-template">
+<style>
+	.list{
+		width:33%;
+		float:left;
+	}
+	p:hover{
+		color:blue;
+		cursor:pointer;
+	}
+	a{
+		color:black;
+		text-decoration:none;
+	}
+	h1{
+		margin-bottom:18px;
+	}
+</style>
+<div class="container">
+<div id = "Sports" class="list">
+	<h1>Sports</h1>
+</div>
 
-	<h1>BÁSICO</h1>
-	
-	
-	<div class="photoData">
-	
-		<img id = "ucmFoto" src="${s}/img/ucmFoto.jpg">
-		
-		<ul class="lista">
-			<li> Nombre: Rugby Fisicas </li>
-			<li> Horario: </li>
-			<li> Calificación: </li>
-		</ul>
-	</div>
-	
-	
-	<div>
-		<ul class="botones">
-			<li>
-				<button type="submit" onClick = "sent()"> Contactar Delegado</button>
-			 </li>
-			 
-			 <li>
-				<button type="submit" onClick = "request()"> Enviar solicitud</button>
-			 </li>
-			 
-			 <li>
-				<button type="submit"> Fotos equipo</button>
-			 </li>
-			 
-			 <li>
-				<button type="submit" onClick = "classification()"> Ver liga</button>
-			 </li>
-		</ul>
-		
-	</div>
-		
+<div id = "Genre" class ="list">
+	<h1>Genre</h1>
+</div>
+
+<div id = "Teams" class="list">
+	<h1>Teams</h1>
 </div>
 </div>
+
 <%@ include file="../jspf/footer.jspf"%>

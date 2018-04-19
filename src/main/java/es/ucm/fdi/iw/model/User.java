@@ -1,9 +1,12 @@
 package es.ucm.fdi.iw.model;
 
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 
 @Entity
 public class User {
@@ -12,6 +15,7 @@ public class User {
 	private String password;
 	private String roles; // split by , to separate roles
 	private byte enabled;
+	private List<Team> teams;
 	
 	@Id
 	@GeneratedValue
@@ -28,6 +32,11 @@ public class User {
 		return login;
 	}
 
+	@ManyToMany(mappedBy = "players")
+	public List<Team> getTeams() {
+		return teams;
+	}
+	
 	public void setLogin(String login) {
 		this.login = login;
 	}
@@ -54,5 +63,9 @@ public class User {
 
 	public void setEnabled(byte enabled) {
 		this.enabled = enabled;
+	}
+	
+	public void setTeams(List<Team> teams) {
+		this.teams = teams;
 	}
 }

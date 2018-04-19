@@ -1,12 +1,12 @@
 table td, table th {
     text-align: center;  
 }
-#classificationHead {
+#rankingHead {
     background-color: #A00E19;
     color: white;
 }
 
-#classificationTitle{
+#rankingTitle{
     color: black;
     font-family: "Times New Roman", Times, serif;
 }
@@ -31,12 +31,12 @@ input[type=text] {
     color: white;
 }
 
-#classificationImage{
+#rankingImage{
     margin-left: 20%;
     margin-bottom: 5%;
 }
 
-#classificationHeader{
+#rankingHeader{
    display: flex;
    flex-direction: row;
    justify-content: flex-start;
