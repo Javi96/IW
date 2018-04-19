@@ -18,7 +18,7 @@ public class Team {
 	private String name;
 	private String school;
 	private String sport;
-	private long deputy;
+	private String deputy;
 	private String trainingSchedule;
 	private String nextMatchSchedule;
 	private String nextMatchFacilities;
@@ -31,14 +31,14 @@ public class Team {
 		// TODO Auto-generated constructor stub
 	}
 	
-	public Team(String name, String sport, String school, long deputy) {
+	public Team(String name, String sport, String school, String deputy) {
 		this.name = name;
 		this.sport = sport;
 		this.school = school;
 		this.deputy = deputy;
 	}
 	
-	public Team(String name, String sport, String school, long deputy, String trainingSchedule,String nextMatchSchedule, String nextMatchFacilities) {
+	public Team(String name, String sport, String school, String deputy, String trainingSchedule,String nextMatchSchedule, String nextMatchFacilities) {
 		this.name = name;
 		this.sport = sport;
 		this.school = school;
@@ -70,7 +70,7 @@ public class Team {
 	}
 	
 	@Column(unique = true)
-	public long getDeputy() {
+	public String getDeputy() {
 		return deputy;
 	}
 	
@@ -115,7 +115,7 @@ public class Team {
 		this.sport = sport;
 	}
 	
-	public void setDeputy(long deputy) {
+	public void setDeputy(String deputy) {
 		this.deputy = deputy;
 	}
 	

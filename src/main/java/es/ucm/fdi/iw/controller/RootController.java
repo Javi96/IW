@@ -1,9 +1,10 @@
 package es.ucm.fdi.iw.controller;
 
 import java.security.Principal;
-import java.util.List;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
+import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.SessionAttribute;
 
 import es.ucm.fdi.iw.model.League;
 import es.ucm.fdi.iw.model.MatchRecord;
@@ -36,11 +38,16 @@ public class RootController {
     }
 
 	@GetMapping({"/", "/index"})
-	public String root(Model model, Principal principal) {
+	public String root(Model model, HttpSession session, Principal principal) {
 		log.info(principal.getName() + " de tipo " + principal.getClass());		
 		// org.springframework.security.core.userdetails.User
-		Team fisicasTeam = new Team("Rugby Fisicas","Rugby", "Facultad de Fisicas", 1,"Lunes y Miercoles / 14:00 - 15:30 h","Viernes / 13:30 - 15:30","Paraninfo Norte");
-		model.addAttribute("team", fisicasTeam);
+		if (session.getAttribute("user") == null && principal != null) {
+			User u = entityManager.createQuery("from User where login = :login", User.class)
+                .setParameter("login", principal.getName())
+                .getSingleResult();
+			session.setAttribute("user", u);
+		}
+		
 		return "home";
 	}
 	
@@ -67,7 +74,12 @@ public class RootController {
 	@RequestMapping(path = "/addTeam",method = RequestMethod.POST)
 	@Transactional
 	public String adminCreateTeam(@ModelAttribute("team") Team t) {
+		
+		League league = entityManager.createQuery("select l from League l where sport = :sportName",League.class)
+				.setParameter("sportName", t.getSport()).getSingleResult();
+		league.addTeam(t);
 		entityManager.persist(t);
+		entityManager.persist(league);
 		entityManager.flush();
 		return "prueba";
 	}
@@ -82,14 +94,36 @@ public class RootController {
 	
 	@RequestMapping(path = "/changeTeamInfo",method = RequestMethod.POST)
 	@Transactional
-	public String adminTeamInfo(@ModelAttribute("teamInfo") Team team) {
-		//hay que guardar el id del usuario en la sesion, etc. pendiente
-		//List<User> u = entityManager.createQuery("select u from User u", User.class).getResultList();
-		//u.clear();
-		entityManager.persist(team);
-		entityManager.flush();
+	
+	public String adminTeamInfo(@ModelAttribute("teamInfo") Team team, @SessionAttribute("user") User u) {
+		
+		//Coge el equipo de la bd, donde el usuario logueado es el encargado.
+		try {
+			Team t = entityManager.createQuery("select t from Team t where deputy = :deputyName", Team.class)
+					.setParameter("deputyName", u.getName()).getSingleResult();
+			
+			String trainig = team.getTrainingSchedule();
+			String nextMatch = team.getNextMatchSchedule();
+			String facilities = team.getNextMatchFacilities();
+			if(trainig != null) {
+				t.setTrainingSchedule(trainig);
+			}
+			if(nextMatch != null) {
+				t.setNextMatchSchedule(nextMatch);
+			}
+			if(facilities != null) {
+				t.setNextMatchFacilities(facilities);
+			}
+			
+			entityManager.persist(t);
+			entityManager.flush();
+		}
+		catch(NoResultException e) {
+			System.out.print(e.getMessage());
+		}
 		return "prueba";
 	}
+	
 	
 	@RequestMapping(path = "/addRecord",method = RequestMethod.POST)
 	@Transactional
@@ -103,7 +137,7 @@ public class RootController {
 	@Transactional
 	@ResponseBody
 	public String t(Model model) {
-		Team t = new Team("Rugby Fisicas","Rugby", "Facultad de Fisicas", 1,"Lunes y Miercoles / 14:00 - 15:30 h","Viernes / 13:30 - 15:30","Paraninfo Norte");
+		Team t = new Team("Rugby Fisicas","Rugby", "Facultad de Fisicas","Juan jose","Lunes y Miercoles / 14:00 - 15:30 h","Viernes / 13:30 - 15:30","Paraninfo Norte");
 		entityManager.persist(t);
 		entityManager.flush();
 		return "" + t.getId();
@@ -117,7 +151,7 @@ public class RootController {
 	
 	@RequestMapping(path = "/home",method = RequestMethod.GET)
 	public String home(Model model) {
-		Team t = new Team("Rugby Fisicas","Rugby", "Facultad de Fisicas", 1,"Lunes y Miercoles / 14:00 - 15:30 h","Viernes / 13:30 - 15:30","Paraninfo Norte");
+		Team t = new Team("Rugby Fisicas","Rugby", "Facultad de Fisicas", "Juan jose","Lunes y Miercoles / 14:00 - 15:30 h","Viernes / 13:30 - 15:30","Paraninfo Norte");
 		model.addAttribute("team", t);
 		return "home";
 	}
@@ -187,7 +221,7 @@ public class RootController {
 	
 	@RequestMapping(path = "/team",method = RequestMethod.GET)
 	public String team(Model model) {
-		Team fisicasTeam = new Team("Rugby Fisicas","Rugby", "Facultad de Fisicas", 1,"Lunes y Miercoles / 14:00 - 15:30 h","Viernes / 13:30 - 15:30","Paraninfo Norte");
+		Team fisicasTeam = new Team("Rugby Fisicas","Rugby", "Facultad de Fisicas", "Juan jose","Lunes y Miercoles / 14:00 - 15:30 h","Viernes / 13:30 - 15:30","Paraninfo Norte");
 		model.addAttribute("team", fisicasTeam);
 		return "team";
 	}
