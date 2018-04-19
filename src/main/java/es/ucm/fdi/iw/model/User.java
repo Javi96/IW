@@ -14,6 +14,7 @@ public class User {
 	private String login;
 	private String password;
 	private String roles; // split by , to separate roles
+	private String name;
 	private byte enabled;
 	private List<Team> teams;
 	
@@ -35,6 +36,15 @@ public class User {
 	@ManyToMany(mappedBy = "players")
 	public List<Team> getTeams() {
 		return teams;
+	}
+	
+	@Column
+	public String getName() {
+		return name;
+	}
+	
+	public void setName(String name) {
+		this.name = name;
 	}
 	
 	public void setLogin(String login) {
