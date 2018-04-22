@@ -129,7 +129,6 @@
          </div>
          
           <div class="container">
-          	<h1 class = "redColor" >Bienvenido a U-SPORTS</h1>
 			<nav class="container navbar navbar-default" role="navigation" id="menu">
 			<div class="collapse navbar-collapse navbar-ex1-collapse">
     		<ul class="nav nav-justified" id="contenidomenu"></ul>
