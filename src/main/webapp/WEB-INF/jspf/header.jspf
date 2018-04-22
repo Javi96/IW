@@ -96,9 +96,14 @@
                         </div>
                         <div id="contenido-menusuperior" class="collapse navbar-collapse navbar-sup-collapse">
                            <ul class="nav navbar-nav">
-                              <c:if test="${empty user}">
-                              	<li class="iniciasesion"><a href="https://www.ucm.es/login_sso/" title="Navegar identificado">Navegar identificado</a></li>
-                              </c:if> 
+                              <c:choose>
+                              	<c:when test="${empty user}">
+									<li class="iniciasesion"><a href="https://www.ucm.es/login_sso/" title="Navegar identificado">Navegar identificado</a></li>
+                              	</c:when>
+                              	<c:otherwise>
+									<li class="iniciasesion"><a href="https://www.ucm.es/login_sso/" title="Navegar identificado">Bienvenidx: ${user.id}</a></li>
+                              	</c:otherwise>
+                              </c:choose>
                            </ul>
                         </div>
                      </nav>

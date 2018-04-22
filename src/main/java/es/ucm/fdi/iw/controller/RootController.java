@@ -225,20 +225,17 @@ public class RootController {
 		model.addAttribute("league", l);*/
 		return "ranking";
 	}
-<<<<<<< HEAD
 	
-	@RequestMapping(path = "/team",method = RequestMethod.GET)
+	/*@RequestMapping(path = "/team",method = RequestMethod.GET)
 	public String team(Model model) {
-		
 		Team fisicasTeam = new Team("Rugby Fisicas","Rugby", "Facultad de Fisicas", "Juan Antonio","Lunes y Miercoles / 14:00 - 15:30 h","Viernes / 13:30 - 15:30","Paraninfo Norte");
-=======
-
+	}*/
+	
 	@RequestMapping(path = "/team/{idTeam}/{idSport}/{idGenre}",method = RequestMethod.GET)
 	public String team(Model model, @PathVariable String idTeam, @PathVariable String idSport, @PathVariable String idGenre) {
 
 		//create querry to get data from parametres
 		Team fisicasTeam = new Team("Rugby Fisicas","Rugby", "Facultad de Fisicas", "Juan jose","Lunes y Miercoles / 14:00 - 15:30 h","Viernes / 13:30 - 15:30","Paraninfo Norte");
->>>>>>> 7573cf5895a8986fd426a6e688779a97cdc56ae6
 		model.addAttribute("team", fisicasTeam);
 		return "team";
 	}
