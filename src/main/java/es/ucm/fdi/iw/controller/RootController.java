@@ -225,7 +225,12 @@ public class RootController {
 		model.addAttribute("league", l);*/
 		return "ranking";
 	}
-
+	
+	/*@RequestMapping(path = "/team",method = RequestMethod.GET)
+	public String team(Model model) {
+		Team fisicasTeam = new Team("Rugby Fisicas","Rugby", "Facultad de Fisicas", "Juan Antonio","Lunes y Miercoles / 14:00 - 15:30 h","Viernes / 13:30 - 15:30","Paraninfo Norte");
+	}*/
+	
 	@RequestMapping(path = "/team/{idTeam}/{idSport}/{idGenre}",method = RequestMethod.GET)
 	public String team(Model model, @PathVariable String idTeam, @PathVariable String idSport, @PathVariable String idGenre) {
 
