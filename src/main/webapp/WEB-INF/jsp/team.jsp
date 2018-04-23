@@ -18,6 +18,7 @@
 	            <div id = "teamName">
 	               <h2>${team.name}</h2>
 	            </div>
+	            
 	            <ul class="container details teamInfoStyle">
 	               <li><p><span class="glyphicon glyphicon-calendar one space" ></span> Entrenamientos: ${team.trainingSchedule} </p></li>
 	               <li><p><span class="glyphicon glyphicon-calendar one space" ></span> Siguiente partido: ${team.nextMatchSchedule} </p></li>

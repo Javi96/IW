@@ -15,6 +15,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -108,16 +109,13 @@ public class RootController {
 		String training = team.getTrainingSchedule();
 		String nextMatch = team.getNextMatchSchedule();
 		String facilities = team.getNextMatchFacilities();
-		if(training != null) {
+		if(training != null)
 			t.setTrainingSchedule(training);
-		}
-		if(nextMatch != null) {
+		if(nextMatch != null)
 			t.setNextMatchSchedule(nextMatch);
-		}
-		if(facilities != null) {
+		if(facilities != null)
 			t.setNextMatchFacilities(facilities);
-		}
-
+		
 		entityManager.persist(t);
 		return "prueba";
 	}
@@ -149,15 +147,11 @@ public class RootController {
 
     //preguntar como hacer esto para que se pueda configurar el html con esta informacion
 	@RequestMapping(path = "/home",method = RequestMethod.GET)
-	public String home(Model model/*, @PathVariable String sport , @PathVariable String genre*/) {
-		Team t = new Team("Rugby Fisicas","Rugby",
-				"Facultad de Fisicas", "Juan jose",
-				"Lunes y Miercoles / 14:00 - 15:30 h",
-				"Viernes / 13:30 - 15:30","Paraninfo Norte");
-		model.addAttribute("team", t);
+	public String home(Model model) {
+		List<Team> teams = entityManager.createQuery("select ts from Team ts ",Team.class).getResultList();
+		model.addAttribute("teams", teams);
 		return "home";
 	}
-
 
    @RequestMapping(path = "/ranking",method = RequestMethod.GET)
 	public String classification(Model model) {
@@ -227,9 +221,8 @@ public class RootController {
 		Team fisicasTeam = new Team("Rugby Fisicas","Rugby", "Facultad de Fisicas", "Juan Antonio","Lunes y Miercoles / 14:00 - 15:30 h","Viernes / 13:30 - 15:30","Paraninfo Norte");
 	}*/
 	
-	@RequestMapping(path = "/team/{idTeam}/{sport}/{idGenre}",method = RequestMethod.GET)
-	public String team(Model model, @PathVariable String idTeam, @PathVariable String sport,
-			@PathVariable String idGenre, @SessionAttribute("user") User u) {
+	@RequestMapping("/team")
+	public String team(Model model, @RequestBody long id, @SessionAttribute("user") User u) {
 		
 		
 		
