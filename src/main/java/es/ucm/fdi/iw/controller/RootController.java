@@ -1,6 +1,7 @@
 package es.ucm.fdi.iw.controller;
 
 import java.security.Principal;
+import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -64,7 +65,10 @@ public class RootController {
 
 
 	@GetMapping("/showFormDelegateSets")
-	public String adminFormDelegateSets() {
+	public String adminFormDelegateSets(Model m, @SessionAttribute("user") User u) {
+		Team t = entityManager.createQuery("select t from Team t where deputy = :deputyName", Team.class)
+				.setParameter("deputyName", u.getName()).getSingleResult();
+		m.addAttribute("team",t);
 		return "adminDelegateSets";
 	}
 
@@ -96,33 +100,25 @@ public class RootController {
 
 	@RequestMapping(path = "/changeTeamInfo",method = RequestMethod.POST)
 	@Transactional
-
 	public String adminTeamInfo(@ModelAttribute("teamInfo") Team team, @SessionAttribute("user") User u) {
 
 		//Coge el equipo de la bd, donde el usuario logueado es el encargado.
-		try {
-			Team t = entityManager.createQuery("select t from Team t where deputy = :deputyName", Team.class)
-					.setParameter("deputyName", u.getName()).getSingleResult();
+		Team t = entityManager.find(Team.class, team.getId());
 
-			String trainig = team.getTrainingSchedule();
-			String nextMatch = team.getNextMatchSchedule();
-			String facilities = team.getNextMatchFacilities();
-			if(trainig != null) {
-				t.setTrainingSchedule(trainig);
-			}
-			if(nextMatch != null) {
-				t.setNextMatchSchedule(nextMatch);
-			}
-			if(facilities != null) {
-				t.setNextMatchFacilities(facilities);
-			}
+		String training = team.getTrainingSchedule();
+		String nextMatch = team.getNextMatchSchedule();
+		String facilities = team.getNextMatchFacilities();
+		if(training != null) {
+			t.setTrainingSchedule(training);
+		}
+		if(nextMatch != null) {
+			t.setNextMatchSchedule(nextMatch);
+		}
+		if(facilities != null) {
+			t.setNextMatchFacilities(facilities);
+		}
 
-			entityManager.persist(t);
-			entityManager.flush();
-		}
-		catch(NoResultException e) {
-			System.out.print(e.getMessage());
-		}
+		entityManager.persist(t);
 		return "prueba";
 	}
 
@@ -231,9 +227,12 @@ public class RootController {
 		Team fisicasTeam = new Team("Rugby Fisicas","Rugby", "Facultad de Fisicas", "Juan Antonio","Lunes y Miercoles / 14:00 - 15:30 h","Viernes / 13:30 - 15:30","Paraninfo Norte");
 	}*/
 	
-	@RequestMapping(path = "/team/{idTeam}/{idSport}/{idGenre}",method = RequestMethod.GET)
-	public String team(Model model, @PathVariable String idTeam, @PathVariable String idSport, @PathVariable String idGenre) {
-
+	@RequestMapping(path = "/team/{idTeam}/{sport}/{idGenre}",method = RequestMethod.GET)
+	public String team(Model model, @PathVariable String idTeam, @PathVariable String sport,
+			@PathVariable String idGenre, @SessionAttribute("user") User u) {
+		
+		
+		
 		//create querry to get data from parametres
 		Team fisicasTeam = new Team("Rugby Fisicas","Rugby", "Facultad de Fisicas", "Juan jose","Lunes y Miercoles / 14:00 - 15:30 h","Viernes / 13:30 - 15:30","Paraninfo Norte");
 		model.addAttribute("team", fisicasTeam);
