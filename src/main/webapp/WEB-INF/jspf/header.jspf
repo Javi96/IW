@@ -9,7 +9,7 @@
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<title>UCM-Area de deportes</title>
-		<script src="static/js//jquery.min.js"></script>
+		<script src="/static/js//jquery.min.js"></script>
 		<meta name="description" content="La Universidad Complutense de Madrid es una institución de larga trayectoria y amplio reconocimiento social que aspira a situarse entre las primeras universidades de Europa y a consolidarse como centro de referencia para el continente latinoamericano">
 		<meta name="keywords" content="Universidad Complutense de Madrid, Complutense, UCM, Educación, Innovación, Universidad de excelencia, Formación, Grado, Máster, Doctorado, Postgrado, Deportes, Futbol, Baloncesto, Rugby, Volley, Balonmano">
 		<link rel="apple-touch-icon" href="https://www.ucm.es/themes/ucm16/media/img/logoucm.ico">
@@ -33,7 +33,7 @@
 					let e = $('<li></li>');
 					e.append($('<a  href="/calendarPrueba">Horario deportivo</a>'))
 					let f = $('<li></li>');
-					f.append($('<a  href="">Mis equipos</a>'));
+					f.append($('<a  href="/teamHome">Mis equipos</a>'));
 					
 				c.append(d);
 				c.append(e);
