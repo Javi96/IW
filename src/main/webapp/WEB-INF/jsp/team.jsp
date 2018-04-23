@@ -8,7 +8,6 @@
 
 <link type="text/css" media="screen" rel="stylesheet" href="${s}/css/home.css" />
 <div class = "container">
-	<h1 class = "redColor">Rugby</h1>
 	<div class="jumbotron">
     	<div class="row">
 	        <div class="col-md-4 col-xs-12 col-sm-6 col-lg-4">
