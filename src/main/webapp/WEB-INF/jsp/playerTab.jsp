@@ -9,7 +9,7 @@
 <script src = "static/js/playerTab.js"></script>
 
 <style>
-
+ 
             /* width */
 ::-webkit-scrollbar {
     width: 5px;
