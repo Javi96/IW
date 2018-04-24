@@ -23,6 +23,7 @@ public class Team {
 	private String nextMatchSchedule;
 	private String nextMatchFacilities;
 	private League league;
+	private RequestTeam request;
 	private List<User> players; 
 	
 //	private byte enabled; // esto que es? 
@@ -93,6 +94,13 @@ public class Team {
 	public List<User> getPlayers() {
 		return players;
 	}
+	
+	/*
+	@ManyToOne(fetch=FetchType.EAGER)
+	public RequestTeam getRequest() {
+		return request;
+	}
+	*/
 	
 	@ManyToOne(fetch=FetchType.EAGER)
 	public League getLeague() {
