@@ -9,6 +9,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 @Entity
 public class Team {
@@ -17,14 +18,16 @@ public class Team {
 	private String name;
 	private String school;
 	private String sport;
-	private String deputy;
 	private String training_schedule;
 	private String next_match_schedule;
 	private String next_match_facilities;
 	private String category;
-
+	private long deputy;
 	private League league;
-	private RequestTeam request;
+	
+	@OneToMany(mappedBy = "team_id")
+	private List<RequestTeam> requests;
+	
 	private List<User> players;
 
 //	private byte enabled; // esto que es?
@@ -33,7 +36,7 @@ public class Team {
 		// TODO Auto-generated constructor stub
 	}
 
-	public Team(String name, String sport, String school, String deputy, String category) {
+	public Team(String name, String sport, String school, long deputy, String category) {
 		this.name = name;
 		this.sport = sport;
 		this.school = school;
@@ -62,8 +65,8 @@ public class Team {
 		return sport;
 	}
 
-	@Column(unique = true)
-	public String getDeputy() {
+	@Column
+	public long getDeputy() {
 		return deputy;
 	}
 
@@ -120,7 +123,7 @@ public class Team {
 		this.sport = sport;
 	}
 
-	public void setDeputy(String deputy) {
+	public void setDeputy(long deputy) {
 		this.deputy = deputy;
 	}
 

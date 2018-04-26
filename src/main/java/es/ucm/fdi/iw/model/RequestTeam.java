@@ -1,69 +1,54 @@
 package es.ucm.fdi.iw.model;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.ManyToOne;
 
 @Entity
 public class RequestTeam {
 
 	private long id;
-	private long idTeam;
-	private String login;
-	private List<Team> teams;
+	@ManyToOne
+	private long team_id;
+	private long user_id; //El usuario que envio la peticion de entrar al equipo
 
-	public RequestTeam(long idTeam, String login) {
-
-		this.idTeam = idTeam;
-		this.login = login;
-		this.teams = new ArrayList<Team>();
+	
+	
+	public RequestTeam() {
+		// TODO Auto-generated constructor stub
 	}
 
-
-	//SET
-	public void setId(long id) {
-		this.id = id;
+	public RequestTeam(long idTeam, long user) {
+		this.team_id = idTeam;
+		this.user_id = user;
 	}
 
-
-	public void setIdTeam(long idTeam) {
-		this.idTeam = idTeam;
-	}
-
-	public void setLogin(String l) {
-		this.login = l;
-	}
-
-	public void setTeams(List<Team> teams) {
-		this.teams = teams;
-	}
-
-	//GET
 	@Id
 	@GeneratedValue
 	public long getId(){
 		return this.id;
 	}
-
 	@Column
-	public long getIdTeam() {
-		return this.idTeam;
+	public long getTeam_id() {
+		return team_id;
 	}
-
 	@Column
-	public String getLogin() {
-		return this.login;
+	public long getUser_id() {
+		return user_id;
+	}
+	
+	public void setId(long id) {
+		this.id = id;
+	}
+	
+	public void setTeam_id(long team_id) {
+		this.team_id = team_id;
+	}
+	
+	public void setUser_id(long user_id) {
+		this.user_id = user_id;
 	}
 
-	/*
-	@OneToMany(mappedBy = "Team" )
-	public List<Team> getTeams() {
-		return teams;
-	}
-	*/
 }

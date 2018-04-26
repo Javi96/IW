@@ -228,6 +228,10 @@ public class RootController {
 		Team team = entityManager.createQuery("select t from Team t where id = :id",Team.class)
 		.setParameter("id", id).getSingleResult();
 		model.addAttribute("team",team);
+		
+		User deputy = entityManager.createQuery("select u from User u where id = :id",User.class)
+				.setParameter("id", team.getDeputy()).getSingleResult();
+		model.addAttribute("deputy",deputy.getName());
 		return "team";
 	}
 
@@ -246,57 +250,33 @@ public class RootController {
 		return "matchRecord";
 	}
 
-	@GetMapping("/contact")
-	public String contact() {
+	@RequestMapping("/contact")
+	public String contact(@RequestParam("id") long id, Model m) {
+		m.addAttribute("team", entityManager.find(Team.class, id));
 		return "contact";
 	}
 	
 	@RequestMapping(path = "/contactDelegated",method = RequestMethod.POST)
-	@Transactional
-	public String contactDelegated(@RequestParam("name") String name, @RequestBody String message) {
-			//,@SessionAttribute("user") User u, @RequestParam("team") long idTeam,
-			//@RequestParam("delegated") String deputy) {
-
-		//long t = 1;
-		//long d= 1;
-		
-		if(!name.isEmpty() && !message.isEmpty()) {
-			
-			Notification noti = new Notification(1, "dele", name, message);
-			entityManager.persist(noti);
-			entityManager.flush();
-			noti.setId(noti.getId());
-			
-			return "teamHome";
-		}
-		
+	public String contactDelegated(@ModelAttribute("notification") Notification notification) {
+		entityManager.persist(notification);
 		return "home";
 	}
 	
 
-	@GetMapping("/joinTeam")
-	public String joinTeam() {
+	@RequestMapping("/joinTeam")
+	public String joinTeam(@RequestParam("id") long id, Model m) {
+		m.addAttribute("team", entityManager.find(Team.class, id));
 		return "joinTeam";
-
 	}
 	
-	@RequestMapping(path = "/sentRequest",method = RequestMethod.POST)
+	@RequestMapping(path = "/sentRequestTeam",method = RequestMethod.POST)
 	@Transactional
-	public String sentRequest(@RequestBody String InputName, @RequestBody String InputDNI){
-			//@SessionAttribute("user") User u, @RequestParam("team") long idTeam) {
-
-		RequestTeam rqs = new RequestTeam(1, "name");
-		entityManager.persist(rqs);
-		entityManager.flush();
-		
-		return "teamHome";
-	}
-	
-
-	@GetMapping("/teamHome")
-	public String teamHome() {
-		return "teamHome";
-
+	public String sentRequestTeam(@ModelAttribute("requestTeam") RequestTeam requestTeam, @SessionAttribute("user") User u, Model model){
+		//En un script hacer una peticion para que se devuelvan los equipos del usuario. Si no pertenece al equipo de envia la peticion
+		//se envia. Si ya pertenece a ese equipo se muestra el error con formato que esta en joinTeam comentado.
+		requestTeam.setUser_id(u.getId());
+		entityManager.persist(requestTeam);
+		return "joinTeam";
 	}
 
 	@GetMapping("/logout")

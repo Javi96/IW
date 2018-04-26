@@ -22,20 +22,23 @@
 	               <li><p><span class="glyphicon glyphicon-calendar one space" ></span> Entrenamientos: ${team.training_schedule} </p></li>
 	               <li><p><span class="glyphicon glyphicon-calendar one space" ></span> Siguiente partido: ${team.next_match_schedule} </p></li>
 	               <li><p><span class="glyphicon glyphicon-map-marker one space"></span> Instalaciones: ${team.next_match_facilities} </p></li>
-	               <li><p><span class="glyphicon glyphicon-user one space"></span>Delegado: ${team.deputy}</p></li>
+	               <li><p><span class="glyphicon glyphicon-user one space"></span>Delegado: ${deputy}</p></li>
 	            </ul>
 	            <div>
 	            	<form action = "/contact" method="get" class="btn-group teamButtonsStyle">
 						<button type="submit" class="btn btn-primary">Contactar delegado</button>
+						<input type="hidden" name = "id" value="${team.id}">
 					</form>
 					<form action = "/joinTeam" method="get"  class="btn-group teamButtonsStyle">
 						<button type="submit" class="btn btn-primary">Enviar solicitud</button>
+						<input type="hidden" name = "id" value="${team.id}">
 					</form>
 					<form action = "/gallery" method="get"  class="btn-group teamButtonsStyle">
 						<button type="submit" class="btn btn-primary">Ver fotos</button>
 					</form>
 					<form action = "/ranking" method="get" class="btn-group teamButtonsStyle">
 						<button type="submit" class="btn btn-primary">Ver clasificacion</button>
+						<input type="hidden" name = "id" value="${team.id}">
 					</form>
 				</div>
         	</div>

@@ -5,50 +5,26 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
-import org.springframework.ui.Model;
-
 @Entity
 public class Notification {
 	
 	private long id;
-	private long idTeam;
-	private String deputy;
+	private long team_id;
+	private long deputy;
 	private String name;
 	private String message;
 	
+	public Notification() {
+		// TODO Auto-generated constructor stub
+	}
 	
-	public Notification(long idTeam, String deputy, String name, String message) {
-		
-		this.idTeam = idTeam;
+	public Notification(long idTeam, long deputy, String name, String message) {
+		this.team_id = idTeam;
 		this.deputy= deputy;
 		this.name = name;
 		this.message = message;
 	}
 	
-	//SET
-	public void setId(long id) {
-		this.id = id;
-	}
-	
-	
-	public void setIdTeam(long idTeam) {
-		this.idTeam = idTeam;
-	}
-	
-	
-	public void setDebuty(String d) {
-		this.deputy=d;	
-	}
-	
-	public void setName(String n) {
-		this.name=n;	
-	}
-	
-	public void setMessage(String m) {
-		this.message = m;
-	}
-
-	//GET
 	@Id
 	@GeneratedValue
 	public long getId(){
@@ -56,23 +32,39 @@ public class Notification {
 	}
 	
 	@Column
-	public long getIdTeam() {
-		return this.idTeam;
+	public long getDeputy() {
+		return deputy;
 	}
-	
 	@Column
-	public String getDebuty() {
-		return this.deputy;	
+	public long getTeam_id() {
+		return team_id;
 	}
-	
-	@Column
-	public String getName() {
-		return this.name;
-	}
-	
 	@Column
 	public String getMessage() {
-		return this.message;
+		return message;
+	}
+	@Column
+	public String getName() {
+		return name;
 	}
 	
+	public void setDeputy(long deputy) {
+		this.deputy = deputy;
+	}
+	
+	public void setId(long id) {
+		this.id = id;
+	}
+	
+	public void setTeam_id(long team_id) {
+		this.team_id = team_id;
+	}
+	
+	public void setMessage(String message) {
+		this.message = message;
+	}
+	
+	public void setName(String name) {
+		this.name = name;
+	}
 }
