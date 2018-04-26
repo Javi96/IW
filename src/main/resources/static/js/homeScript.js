@@ -1,5 +1,7 @@
 "use strict"
 $(function () {
+	$( "#female" ).prop( "checked", false );
+	$( "#male" ).prop( "checked", false );
     $('.button-checkbox').each(function () {
 
         // Settings

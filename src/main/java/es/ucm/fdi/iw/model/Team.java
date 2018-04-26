@@ -13,7 +13,6 @@ import javax.persistence.ManyToOne;
 @Entity
 public class Team {
 
-
 	private long id;
 	private String name;
 	private String school;
@@ -149,9 +148,5 @@ public class Team {
 		this.category = category;
 	}
 
-	@Override
-	public String toString() {
-		// TODO Auto-generated method stub
-		return super.toString();
-	}
+
 }
