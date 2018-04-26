@@ -1,10 +1,10 @@
 package es.ucm.fdi.iw.controller;
 
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
@@ -14,8 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -106,15 +104,15 @@ public class RootController {
 		//Coge el equipo de la bd, donde el usuario logueado es el encargado.
 		Team t = entityManager.find(Team.class, team.getId());
 
-		String training = team.getTrainingSchedule();
-		String nextMatch = team.getNextMatchSchedule();
-		String facilities = team.getNextMatchFacilities();
+		String training = team.getTraining_schedule();
+		String nextMatch = team.getNext_match_schedule();
+		String facilities = team.getNext_match_facilities();
 		if(training != null)
-			t.setTrainingSchedule(training);
+			t.setTraining_schedule(training);
 		if(nextMatch != null)
-			t.setNextMatchSchedule(nextMatch);
+			t.setNext_match_schedule(nextMatch);
 		if(facilities != null)
-			t.setNextMatchFacilities(facilities);
+			t.setNext_match_facilities(facilities);
 		
 		entityManager.persist(t);
 		return "prueba";
@@ -128,31 +126,36 @@ public class RootController {
 		entityManager.flush();
 		return "addRecord test";
 	}
-
-	@RequestMapping(path = "/t",method = RequestMethod.GET)
-	@Transactional
-	@ResponseBody
-	public String t(Model model) {
-		Team t = new Team("Rugby Fisicas","Rugby", "Facultad de Fisicas","Juan jose","Lunes y Miercoles / 14:00 - 15:30 h","Viernes / 13:30 - 15:30","Paraninfo Norte");
-		entityManager.persist(t);
-		entityManager.flush();
-		return "" + t.getId();
-	}
-
-	@RequestMapping(path = "/eq",method = RequestMethod.GET)
-	public String eq(@RequestParam long id,Model model) {
-		model.addAttribute("team", entityManager.find(Team.class, id));
-		return "home";
-	}
-
-    //preguntar como hacer esto para que se pueda configurar el html con esta informacion
+	
 	@RequestMapping(path = "/home",method = RequestMethod.GET)
-	public String home(Model model) {
-		List<Team> teams = entityManager.createQuery("select ts from Team ts ",Team.class).getResultList();
-		model.addAttribute("teams", teams);
+	public String home() {
 		return "home";
 	}
+	
+	@RequestMapping(value = "/showTeamsBySportsAndGender",method = RequestMethod.GET)
+	@ResponseBody
+	public String showTeamsBySportsAndGender(Model model, @RequestParam("category") String category,  @RequestParam("sport") String sport ) {
+		List<Team> teams = entityManager.createQuery("select ts from Team ts where category = :category and sport = :sport",Team.class)
+				.setParameter("category", category).setParameter("sport", sport).getResultList();
+		List<String> data = new ArrayList<>();
+		for (Team t : teams) {
+			data.add("{ \"id\":"+ "\"" + t.getId() + "\"" +"," + "\"name\":" + "\"" + t.getName()  + "\"" + "}");
+		}
+		return String.join("'", data);
+	}
 
+	@RequestMapping(value = "/showSportsByGender",method = RequestMethod.GET)
+	@ResponseBody
+	public String showSportsByGender(Model model, @RequestParam("category") String category ) {
+		List<Team> teams = entityManager.createQuery("select ts from Team ts where category = :category",Team.class)
+				.setParameter("category", category).getResultList();
+		List<String> data = new ArrayList<>();
+		for (Team t : teams) {
+			data.add("{" + "\"sport\":" + "\"" + t.getSport()  + "\"" + "}");
+		}
+		return String.join("'", data);
+	}
+	
    @RequestMapping(path = "/ranking",method = RequestMethod.GET)
 	public String classification(Model model) {
 		//esta en la tabla ligas, pero es necesario ahora para la prueba, se cambia cuando tengamos bd
@@ -216,19 +219,11 @@ public class RootController {
 		return "ranking";
 	}
 	
-	/*@RequestMapping(path = "/team",method = RequestMethod.GET)
-	public String team(Model model) {
-		Team fisicasTeam = new Team("Rugby Fisicas","Rugby", "Facultad de Fisicas", "Juan Antonio","Lunes y Miercoles / 14:00 - 15:30 h","Viernes / 13:30 - 15:30","Paraninfo Norte");
-	}*/
-	
 	@RequestMapping("/team")
-	public String team(Model model, @RequestBody long id, @SessionAttribute("user") User u) {
-		
-		
-		
-		//create querry to get data from parametres
-		Team fisicasTeam = new Team("Rugby Fisicas","Rugby", "Facultad de Fisicas", "Juan jose","Lunes y Miercoles / 14:00 - 15:30 h","Viernes / 13:30 - 15:30","Paraninfo Norte");
-		model.addAttribute("team", fisicasTeam);
+	public String team(@RequestParam("id") long id, Model model) {
+		Team team = entityManager.createQuery("select t from Team t where id = :id",Team.class)
+		.setParameter("id", id).getSingleResult();
+		model.addAttribute("team",team);
 		return "team";
 	}
 

@@ -19,10 +19,13 @@ public class Team {
 	private String school;
 	private String sport;
 	private String deputy;
-	private String trainingSchedule;
-	private String nextMatchSchedule;
-	private String nextMatchFacilities;
+	private String training_schedule;
+	private String next_match_schedule;
+	private String next_match_facilities; 
+	private String category;
+	
 	private League league;
+	
 	private List<User> players; 
 	
 //	private byte enabled; // esto que es? 
@@ -31,21 +34,12 @@ public class Team {
 		// TODO Auto-generated constructor stub
 	}
 	
-	public Team(String name, String sport, String school, String deputy) {
+	public Team(String name, String sport, String school, String deputy, String category) {
 		this.name = name;
 		this.sport = sport;
 		this.school = school;
 		this.deputy = deputy;
-	}
-	
-	public Team(String name, String sport, String school, String deputy, String trainingSchedule,String nextMatchSchedule, String nextMatchFacilities) {
-		this.name = name;
-		this.sport = sport;
-		this.school = school;
-		this.deputy = deputy;
-		this.trainingSchedule = trainingSchedule;
-		this.nextMatchSchedule = nextMatchSchedule;
-		this.nextMatchFacilities = nextMatchFacilities;
+		this.category = category;
 	}
 	
 	@Id
@@ -75,18 +69,18 @@ public class Team {
 	}
 	
 	@Column
-	public String getNextMatchFacilities() {
-		return nextMatchFacilities;
+	public String getNext_match_facilities() {
+		return next_match_facilities;
 	}
 	
 	@Column
-	public String getNextMatchSchedule() {
-		return nextMatchSchedule;
+	public String getNext_match_schedule() {
+		return next_match_schedule;
 	}
 	
 	@Column
-	public String getTrainingSchedule() {
-		return trainingSchedule;
+	public String getTraining_schedule() {
+		return training_schedule;
 	}
 	
 	@ManyToMany(targetEntity = User.class)
@@ -97,6 +91,11 @@ public class Team {
 	@ManyToOne(fetch=FetchType.EAGER)
 	public League getLeague() {
 		return league;
+	}
+	
+	@Column
+	public String getCategory() {
+		return category;
 	}
 	
 	public void setName(String name) {
@@ -119,16 +118,16 @@ public class Team {
 		this.deputy = deputy;
 	}
 	
-	public void setNextMatchFacilities(String nextMatchFacilities) {
-		this.nextMatchFacilities = nextMatchFacilities;
+	public void setNext_match_facilities(String next_match_facilities) {
+		this.next_match_facilities = next_match_facilities;
 	}
 	
-	public void setNextMatchSchedule(String nextMatchSchedule) {
-		this.nextMatchSchedule = nextMatchSchedule;
+	public void setNext_match_schedule(String next_match_schedule) {
+		this.next_match_schedule = next_match_schedule;
 	}
 	
-	public void setTrainingSchedule(String trainingSchedule) {
-		this.trainingSchedule = trainingSchedule;
+	public void setTraining_schedule(String training_schedule) {
+		this.training_schedule = training_schedule;
 	}
 	
 	public void setLeague(League league) {
@@ -139,4 +138,13 @@ public class Team {
 		this.players = players;
 	}
 	
+	public void setCategory(String category) {
+		this.category = category;
+	}
+	
+	@Override
+	public String toString() {
+		// TODO Auto-generated method stub
+		return super.toString();
+	}
 }

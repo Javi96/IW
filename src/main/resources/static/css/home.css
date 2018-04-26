@@ -1,37 +1,21 @@
-.redColor{
+.glyphicon.glyphicon-arrow-right {
     color: #A00E19;
+    font-size: 80px;
 }
 
-#logoEquipo{
-	width: 300px;
-	height: 300px;
+#sports .list-group-item{
+	margin: 3px;
 }
 
-#teamName{
-	border-bottom:1px solid black;
-	text-align: center;
+.inputSports{
+	border:none;
+	width: 100%;
 }
-.teamInfoStyle{
-	text-align: left;
-}
-
-.space{
-	width: 50px;
-}
-.teamButtonsStyle{
-	padding-top: 1.5rem;
+.row{
+	margin-bottom: 40px;
 }
 
-#teamInfo{
-	text-align: center;
-	font: oblique bold 120% cursive;
-}
-
-#joinTeamStyle .col-md-12 {
-    width: 50%;
-    margin-left: 25%;
-}
-
-#joinTeamStyle .btn.btn-info{
-    margin-left: 40%;
+.spHeader{
+	color: #A00E19;
+	font-size: 30px;
 }

@@ -6,7 +6,7 @@
 
 <%@ include file="../jspf/header.jspf"%>
 
-<link type="text/css" media="screen" rel="stylesheet" href="${s}/css/home.css" />
+<link type="text/css" media="screen" rel="stylesheet" href="${s}/css/team.css" />
 <div class = "container">
 	<div class="jumbotron">
     	<div class="row">
@@ -15,13 +15,13 @@
 	        </div>
          	<div id = "teamInfo" class="col-md-8 col-xs-12 col-sm-6 col-lg-8">
 	            <div id = "teamName">
-	               <h2>${team.name}</h2>
+	               <h2>${team.name} - ${team.category}</h2>
 	            </div>
 	            
 	            <ul class="container details teamInfoStyle">
-	               <li><p><span class="glyphicon glyphicon-calendar one space" ></span> Entrenamientos: ${team.trainingSchedule} </p></li>
-	               <li><p><span class="glyphicon glyphicon-calendar one space" ></span> Siguiente partido: ${team.nextMatchSchedule} </p></li>
-	               <li><p><span class="glyphicon glyphicon-map-marker one space"></span> Instalaciones: ${team.nextMatchFacilities} </p></li>
+	               <li><p><span class="glyphicon glyphicon-calendar one space" ></span> Entrenamientos: ${team.training_schedule} </p></li>
+	               <li><p><span class="glyphicon glyphicon-calendar one space" ></span> Siguiente partido: ${team.next_match_schedule} </p></li>
+	               <li><p><span class="glyphicon glyphicon-map-marker one space"></span> Instalaciones: ${team.next_match_facilities} </p></li>
 	               <li><p><span class="glyphicon glyphicon-user one space"></span>Delegado: ${team.deputy}</p></li>
 	            </ul>
 	            <div>
