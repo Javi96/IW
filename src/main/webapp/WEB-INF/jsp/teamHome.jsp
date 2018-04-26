@@ -43,9 +43,12 @@
 	            <div>
 	            	<form action = "/contact" method="get" class="btn-group teamButtonsStyle">
 						<button type="submit" class="btn btn-primary">Contactar delegado</button>
+						<input type='hidden' name='team' value=${team.id}\>
+						<input type='hidden' name='delegated' value=${team.debuty}\>
 					</form>
 					<form action = "/joinTeam" method="get"  class="btn-group teamButtonsStyle">
 						<button type="submit" class="btn btn-primary">Enviar solicitud</button>
+						<input type='hidden' name='team' value=${team.id}\>
 					</form>
 					<form action = "/gallery" method="get"  class="btn-group teamButtonsStyle">
 						<button type="submit" class="btn btn-primary">Ver fotos</button>

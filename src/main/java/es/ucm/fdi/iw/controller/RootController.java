@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -22,6 +23,8 @@ import org.springframework.web.bind.annotation.SessionAttribute;
 
 import es.ucm.fdi.iw.model.League;
 import es.ucm.fdi.iw.model.MatchRecord;
+import es.ucm.fdi.iw.model.Notification;
+import es.ucm.fdi.iw.model.RequestTeam;
 import es.ucm.fdi.iw.model.Team;
 import es.ucm.fdi.iw.model.User;
 
@@ -49,6 +52,7 @@ public class RootController {
                 .getSingleResult();
 			session.setAttribute("user", u);
 		}
+		
 		return "home";
 	}
 
@@ -246,12 +250,48 @@ public class RootController {
 	public String contact() {
 		return "contact";
 	}
+	
+	@RequestMapping(path = "/contactDelegated",method = RequestMethod.POST)
+	@Transactional
+	public String contactDelegated(@RequestParam("name") String name, @RequestBody String message) {
+			//,@SessionAttribute("user") User u, @RequestParam("team") long idTeam,
+			//@RequestParam("delegated") String deputy) {
+
+		//long t = 1;
+		//long d= 1;
+		
+		if(!name.isEmpty() && !message.isEmpty()) {
+			
+			Notification noti = new Notification(1, "dele", name, message);
+			entityManager.persist(noti);
+			entityManager.flush();
+			noti.setId(noti.getId());
+			
+			return "teamHome";
+		}
+		
+		return "home";
+	}
+	
 
 	@GetMapping("/joinTeam")
 	public String joinTeam() {
 		return "joinTeam";
 
 	}
+	
+	@RequestMapping(path = "/sentRequest",method = RequestMethod.POST)
+	@Transactional
+	public String sentRequest(@RequestBody String InputName, @RequestBody String InputDNI){
+			//@SessionAttribute("user") User u, @RequestParam("team") long idTeam) {
+
+		RequestTeam rqs = new RequestTeam(1, "name");
+		entityManager.persist(rqs);
+		entityManager.flush();
+		
+		return "teamHome";
+	}
+	
 
 	@GetMapping("/teamHome")
 	public String teamHome() {
