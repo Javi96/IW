@@ -5,30 +5,43 @@
 	uri="http://www.springframework.org/security/tags"%>
 
 <%@ include file="../jspf/header.jspf"%>
-<link type="text/css" media="screen" rel="stylesheet" href="${s}/css/home.css" />
+<link type="text/css" media="screen" rel="stylesheet" href="${s}/css/team.css" />
+
 
 <div class="container">
 	<div class="row" id = "joinTeamStyle">
 		<div class="col-md-12" >
+		<!-- 
+		
 			<small><i>Las alertas las muestro pero se deben utilizar una vez pulsado el boton</i></small>
-			<div class="alert alert-success"><strong><span class="glyphicon glyphicon-send"></span> Success! Message sent. (If form ok!)</strong></div>	  
-			<div class="alert alert-danger"><span class="glyphicon glyphicon-alert"></span><strong> Error! Please check the inputs. (If form error!)</strong></div>
+			<div class="alert alert-success">
+				<strong><span class="glyphicon glyphicon-send"></span> 
+				Success! Message sent. (If form ok!)</strong>
+			</div>	
+			  
+			<div class="alert alert-danger">
+				<strong> <span class="glyphicon glyphicon-alert"></span>
+				 Error! Please check the inputs. (If form error!)</strong>
+			</div>
+		 -->
+			
 		</div>
 		<div >
-			<form role="form" action="" method="post" >
+			<form role="form" action="/sentRequestTeam" name = "requestTeam" method="post" >
 				<div class="col-md-12">
 					<div class="well well-sm"><strong><span class="glyphicon glyphicon-ok"></span> Required Field</strong></div>
 					<div class="form-group">
 						<label for="InputName">Nombre Completo</label>
 						<div class="input-group">
-							<input type="text" class="form-control" name="InputName" id="InputName" placeholder="Tu nombre completo" required>
+							<input type="text" class="form-control" name="name" id="InputName" placeholder="Tu nombre completo" required>
 							<span class="input-group-addon"><i class="glyphicon glyphicon-ok form-control-feedback"></i></span>
 						</div>
 					</div>
 					<div class="form-group">
 						<label for="InputEmail">DNI</label>
 						<div class="input-group">
-							<input type="email" class="form-control" id="InputEmail" name="InputEmail" placeholder="Tu DNI incluida la letra" required  >
+							<input type="text" class="form-control" id="InputDNI" name="dni" placeholder="Tu DNI incluida la letra" required  >
+							<input type="hidden" name = "team_id" value = "${team.id}">
 							<span class="input-group-addon"><i class="glyphicon glyphicon-ok form-control-feedback"></i></span>
 						</div>
 						

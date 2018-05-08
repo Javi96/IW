@@ -16,6 +16,7 @@ public class User {
 	private String roles; // split by , to separate roles
 	private String name;
 	private byte enabled;
+	
 	private List<Team> teams;
 	
 	@Id

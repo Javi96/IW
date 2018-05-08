@@ -9,134 +9,147 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 @Entity
 public class Team {
-	
 
 	private long id;
 	private String name;
 	private String school;
 	private String sport;
-	private String deputy;
-	private String trainingSchedule;
-	private String nextMatchSchedule;
-	private String nextMatchFacilities;
+	private String training_schedule;
+	private String next_match_schedule;
+	private String next_match_facilities;
+	private String category;
+	private long deputy;
 	private League league;
-	private List<User> players; 
 	
-//	private byte enabled; // esto que es? 
+	@OneToMany(mappedBy = "team_id")
+	private List<RequestTeam> requests;
 	
+	private List<User> players;
+
+//	private byte enabled; // esto que es?
+
 	public Team() {
 		// TODO Auto-generated constructor stub
 	}
-	
-	public Team(String name, String sport, String school, String deputy) {
+
+	public Team(String name, String sport, String school, long deputy, String category) {
 		this.name = name;
 		this.sport = sport;
 		this.school = school;
 		this.deputy = deputy;
+		this.category = category;
 	}
-	
-	public Team(String name, String sport, String school, String deputy, String trainingSchedule,String nextMatchSchedule, String nextMatchFacilities) {
-		this.name = name;
-		this.sport = sport;
-		this.school = school;
-		this.deputy = deputy;
-		this.trainingSchedule = trainingSchedule;
-		this.nextMatchSchedule = nextMatchSchedule;
-		this.nextMatchFacilities = nextMatchFacilities;
-	}
-	
+
 	@Id
 	@GeneratedValue
 	public long getId() {
 		return id;
-	}	
-	
+	}
+
 	@Column(unique = true)
 	public String getName() {
 		return name;
 	}
-	
+
 	@Column
 	public String getSchool() {
 		return school;
 	}
-	
+
 	@Column
 	public String getSport() {
 		return sport;
 	}
-	
-	@Column(unique = true)
-	public String getDeputy() {
+
+	@Column
+	public long getDeputy() {
 		return deputy;
 	}
-	
+
 	@Column
-	public String getNextMatchFacilities() {
-		return nextMatchFacilities;
+	public String getNext_match_facilities() {
+		return next_match_facilities;
 	}
-	
+
 	@Column
-	public String getNextMatchSchedule() {
-		return nextMatchSchedule;
+	public String getNext_match_schedule() {
+		return next_match_schedule;
 	}
-	
+
 	@Column
-	public String getTrainingSchedule() {
-		return trainingSchedule;
+	public String getTraining_schedule() {
+		return training_schedule;
 	}
-	
+
 	@ManyToMany(targetEntity = User.class)
 	public List<User> getPlayers() {
 		return players;
 	}
-	
+
+	/*
+	@ManyToOne(fetch=FetchType.EAGER)
+	public RequestTeam getRequest() {
+		return request;
+	}
+	*/
+
 	@ManyToOne(fetch=FetchType.EAGER)
 	public League getLeague() {
 		return league;
 	}
-	
+
+	@Column
+	public String getCategory() {
+		return category;
+	}
+
 	public void setName(String name) {
 		this.name = name;
 	}
-	
+
 	public void setId(long id) {
 		this.id = id;
 	}
-		
+
 	public void setSchool(String school) {
 		this.school = school;
 	}
-	
+
 	public void setSport(String sport) {
 		this.sport = sport;
 	}
-	
-	public void setDeputy(String deputy) {
+
+	public void setDeputy(long deputy) {
 		this.deputy = deputy;
 	}
-	
-	public void setNextMatchFacilities(String nextMatchFacilities) {
-		this.nextMatchFacilities = nextMatchFacilities;
+
+	public void setNext_match_facilities(String next_match_facilities) {
+		this.next_match_facilities = next_match_facilities;
 	}
-	
-	public void setNextMatchSchedule(String nextMatchSchedule) {
-		this.nextMatchSchedule = nextMatchSchedule;
+
+	public void setNext_match_schedule(String next_match_schedule) {
+		this.next_match_schedule = next_match_schedule;
 	}
-	
-	public void setTrainingSchedule(String trainingSchedule) {
-		this.trainingSchedule = trainingSchedule;
+
+	public void setTraining_schedule(String training_schedule) {
+		this.training_schedule = training_schedule;
 	}
-	
+
 	public void setLeague(League league) {
 		this.league = league;
 	}
-	
+
 	public void setPlayers(List<User> players) {
 		this.players = players;
 	}
-	
+
+	public void setCategory(String category) {
+		this.category = category;
+	}
+
+
 }

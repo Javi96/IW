@@ -101,7 +101,7 @@ public class AdminController {
 	}
 	
 	/**
-	 * Uploads a photo for a user 
+	 * Uploads a photo for a user
 	 * @param id of user 
 	 * @param photo to upload
 	 * @return
