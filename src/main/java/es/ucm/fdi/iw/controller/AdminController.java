@@ -101,22 +101,30 @@ public class AdminController {
 	}
 	
 	/**
-	 * Uploads a photo for a user
+	 * Uploads a photo for a user 
 	 * @param id of user 
 	 * @param photo to upload
 	 * @return
 	 */
-	@RequestMapping(value="/photo/{id}", method=RequestMethod.POST)
+	@RequestMapping(value="/photo", method=RequestMethod.POST)
     public @ResponseBody String handleFileUpload(@RequestParam("photo") MultipartFile photo,
-    		@PathVariable("id") String id){
+    		@RequestParam("id") String id){
         if (!photo.isEmpty()) {
             try {
+            	File f = new File("/tmp/iw/"+id);
+            	if(!f.exists() || (f.exists() && !f.isDirectory())) {
+            		new File("/tmp/iw/"+id).mkdirs();
+            	}
+            	
+            	int files = new File("/tmp/iw/"+id).listFiles().length;
                 byte[] bytes = photo.getBytes();
                 BufferedOutputStream stream =
                         new BufferedOutputStream(
-                        		new FileOutputStream(localData.getFile("user", id)));
+                        		new FileOutputStream(localData.getFile(id, Integer.toString(files+1))));
                 stream.write(bytes);
                 stream.close();
+                System.out.println("/tmp/iw/user/"+"     files: " + new File("/tmp/iw/user").listFiles().length
+);
                 return "You successfully uploaded " + id + 
                 		" into " + localData.getFile("user", id).getAbsolutePath() + "!";
             } catch (Exception e) {
