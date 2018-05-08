@@ -33,8 +33,9 @@
 						<button type="submit" class="btn btn-primary">Enviar solicitud</button>
 						<input type="hidden" name = "id" value="${team.id}">
 					</form>
-					<form action = "/gallery" method="get"  class="btn-group teamButtonsStyle">
+					<form action = "/gallery_good" method="get"  class="btn-group teamButtonsStyle">
 						<button type="submit" class="btn btn-primary">Ver fotos</button>
+						<input type="hidden" name = "id" value="${team.id}">
 					</form>
 					<form action = "/ranking" method="get" class="btn-group teamButtonsStyle">
 						<button type="submit" class="btn btn-primary">Ver clasificacion</button>
