@@ -5,50 +5,70 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 @Entity
 public class RequestTeam {
 
 	private long id;
-	@ManyToOne
-	private long team_id;
-	private long user_id; //El usuario que envio la peticion de entrar al equipo
-
-	
+	private Team team; // El equipo al que se quiere ingresar
+	private User user; // El usuario que quiere ingresar
+	private String id_card_nr;
+	private String name;
 	
 	public RequestTeam() {
 		// TODO Auto-generated constructor stub
 	}
 
-	public RequestTeam(long idTeam, long user) {
-		this.team_id = idTeam;
-		this.user_id = user;
+	public RequestTeam(Team team, User user) {
+		this.team = team;
+		this.user = user;
 	}
-
+	
 	@Id
 	@GeneratedValue
 	public long getId(){
 		return this.id;
 	}
-	@Column
-	public long getTeam_id() {
-		return team_id;
+	
+	@ManyToOne
+	public Team getTeam() {
+		return team;
 	}
+	
+	@ManyToOne
+	public User getUser() {
+		return user;
+	}
+	
 	@Column
-	public long getUser_id() {
-		return user_id;
+	public String getId_card_nr() {
+		return id_card_nr;
+	}
+	
+	@Column
+	public String getName() {
+		return name;
+	}
+	
+	public void setId_card_nr(String id_card_nr) {
+		this.id_card_nr = id_card_nr;
+	}
+	
+	public void setName(String name) {
+		this.name = name;
 	}
 	
 	public void setId(long id) {
 		this.id = id;
 	}
 	
-	public void setTeam_id(long team_id) {
-		this.team_id = team_id;
+	public void setTeam(Team team) {
+		this.team = team;
 	}
 	
-	public void setUser_id(long user_id) {
-		this.user_id = user_id;
+	public void setUser(User user) {
+		this.user = user;
 	}
 
 }

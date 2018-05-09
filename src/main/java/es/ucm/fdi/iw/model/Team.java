@@ -10,6 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 
 @Entity
 public class Team {
@@ -22,11 +23,12 @@ public class Team {
 	private String next_match_schedule;
 	private String next_match_facilities;
 	private String category;
-	private long deputy;
+	private User deputy;
 	private League league;
 	
-	@OneToMany(mappedBy = "team_id")
+	
 	private List<RequestTeam> requests;
+	
 	
 	private List<User> players;
 
@@ -36,7 +38,7 @@ public class Team {
 		// TODO Auto-generated constructor stub
 	}
 
-	public Team(String name, String sport, String school, long deputy, String category) {
+	public Team(String name, String sport, String school, User deputy, String category) {
 		this.name = name;
 		this.sport = sport;
 		this.school = school;
@@ -65,8 +67,8 @@ public class Team {
 		return sport;
 	}
 
-	@Column
-	public long getDeputy() {
+	@OneToOne(targetEntity = User.class)
+	public User getDeputy() {
 		return deputy;
 	}
 
@@ -84,18 +86,20 @@ public class Team {
 	public String getTraining_schedule() {
 		return training_schedule;
 	}
-
+	
 	@ManyToMany(targetEntity = User.class)
 	public List<User> getPlayers() {
 		return players;
 	}
 
-	/*
-	@ManyToOne(fetch=FetchType.EAGER)
-	public RequestTeam getRequest() {
-		return request;
+	@OneToMany(mappedBy = "team")
+	public List<RequestTeam> getRequests() {
+		return requests;
 	}
-	*/
+	
+	public void setRequests(List<RequestTeam> requests) {
+		this.requests = requests;
+	}
 
 	@ManyToOne(fetch=FetchType.EAGER)
 	public League getLeague() {
@@ -123,7 +127,7 @@ public class Team {
 		this.sport = sport;
 	}
 
-	public void setDeputy(long deputy) {
+	public void setDeputy(User deputy) {
 		this.deputy = deputy;
 	}
 

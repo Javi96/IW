@@ -11,21 +11,20 @@
 <div class="container">
 	<div class="row" id = "joinTeamStyle">
 		<div class="col-md-12" >
-		<!-- 
-		
-			<small><i>Las alertas las muestro pero se deben utilizar una vez pulsado el boton</i></small>
-			<div class="alert alert-success">
+		 <c:if test="${correct}">
+		 	<div class="alert alert-success">
 				<strong><span class="glyphicon glyphicon-send"></span> 
-				Success! Message sent. (If form ok!)</strong>
-			</div>	
-			  
+				Tu solicitud ha sido enviada correctamente</strong>
+			</div>
+		</c:if>
+		<c:if test="${error}">
 			<div class="alert alert-danger">
 				<strong> <span class="glyphicon glyphicon-alert"></span>
-				 Error! Please check the inputs. (If form error!)</strong>
+				Error! Ya has enviado una solicitud a este equipo</strong>
 			</div>
-		 -->
-			
+		</c:if>
 		</div>
+		
 		<div >
 			<form role="form" action="/sentRequestTeam" name = "requestTeam" method="post" >
 				<div class="col-md-12">
@@ -33,21 +32,20 @@
 					<div class="form-group">
 						<label for="InputName">Nombre Completo</label>
 						<div class="input-group">
-							<input type="text" class="form-control" name="name" id="InputName" placeholder="Tu nombre completo" required>
+							<input type="text" class="form-control" name="name" placeholder="Tu nombre completo" required>
 							<span class="input-group-addon"><i class="glyphicon glyphicon-ok form-control-feedback"></i></span>
 						</div>
 					</div>
 					<div class="form-group">
 						<label for="InputEmail">DNI</label>
 						<div class="input-group">
-							<input type="text" class="form-control" id="InputDNI" name="dni" placeholder="Tu DNI incluida la letra" required  >
-							<input type="hidden" name = "team_id" value = "${team.id}">
+							<input type="text" class="form-control" name="id_card_nr" placeholder="Tu DNI incluida la letra" required  >
 							<span class="input-group-addon"><i class="glyphicon glyphicon-ok form-control-feedback"></i></span>
 						</div>
-						
 					</div>
 					<input class="btn btn-info" type="submit" name="submit" id="submit" value="Enviar" >	
 				</div>
+				<input type="hidden" name="teamId" value ="${team.id}" placeholder="Tu DNI incluida la letra" required  >
 			</form>
 		</div>
 	</div>

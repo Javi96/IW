@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
@@ -14,7 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -45,14 +45,12 @@ public class RootController {
 	public String root(Model model, HttpSession session, Principal principal) {
 		log.info(principal.getName() + " de tipo " + principal.getClass());
 		// org.springframework.security.core.userdetails.User
-
-		if (session.getAttribute("user") == null && principal != null) {
+		if (principal != null) {
 			User u = entityManager.createQuery("from User where login = :login", User.class)
                 .setParameter("login", principal.getName())
                 .getSingleResult();
 			session.setAttribute("user", u);
 		}
-		
 		return "home";
 	}
 
@@ -160,8 +158,8 @@ public class RootController {
 		return String.join("'", data);
 	}
 	
-   @RequestMapping(path = "/ranking",method = RequestMethod.GET)
-	public String classification(Model model) {
+   @RequestMapping(value = "/ranking",method = RequestMethod.GET)
+	public String classification(Model model, @RequestParam("sport") String sport) {
 		//esta en la tabla ligas, pero es necesario ahora para la prueba, se cambia cuando tengamos bd
 		/*Team team1 = new Team("Rugby Fisicas","Rugby", "Facultad de Fisicas", 1,"Lunes y Miercoles / 14:00 - 15:30 h","Viernes / 13:30 - 15:30","Paraninfo Norte");
 		Team team2 = new Team("Rugby Geologicas","Rugby", "Facultad de Geologia", 2,"Lunes y Jueves / 17:00 - 18:30 h","Viernes / 13:30 - 15:30","Cantarranas");
@@ -224,14 +222,18 @@ public class RootController {
 	}
 	
 	@RequestMapping("/team")
-	public String team(@RequestParam("id") long id, Model model) {
-		Team team = entityManager.createQuery("select t from Team t where id = :id",Team.class)
-		.setParameter("id", id).getSingleResult();
-		model.addAttribute("team",team);
-		
-		User deputy = entityManager.createQuery("select u from User u where id = :id",User.class)
-				.setParameter("id", team.getDeputy()).getSingleResult();
-		model.addAttribute("deputy",deputy.getName());
+	public String team(@RequestParam("id") long id, Model model, HttpSession session) {
+		boolean logged = false;
+		Team team = entityManager.find(Team.class, id);
+		List<User> players = new ArrayList<User>();
+		players.add(entityManager.find(User.class, Long.parseLong("5")));
+		team.setPlayers(players);
+		User currentUser = (User) session.getAttribute("user");
+		if(currentUser != null) {
+			logged = true;
+		}
+		model.addAttribute("team", team);
+		model.addAttribute("logged", logged);
 		return "team";
 	}
 
@@ -256,28 +258,46 @@ public class RootController {
 		return "contact";
 	}
 	
-	@RequestMapping(path = "/contactDelegated",method = RequestMethod.POST)
-	public String contactDelegated(@ModelAttribute("notification") Notification notification) {
+	@RequestMapping(value = "/contactDeputy",method = RequestMethod.POST)
+	@Transactional
+	public String contactDeputy(@ModelAttribute("notification") Notification notification, @RequestParam("deputyId") long deputyId, Model model) {
+		// se envia bien siempre
+		notification.setDeputy(entityManager.find(User.class, deputyId));
 		entityManager.persist(notification);
-		return "home";
+		model.addAttribute("correct", true);
+		return "contact";
 	}
-	
 
 	@RequestMapping("/joinTeam")
-	public String joinTeam(@RequestParam("id") long id, Model m) {
+	public String joinTeam(@RequestParam("id") long id, @SessionAttribute("user") User user , Model m) {
 		m.addAttribute("team", entityManager.find(Team.class, id));
 		return "joinTeam";
 	}
 	
 	@RequestMapping(path = "/sentRequestTeam",method = RequestMethod.POST)
 	@Transactional
-	public String sentRequestTeam(@ModelAttribute("requestTeam") RequestTeam requestTeam, @SessionAttribute("user") User u, Model model){
-		//En un script hacer una peticion para que se devuelvan los equipos del usuario. Si no pertenece al equipo de envia la peticion
-		//se envia. Si ya pertenece a ese equipo se muestra el error con formato que esta en joinTeam comentado.
-		requestTeam.setUser_id(u.getId());
-		entityManager.persist(requestTeam);
+	public String sentRequestTeam(@RequestParam("teamId") long teamId,@ModelAttribute("requestTeam") RequestTeam requestTeam, @SessionAttribute("user") User u, Model model){
+		RequestTeam rq = null;
+		Team t = entityManager.find(Team.class, teamId);
+		try {
+			rq = entityManager.createQuery("select rq from RequestTeam rq where user_id = :userId",RequestTeam.class)
+					.setParameter("userId", u.getId()).getSingleResult();
+		}
+		catch(NoResultException ex) {
+			
+		}
+		if(rq == null) {
+			requestTeam.setUser(u);
+			requestTeam.setTeam(t);
+			entityManager.persist(requestTeam);
+			model.addAttribute("correct", true);
+		}
+		else
+			model.addAttribute("error", true);
+		model.addAttribute("team", t);//por si hace dos peticiones seguidas
 		return "joinTeam";
 	}
+	
 
 	@GetMapping("/logout")
 	public String logout() {
@@ -323,4 +343,11 @@ public class RootController {
 	public String rugbyTeams() {
 		return "rugbyTeams";
 	}
+	
+	@GetMapping("/teamHome")
+	public String teamHome() {
+		return "teamHome";
+	}
+	
+	
 }

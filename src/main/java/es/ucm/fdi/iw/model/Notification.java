@@ -4,13 +4,13 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 
 @Entity
 public class Notification {
 	
 	private long id;
-	private long team_id;
-	private long deputy;
+	private User deputy;
 	private String name;
 	private String message;
 	
@@ -18,8 +18,7 @@ public class Notification {
 		// TODO Auto-generated constructor stub
 	}
 	
-	public Notification(long idTeam, long deputy, String name, String message) {
-		this.team_id = idTeam;
+	public Notification(User deputy, String name, String message) {
 		this.deputy= deputy;
 		this.name = name;
 		this.message = message;
@@ -31,14 +30,11 @@ public class Notification {
 		return this.id;
 	}
 	
-	@Column
-	public long getDeputy() {
+	@ManyToOne(targetEntity = User.class)
+	public User getDeputy() {
 		return deputy;
 	}
-	@Column
-	public long getTeam_id() {
-		return team_id;
-	}
+
 	@Column
 	public String getMessage() {
 		return message;
@@ -48,16 +44,12 @@ public class Notification {
 		return name;
 	}
 	
-	public void setDeputy(long deputy) {
+	public void setDeputy(User deputy) {
 		this.deputy = deputy;
 	}
 	
 	public void setId(long id) {
 		this.id = id;
-	}
-	
-	public void setTeam_id(long team_id) {
-		this.team_id = team_id;
 	}
 	
 	public void setMessage(String message) {
