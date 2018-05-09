@@ -14,9 +14,9 @@
     	if(${player.id == user.id}){
     		belong = true;
     	};
-    	
+
 	</c:forEach>
-	
+
 </script>
 <script src="${s}/js/team.js"></script>
 
@@ -43,13 +43,13 @@
 							<button type="submit" class="btn btn-primary">Contactar delegado</button>
 							<input type="hidden" name = "id" value="${team.id}">
 						</form>
-						
+
 						<form action = "/joinTeam" method="get"  class="btn-group teamButtonsStyle" id = "joinTeam">
 							<button type="submit" class="btn btn-primary">Enviar solicitud</button>
 							<input type="hidden" name = "id" value="${team.id}">
 						</form>
 					</c:if>
-					<form action = "/gallery" method="get"  class="btn-group teamButtonsStyle" id = "gallery">
+					<form action = "/gallery_good" method="get"  class="btn-group teamButtonsStyle" id = "gallery">
 						<button type="submit" class="btn btn-primary">Galeria</button>
 					</form>
 					<form action = "/ranking" method="get" class="btn-group teamButtonsStyle" id = "ranking">

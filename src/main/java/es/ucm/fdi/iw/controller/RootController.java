@@ -1,5 +1,9 @@
 package es.ucm.fdi.iw.controller;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.PrintStream;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
@@ -237,11 +241,20 @@ public class RootController {
 		return "team";
 	}
 
+	@GetMapping("/gallery_good")
+	public String gallery_good(@RequestParam("id") long id, Model model) {
+		model.addAttribute("team",id);
+		return "gallery_good";
+	}
+	
 	@GetMapping("/playerTab")
 	public String playerTab() {
 		return "playerTab";
 	}
 
+
+	
+	
 	@GetMapping("/delegatedTeam")
 	public String delegatedTeam() {
 		return "delegatedTeam";
