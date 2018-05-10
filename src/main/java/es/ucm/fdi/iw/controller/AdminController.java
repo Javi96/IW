@@ -83,10 +83,10 @@ public class AdminController {
 	 * @return
 	 */
 	@RequestMapping(value="/photo/{id}", method = RequestMethod.GET, produces = MediaType.IMAGE_JPEG_VALUE)
-	public void userPhoto(@PathVariable("id") String id, 
+	public void userPhoto(@PathVariable("id") String id, @RequestParam("file") String file,
 			HttpServletResponse response) {
-	    File f = localData.getFile("user", id);
-	    InputStream in = null;
+	    File f = localData.getFile(id, file);
+		InputStream in = null;
 	    try {
 		    if (f.exists()) {
 		    	in = new BufferedInputStream(new FileInputStream(f));

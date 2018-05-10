@@ -1,8 +1,12 @@
 package es.ucm.fdi.iw.controller;
 
+import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintStream;
 import java.security.Principal;
 import java.util.ArrayList;
@@ -10,21 +14,26 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttribute;
 
+import es.ucm.fdi.iw.LocalData;
 import es.ucm.fdi.iw.model.League;
 import es.ucm.fdi.iw.model.MatchRecord;
 import es.ucm.fdi.iw.model.Notification;
@@ -37,6 +46,9 @@ public class RootController {
 
 	private static Logger log = Logger.getLogger(RootController.class);
 
+	@Autowired
+	private LocalData localData;
+	
 	@Autowired
 	private EntityManager entityManager;
 
@@ -162,6 +174,17 @@ public class RootController {
 		return String.join("'", data);
 	}
 	
+	@RequestMapping(value = "/showImages",method = RequestMethod.GET)
+	@ResponseBody
+	public String showImages(Model model, @RequestParam("team") String team, @RequestParam("files") int files ) {
+		List<String> data = new ArrayList<>();
+		for(int i=0; i<files; i++) {
+			data.add("{" + "\"src\":" + "\"" + "/"  + "\"" + "}");
+		}
+		return String.join("'", data);
+	}
+	
+	
    @RequestMapping(value = "/ranking",method = RequestMethod.GET)
 	public String classification(Model model, @RequestParam("sport") String sport) {
 		//esta en la tabla ligas, pero es necesario ahora para la prueba, se cambia cuando tengamos bd
@@ -242,8 +265,9 @@ public class RootController {
 	}
 
 	@GetMapping("/gallery_good")
-	public String gallery_good(@RequestParam("id") long id, Model model) {
+	public String gallery_good(@RequestParam("id") String id, Model model) {
 		model.addAttribute("team",id);
+		model.addAttribute("files", localData.getFile(id, "").listFiles().length);
 		return "gallery_good";
 	}
 	
