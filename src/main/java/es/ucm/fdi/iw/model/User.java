@@ -7,6 +7,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
+import javax.persistence.Transient;
 
 @Entity
 public class User {
@@ -16,7 +18,12 @@ public class User {
 	private String roles; // split by , to separate roles
 	private String name;
 	private byte enabled;
+	
 	private List<Team> teams;
+	
+	private List<Notification> notifications;
+	
+	private List<RequestTeam> requests;
 	
 	@Id
 	@GeneratedValue
@@ -43,6 +50,24 @@ public class User {
 		return name;
 	}
 	
+	@OneToMany(targetEntity = Notification.class , mappedBy = "deputy")
+	public List<Notification> getNotifications() {
+		return notifications;
+	}
+	
+	@OneToMany(mappedBy = "user")
+	public List<RequestTeam> getRequests() {
+		return requests;
+	}
+	
+	public void setRequests(List<RequestTeam> requests) {
+		this.requests = requests;
+	}
+	
+	public void setNotifications(List<Notification> notifications) {
+		this.notifications = notifications;
+	}
+	
 	public void setName(String name) {
 		this.name = name;
 	}
@@ -65,6 +90,11 @@ public class User {
 
 	public void setRoles(String roles) {
 		this.roles = roles;
+	}
+	
+	@Transient
+	public boolean isAdmin() {
+		return roles.contains("ADMIN");
 	}
 
 	public byte getEnabled() {

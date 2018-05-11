@@ -83,10 +83,10 @@ public class AdminController {
 	 * @return
 	 */
 	@RequestMapping(value="/photo/{id}", method = RequestMethod.GET, produces = MediaType.IMAGE_JPEG_VALUE)
-	public void userPhoto(@PathVariable("id") String id, 
+	public void userPhoto(@PathVariable("id") String id, @RequestParam("file") String file,
 			HttpServletResponse response) {
-	    File f = localData.getFile("user", id);
-	    InputStream in = null;
+	    File f = localData.getFile(id, file);
+		InputStream in = null;
 	    try {
 		    if (f.exists()) {
 		    	in = new BufferedInputStream(new FileInputStream(f));
@@ -106,17 +106,25 @@ public class AdminController {
 	 * @param photo to upload
 	 * @return
 	 */
-	@RequestMapping(value="/photo/{id}", method=RequestMethod.POST)
+	@RequestMapping(value="/photo", method=RequestMethod.POST)
     public @ResponseBody String handleFileUpload(@RequestParam("photo") MultipartFile photo,
-    		@PathVariable("id") String id){
+    		@RequestParam("id") String id){
         if (!photo.isEmpty()) {
             try {
+            	File f = new File("/tmp/iw/"+id);
+            	if(!f.exists() || (f.exists() && !f.isDirectory())) {
+            		new File("/tmp/iw/"+id).mkdirs();
+            	}
+            	
+            	int files = new File("/tmp/iw/"+id).listFiles().length;
                 byte[] bytes = photo.getBytes();
                 BufferedOutputStream stream =
                         new BufferedOutputStream(
-                        		new FileOutputStream(localData.getFile("user", id)));
+                        		new FileOutputStream(localData.getFile(id, Integer.toString(files+1))));
                 stream.write(bytes);
                 stream.close();
+                System.out.println("/tmp/iw/user/"+"     files: " + new File("/tmp/iw/user").listFiles().length
+);
                 return "You successfully uploaded " + id + 
                 		" into " + localData.getFile("user", id).getAbsolutePath() + "!";
             } catch (Exception e) {
