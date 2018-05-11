@@ -17,13 +17,13 @@ public class User {
 	private String password;
 	private String roles; // split by , to separate roles
 	private String name;
+	private String idCard;
 	private byte enabled;
 	
 	private List<Team> teams;
 	
 	private List<Notification> notifications;
-	
-	private List<RequestTeam> requests;
+
 	
 	@Id
 	@GeneratedValue
@@ -55,13 +55,13 @@ public class User {
 		return notifications;
 	}
 	
-	@OneToMany(mappedBy = "user")
-	public List<RequestTeam> getRequests() {
-		return requests;
+	@Column(unique=true)
+	public String getIdCard() {
+		return idCard;
 	}
 	
-	public void setRequests(List<RequestTeam> requests) {
-		this.requests = requests;
+	public void setIdCard(String idCard) {
+		this.idCard = idCard;
 	}
 	
 	public void setNotifications(List<Notification> notifications) {

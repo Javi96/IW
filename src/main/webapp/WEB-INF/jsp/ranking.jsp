@@ -11,7 +11,7 @@
 	<script src = "${s}/js/rankingSearchTeam.js"></script>
     
  <div class = "container">
-     <h1 id = "rankingTitle">La liga <small>${league.name}</small></h1>
+     <h1 id = "rankingTitle">La liga <small>${leagueName}</small></h1>
      <div id = "rankingHeader">
          <div id = "searchTeamDiv">
              <input id = "searchTeam" class="form-control" type="text" placeholder="Buscar equipo" onclick="search()" >

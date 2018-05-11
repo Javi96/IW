@@ -26,12 +26,14 @@ public class Team {
 	private User deputy;
 	private League league;
 	
-	
 	private List<RequestTeam> requests;
-	
 	
 	private List<User> players;
 
+	private List<Match> awayMatches;
+	
+	private List<Match> homeMatches;
+	
 //	private byte enabled; // esto que es?
 
 	public Team() {
@@ -109,6 +111,24 @@ public class Team {
 	@Column
 	public String getCategory() {
 		return category;
+	}
+
+	@OneToMany(mappedBy = "awayTeam")
+	public List<Match> getAwayMatches() {
+		return awayMatches;
+	}
+	
+	@OneToMany(mappedBy = "homeTeam")
+	public List<Match> getHomeMatches() {
+		return homeMatches;
+	}
+	
+	public void setAwayMatches(List<Match> awayMatches) {
+		this.awayMatches = awayMatches;
+	}
+	
+	public void setHomeMatches(List<Match> homeMatches) {
+		this.homeMatches = homeMatches;
 	}
 
 	public void setName(String name) {

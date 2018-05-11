@@ -94,7 +94,7 @@ $(function () {
 		$('#sports').empty();
 		$.get("/showSportsByGender", {category: category},
 		function(data) {
-			//$('#sports').empty();
+			$('#sports').empty();
 			let teamInfo = data.split("'");
 			for(let i = 0; i < teamInfo.length; i++){
 				let team = JSON.parse(teamInfo[i]);
@@ -124,12 +124,14 @@ function getTeams(sport) {
 		$('#arrowHeader').show();
 		for(let i = 0; i < teamInfo.length; i++){
 			let team = JSON.parse(teamInfo[i]);
+			let form = $('<form>').attr('action','team').attr('method','get');
 			let teamName = $('<input>').addClass('list-group-item inputSports all pull-center').attr('type','submit').attr('value',team.name);
 			let teamID = $('<input>').attr('type','hidden').attr('name',"id").prop('value',team.id);
 			let li = $('<li>').addClass('list-group-item');
 			li.append(teamName);
 			li.append(teamID);
-			$('#teams').append(li);
+			form.append(li);
+			$('#teams').append(form);
 		}
 	});
 }
