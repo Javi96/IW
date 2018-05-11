@@ -37,8 +37,7 @@
 		<link href="${s}/css/ucm.css" media ="screen" rel="stylesheet">
 		<link href="${s}/css/ucm-wg.css"  media ="screen" rel="stylesheet">
 		<link href="${s}/css/print.css"  media ="print" rel="stylesheet">
-		
-		
+	
 		<link type="text/css" media="screen" rel="stylesheet" href="${s}/css/cabecera.css" />
 		
 		<script type="text/javascript">
