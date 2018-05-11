@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
@@ -14,14 +15,17 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttribute;
 
+import es.ucm.fdi.iw.LocalData;
 import es.ucm.fdi.iw.model.League;
 import es.ucm.fdi.iw.model.Match;
 import es.ucm.fdi.iw.model.MatchRecord;
@@ -35,6 +39,9 @@ import es.ucm.fdi.iw.model.User;
 public class RootController {
 
 	private static Logger log = Logger.getLogger(RootController.class);
+
+	@Autowired
+	private LocalData localData;
 
 	@Autowired
 	private EntityManager entityManager;
@@ -118,7 +125,7 @@ public class RootController {
 			t.setNext_match_schedule(nextMatch);
 		if(facilities != null)
 			t.setNext_match_facilities(facilities);
-		
+
 		entityManager.persist(t);
 		return "prueba";
 	}
@@ -136,7 +143,7 @@ public class RootController {
 	public String home() {
 		return "home";
 	}
-	
+
 	@RequestMapping(value = "/showTeamsBySportsAndGender",method = RequestMethod.GET)
 	@ResponseBody
 	public String showTeamsBySportsAndGender(Model model, @RequestParam("category") String category,  @RequestParam("sport") String sport ) {
@@ -160,37 +167,48 @@ public class RootController {
 		}
 		return String.join("'", data);
 	}
-	
+
+	@RequestMapping(value = "/showImages",method = RequestMethod.GET)
+	@ResponseBody
+	public String showImages(Model model, @RequestParam("team") String team, @RequestParam("files") int files ) {
+		List<String> data = new ArrayList<>();
+		for(int i=0; i<files; i++) {
+			data.add("{" + "\"src\":" + "\"" + "/"  + "\"" + "}");
+		}
+		return String.join("'", data);
+	}
+
+
    @RequestMapping(value = "/ranking",method = RequestMethod.GET)
-	public String classification(Model model, @RequestParam("sport") String sport) {	
+	public String classification(Model model, @RequestParam("sport") String sport) {
 	   //borrar esta linea
 	   List<Team> teams = entityManager.createQuery("select ts from Team ts where sport = :sport",Team.class)
-				.setParameter("sport", sport).getResultList();  
-	   
+				.setParameter("sport", sport).getResultList();
+
 	   //No borrar
 	   League league = entityManager.createQuery("select l from League l where sport = :sport",League.class)
-				.setParameter("sport", sport).getSingleResult(); 
-	   
+				.setParameter("sport", sport).getSingleResult();
+
 	   //borrar solo esta linea
 	   league.setTeams(teams);
-	   
+
 	   Ranking ranking = new Ranking(league);
 	   model.addAttribute("ranking",ranking.getRanking());
 	   model.addAttribute("leagueName", league.getName());
-	   
+
 		return "ranking";
 	}
-	
+
 	@RequestMapping("/team")
 	public String team(@RequestParam("id") long id, Model model, HttpSession session) {
 		boolean logged = false;
 		Team team = entityManager.find(Team.class, id);
-		
+
 		//borrar
 		List<User> players = new ArrayList<User>();
 		players.add(entityManager.find(User.class, Long.parseLong("5")));
 		team.setPlayers(players);
-		
+
 		List<RequestTeam> requests = new ArrayList<RequestTeam>();
 		User u = entityManager.find(User.class, Long.parseLong("4"));
 		RequestTeam rq = new RequestTeam(team,u);
@@ -208,7 +226,7 @@ public class RootController {
 		model.addAttribute("logged", logged);
 		return "team";
 	}
-	
+
 
 	@RequestMapping(value = "/matchRecord", method = RequestMethod.POST,consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
 	@Transactional
@@ -226,7 +244,7 @@ public class RootController {
 				MatchRecord one = list.get(0);
 				if(one.getTeamId() != bodyMatch.getTeamId()) {// si el equipo ya ha enviado un acta
 					entityManager.persist(bodyMatch);
-					
+
 					MatchRecord two = bodyMatch;
 					if(one.getAwayTeamPoints() == two.getAwayTeamPoints() && one.getHomeTeamPoints() == two.getHomeTeamPoints()) {
 						Match match = entityManager.find(Match.class,bodyMatch.getMatchId());
@@ -243,11 +261,11 @@ public class RootController {
 			}
 		}
 		catch(NoResultException e) {
-			
+
 		}
 		return result;
 	}
-	
+
 	@RequestMapping("/getLastMatch")
 	@ResponseBody
 	public String getLastMatch(@RequestParam("teamId") long teamId) {
@@ -257,18 +275,18 @@ public class RootController {
 		Team t = entityManager.find(Team.class, teamId);
 		List<Match> awayMatches = t.getAwayMatches();
 		List<Match> homeMatches = t.getHomeMatches();
-		
+
 		if(awayMatches.size() > 0)
 			lastAwayMatch = awayMatches.get(awayMatches.size()-1);
 		if(homeMatches.size() > 0)
 			lastHomeMatch = homeMatches.get(homeMatches.size()-1);
-		
+
 		if(lastAwayMatch == null && lastHomeMatch == null) {
 			data = "";
 		}
 		else if(lastAwayMatch == null && lastHomeMatch != null ) {
-			data = "{" + "\"homeTeamName\":" + "\"" + lastHomeMatch.getHomeTeam().getName()  + "\"" + "," + 
-					"\"homeTeamPoints\":" + "\"" + lastHomeMatch.getHomeTeamPoints()  + "\""+ "," + 
+			data = "{" + "\"homeTeamName\":" + "\"" + lastHomeMatch.getHomeTeam().getName()  + "\"" + "," +
+					"\"homeTeamPoints\":" + "\"" + lastHomeMatch.getHomeTeamPoints()  + "\""+ "," +
 					"\"awayTeamName\":" + "\"" + lastHomeMatch.getAwayTeam().getName()  + "\"" + "," +
 					"\"awayTeamPoints\":" + "\"" + lastHomeMatch.getAwayTeamPoints()  + "\"" + "," +
 					"\"date\":" + "\"" + lastHomeMatch.getMatchDate()  + "\"" + "," +
@@ -304,16 +322,17 @@ public class RootController {
 	}
 
 	@GetMapping("/gallery_good")
-	public String gallery_good(@RequestParam("id") long id, Model model) {
+	public String gallery_good(@RequestParam("id") String id, Model model) {
 		model.addAttribute("team",id);
+		model.addAttribute("files", localData.getFile(id, "").listFiles().length);
 		return "gallery_good";
 	}
-	
+
 	@GetMapping("/playerTab")
 	public String playerTab() {
 		return "playerTab";
 	}
-	
+
 	@GetMapping("/delegatedTeam")
 	public String delegatedTeam() {
 		return "delegatedTeam";
@@ -324,7 +343,7 @@ public class RootController {
 		m.addAttribute("team", entityManager.find(Team.class, id));
 		return "contact";
 	}
-	
+
 	@RequestMapping(value = "/contactDeputy",method = RequestMethod.POST)
 	@Transactional
 	public String contactDeputy(@ModelAttribute("notification") Notification notification, @RequestParam("deputyId") long deputyId, Model model) {
@@ -340,7 +359,7 @@ public class RootController {
 		m.addAttribute("team", entityManager.find(Team.class, id));
 		return "joinTeam";
 	}
-	
+
 	@RequestMapping(path = "/sentRequestTeam",method = RequestMethod.POST)
 	@Transactional
 	public String sentRequestTeam(@RequestParam("teamId") long teamId,@ModelAttribute("requestTeam") RequestTeam requestTeam, @SessionAttribute("user") User u, Model model){
@@ -351,7 +370,7 @@ public class RootController {
 					.setParameter("userId", u.getId()).getSingleResult();
 		}
 		catch(NoResultException ex) {
-			
+
 		}
 		if(rq == null) {
 			requestTeam.setUser(u);
@@ -409,11 +428,11 @@ public class RootController {
 	public String rugbyTeams() {
 		return "rugbyTeams";
 	}
-	
+
 	@GetMapping("/teamHome")
 	public String teamHome() {
 		return "teamHome";
 	}
-	
-	
+
+
 }

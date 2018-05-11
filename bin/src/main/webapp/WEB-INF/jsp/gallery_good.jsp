@@ -162,18 +162,24 @@ img.hover-shadow {
 	</p>
 	 <input name="${_csrf.parameterName}" type="hidden" value="${_csrf.token}" />
 	<div>
-		<button type="submit">Send</button>
-		<input id="team" type="hidden" name = "id" value="${team}">		
+		<button type="submit" >Send</button>
+		<input type="hidden" name = "id" value="${team}">
 	</div>
 </form>
 
+Existing photos:
+<img class="photo" src="admin/photo/1">
+<img class="photo" src="admin/photo/2">
+<img class="photo" src="admin/photo/3">
+<img class="photo" src="admin/photo/4">
+<img class="photo" src="admin/photo/5">
 <div id="images" class="row">
   
 </div>
 
 
 
-<div id="mycarousel" class="modal"> Files ${files} sd<!--carousel imagenes-->
+<div id="mycarousel" class="modal"> <!--carousel imagenes-->
   <span class="close cursor" onclick="window.open('https://www.w3schools.com')">&times;</span>
   <div class="modal-content">
 
@@ -182,7 +188,8 @@ img.hover-shadow {
 
 <script>
     var slideIndex = 0;
-    var slides = ['admin/photo/1',
+    var slides = ['static/img/cat.jpeg',
+                    'static/img/card.svg',
                     'static/img/cat.jpeg',
                     'static/img/card.svg',
                     'static/img/cat.jpeg',
@@ -260,55 +267,11 @@ function showSlides(n) {
 }
 
 $(document).ready(function(){
-	console.log(document.getElementById("mycarousel").textContent[6,7]);
-  //loadSlices();
-  	var team = $('#team').attr("value");
-    files = document.getElementById("mycarousel").textContent[6,7];
+    loadSlices();
 
-    $("#images").empty();
-    for(i=1; i<=files; i++){
-    	$.get("/admin/photo/"+team, {file: i},
-    	function(data) {
-    		var b64Response = btoa(unescape(encodeURIComponent(data)));
-    		var outputImg = document.createElement('img');
-    		outputImg.src = '.~/tmp/iw/'+team+'/'+b64Response;
-    	    let img = $('<div class="column"><img src="'+outputImg.src+'" style="width:100%; max-height: 320px;" onclick="window.open("https://www.w3schools.com"); class="hover-shadow cursor"></div>');
-    	    $("#images").append(img);
-    	    
-    		//console.log(data);
-   			//$('#sports').empty();
-   			/*let teamInfo = data.split("'");
-   			for(let i = 0; i < teamInfo.length; i++){
-   				let team = JSON.parse(teamInfo[i]);
-   				let sport = $('<input>').addClass('list-group-item inputSports all pull-center').attr('type','submit').attr('value',team.sport)
-   				.attr('onClick', 'getTeams(\"' + team.sport + '\");');
-   				let li = $('<li>').addClass('list-group-item');
-   				li.append(sport);
-   				$('#sports').append(li);
-   			}*/
-     	});
-    }
-    
-    
-    
-    
-	/*$.get("/showImages", {team: $("#team").attr("value"), files: $("#files").attr("value")},
-		function(data) {
-	
-			//$('#teams').empty();
-			let teamInfo = data.split("'");
-			$('#arrowHeader').show();
-			for(let i = 0; i < teamInfo.length; i++){
-				let team = JSON.parse(teamInfo[i]);
-				let teamName = $('<input>').addClass('list-group-item inputSports all pull-center').attr('type','submit').attr('value',team.name);
-				let teamID = $('<input>').attr('type','hidden').attr('name',"id").prop('value',team.id);
-				let li = $('<li>').addClass('list-group-item');
-				li.append(teamName);
-				li.append(teamID);
-				$('#teams').append(li);
-			}
-		});*/
 });
+
+
 </script>
 
 

@@ -1,0 +1,21 @@
+.glyphicon.glyphicon-arrow-right {
+    color: #A00E19;
+    font-size: 80px;
+}
+
+#sports .list-group-item{
+	margin: 3px;
+}
+
+.inputSports{
+	border:none;
+	width: 100%;
+}
+.row{
+	margin-bottom: 40px;
+}
+
+.spHeader{
+	color: #A00E19;
+	font-size: 30px;
+}

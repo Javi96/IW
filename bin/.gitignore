@@ -1,0 +1,30 @@
+*.class
+
+# Mobile Tools for Java (J2ME)
+.mtj.tmp/
+
+# Package Files #
+*.jar
+*.war
+*.ear
+
+# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
+hs_err_pid*
+/target/
+.project
+.settings/org.eclipse.core.resources.prefs
+.settings/org.eclipse.m2e.core.prefs
+.settings/org.eclipse.wst.common.project.facet.core.xml
+.settings/org.eclipse.jdt.core.prefs
+.classpath
+README.md
+/.metadata/
+src/main/webapp/WEB-INF/jspf/header.jspf
+src/main/webapp/WEB-INF/jspf/header.jspf
+*.jspf
+src/main/java/es/.DS_Store
+src/main/java/es/ucm/.DS_Store
+.settings/org.eclipse.wst.common.component
+.settings/org.eclipse.wst.common.component
+src/main/java/es/ucm/fdi/.DS_Store
+.DS_Store
