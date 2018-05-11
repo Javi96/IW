@@ -126,16 +126,7 @@ public class RootController {
 		entityManager.persist(t);
 		return "prueba";
 	}
-
-/*
-	@RequestMapping(path = "/addRecord",method = RequestMethod.POST)
-	@Transactional
-	public String delegateCreateRecord(@ModelAttribute("matchrecord") MatchRecord matchRecord) {
-		entityManager.persist(matchRecord);
-		entityManager.flush();
-		return "addRecord";
-	}
-	*/
+	
 	@RequestMapping(path = "/home",method = RequestMethod.GET)
 	public String home() {
 		return "home";
