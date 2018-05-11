@@ -1,4 +1,4 @@
- function confirmTabs(){
+function confirmTabs(){
 	window.open("/delegatedTeam");
 }
 

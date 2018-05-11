@@ -2,9 +2,11 @@ To Do:
     header.jspf : modificar barra para tener tu y deportes, seguido de tus deportes si estas en login
     
          /login : Done
-(Pedro)  /home : Crear la pagina con noticias varias(igual que la de la UCM).
+(Pedro)  /home : Crear la pagina con noticias varias(igual que la de la UCM) (Done).
     /deportes : Done
+
 (Andrei) /equipo : Cambiar botones en funcion de ser delegado o no etc DONE
+
         Botones por roll:
             -Sin login : ver fotos, ver clasificación.
             -con login sin admin sin ser equipo: contactar delegado, ver fotos, ver clasificacion, enviar solicitud
@@ -14,6 +16,6 @@ To Do:
 (Javier) /galeria : botones de crear o eliminar carpeta si es delegado y ir a una carpeta para ver imagenes
 (javier) /imagenes : transicion entre las imagenes.
 (Silvia) /playerTab : Añadir funcion a los botones y añadir boton añadir jugador. Pop-Up para confirmar cambios
-    /agenda : cambiar el css, pillar datos de la base de datos.
+    /agenda : cambiar el css, pillar datos de la base de datos
     /gestionarSolicitudes : Hacer toda la pagina. : DONE
     /ranking : Done 

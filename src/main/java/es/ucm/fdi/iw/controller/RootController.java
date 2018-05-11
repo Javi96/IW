@@ -67,7 +67,7 @@ public class RootController {
                 .getSingleResult();
 			session.setAttribute("user", u);
 		}
-		return "home";
+		return "mainPage";
 	}
 
 	@GetMapping("/login")
@@ -386,5 +386,11 @@ public class RootController {
 		return "teamHome";
 	}
 	
+	@GetMapping("/mainPage")
+	public String mainPage() {
+		return "mainPage";
+	}
+	
+
 	
 }
