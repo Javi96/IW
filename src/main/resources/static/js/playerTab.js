@@ -15,7 +15,6 @@ $(document).ready(function() {
 	
 	loadActive();
 	
-	
 	$("#btnReset").on("click", onResetClick);
 	$("#btnSave").on("click", onSaveClick);
 });
@@ -75,7 +74,7 @@ function loadActive(){
 	
 	var valores = getGET();	
 	idTeam = valores['id'];
-	console.log("dentro del script para cargar listas con el id del equipo:"+idTeam);
+	console.log("ID equipo:"+idTeam);
 	
 	$.get("/showPlayersByTeam", {idTeam: idTeam},
 	function(data) {
@@ -125,40 +124,75 @@ function addListInOut(liEvento, idPlayer, namePlayer){
 	var user = getUser(playerInOut,idPlayer);
 	borrarElem(playerInOut,idPlayer);
 	
+	if(user.ref == 2){
+		
+		borrarElem(playerInOut,idPlayer);
+		borrarElem(playerIn,idPlayer);
+		$("#in #"+idPlayer).remove();
+		
+		if(!existe(playerOut,idPlayer)){
+			playerOut.push(user);
+			cargarLista("out",idPlayer, namePlayer);
+		}else
+			completeTitle();
+		
+	}else{
+		
+		borrarElem(playerOut,idPlayer);
+		$("#out #"+idPlayer).remove();
+		
+		playerIn.push(user);
+		cargarLista("in",idPlayer, namePlayer);
+	}
+	
+	/*
+	var user = getUser(playerInOut,idPlayer);
+	borrarElem(playerInOut,idPlayer);
+	
 	
 	borrarElem(playerInOut,idPlayer);
 	$("#out #"+idPlayer).remove();
 	
-	
-	//si el elemento vino de no activas
-	/*
-	if(user.ref == 2){
-		borrarElem(playerIn,idPlayer);
-		$("#in #"+idPlayer).remove();
-		completeTitle();
-	}else{
-		
-		//out
-		borrarElem(playerOut,idPlayer);
-		$("#out #"+idPlayer).remove();
-		
-		//in
-		playerIn.push(user);
-		cargarLista("in",idPlayer, namePlayer);
-	}
-	*/
-	
 	playerIn.push(user);
 	cargarLista("in",idPlayer, namePlayer);
-	
-	
+	*/
 };
 
-function addListIn(liEvento, idPlayer, namePlayer){
+function addListIn(liEvento, idPlayer, namePlayer){ 
 	
 	//borramos elemento
 	$("#"+idPlayer).remove();
 	
+	var user = getUser(playerIn,idPlayer);
+	borrarElem(playerIn,idPlayer);
+	
+	if(user.ref == 2){
+		
+		//inout
+		borrarElem(playerInOut,idPlayer);
+		$("#inout #"+idPlayer).remove();
+		$("#"+idPlayer).remove();
+		
+	}else{
+		user.ref = 2;
+		
+		//out
+		playerInOut.push(user);
+		
+		if(playerInOut.length == 1)
+			$("#inout").empty();
+		
+		cargarLista("inout",idPlayer, namePlayer);
+	}
+	
+	//in
+	playerOut.push(user);
+	cargarLista("out",idPlayer, namePlayer);
+	
+
+	/*
+	 SIN REFERENCIAS
+	 * 
 	var user = getUser(playerIn,idPlayer);//obtenemos el usuario que vamso a borrar
 	borrarElem(playerIn,idPlayer); //eliminamos de la lista
 
@@ -177,7 +211,7 @@ function addListIn(liEvento, idPlayer, namePlayer){
 	//añadimos a la lista de activas
 	cargarLista("inout",idPlayer, namePlayer);
 	cargarLista("out",idPlayer, namePlayer);
-	
+	*/
 };
 
 /**
@@ -188,27 +222,40 @@ function addListOut(liEvento, idPlayer, namePlayer){
 	//borramos elemento
 	$("#out #"+idPlayer).remove();
 	
-	var user = getUser(playerOut,idPlayer);//obtenemos el usuario que vamso a borrar
+	 var user = getUser(playerOut,idPlayer);
+	 borrarElem(playerOut,idPlayer);
+	 
+	if(user.ref == 2){
+		
+		//para el momento que pasa a ser de refe 2 por primera vez, que no se repita
+		if(!existe(playerInOut,idPlayer)){
+			playerInOut.push(user);
+			
+			if(playerInOut.length == 1)
+				$("#inout").empty();
+			
+			cargarLista("inout",idPlayer, namePlayer);
+		}
+		
+	}else{
+		borrarElem(playerInOut,idPlayer);
+		 $("#inout #"+idPlayer).remove();
+	}
+
+	//si o si se tiene que insertar en la lista de in
+	 playerIn.push(user);
+	 cargarLista("in",idPlayer, namePlayer);
+	
+	/*
+	 var user = getUser(playerOut,idPlayer);
 	
 	 borrarElem(playerOut,idPlayer);
 	 borrarElem(playerInOut,idPlayer);
 	 $("#inout #"+idPlayer).remove();
 	 
-	 
-	 /*
-	if(user.ref == 2){
-		playerInOut.push(user);
-		if(playerInOut.length == 1)
-			$("#inout").empty();
-		cargarLista("inout",idPlayer, namePlayer);
-	}else{
-		borrarElem(playerInOut,idPlayer);
-		 $("#inout #"+idPlayer).remove();
-	}
-	*/
 	playerIn.push(user);
 	cargarLista("in",idPlayer, namePlayer);
-	
+	*/
 };
 
 function getUser(lista,idPlayer){
@@ -246,7 +293,7 @@ function existe(lista, idPlayer){
 			enc = true;
 	});
 	
-	return ecn;
+	return enc;
 }
 
 //objetos tipos user
@@ -258,8 +305,16 @@ function User(id, n, r) {
 
 function onSaveClick(){
 	
-	var loc=location.href ="http://localhost:8000/team?id="+idTeam;
+    var opcion = confirm("¿Desea guardar los cambios?");
+    if (opcion == true) {
+        redireccionar();
+	} 
+	 
+}
+
+function redireccionar(){
 	
+	var loc=location.href ="http://localhost:8000/team?id="+idTeam;
 	$.ajax({
 	    method: "get",  //"post",
 	    url: loc,
@@ -275,7 +330,7 @@ function onSaveClick(){
 		    }
 	    }
 	});
-	 
+	
 }
 
 function onResetClick(){
