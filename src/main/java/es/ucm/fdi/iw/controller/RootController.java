@@ -189,6 +189,7 @@ public class RootController {
 
 	@RequestMapping("/team")
 	public String team(@RequestParam("id") long id, Model model, HttpSession session) {
+		
 		boolean logged = false;
 		Team team = entityManager.find(Team.class, id);
 
@@ -309,6 +310,34 @@ public class RootController {
 		return data;
 	}
 
+
+	@RequestMapping(value = "/showPlayersByTeam",method = RequestMethod.GET)
+	@ResponseBody
+	public String showSportsByGender(@RequestParam("idTeam") long id,Model model) {
+		
+		Team team = entityManager.find(Team.class, id);
+		
+		//obtenemos usuarios para meterlos en el equipo
+		List<User> users = entityManager.createQuery("select us from User us",User.class).getResultList();
+		
+		//Asignamos equipo a los usuarios
+		for (User u: users) {
+			List<Team> teamUser = u.getTeams();
+			teamUser.add(team);
+			u.setTeams(teamUser);
+		}
+		
+		team.setPlayers(users); //Asignamos los usuarios al equipo
+		List<String> data = new ArrayList<>();
+		
+		for (User u : team.getPlayers()) {
+			String datoUser = u.getId()+","+u.getName();
+			data.add("{" + "\"players\":" + "\"" + datoUser  + "\"" + "}");
+		}
+		
+		return String.join("'", data);
+	}
+	
 	@GetMapping("/gallery_good")
 	public String gallery_good(@RequestParam("id") String id, Model model) {
 		model.addAttribute("team",id);
@@ -320,7 +349,14 @@ public class RootController {
 	public String playerTab() {
 		return "playerTab";
 	}
-
+	
+	@RequestMapping(path = "/savePlayerTab",method = RequestMethod.POST)
+	@Transactional
+	public String savePlayerTab(@SessionAttribute("user") User u, Model model){
+		
+		return "";
+	}
+	
 	@GetMapping("/delegatedTeam")
 	public String delegatedTeam() {
 		return "delegatedTeam";
