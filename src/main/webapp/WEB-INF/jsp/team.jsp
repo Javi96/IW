@@ -55,18 +55,17 @@
 						<input type="hidden" name = "sport" value="${team.sport}">
 					</form>
 					<div class="btn-group teamButtonsStyle" id = "matchRecord">
-						<button type="button" onClick = "getLastMatchRecord()" data-toggle="modal" data-target="#matchRecordModal" 
-						class="btn btn-primary">Firmar actas</button>	
+						<button type="button" onClick = "getLastMatchRecord()" data-toggle="modal" data-target="#matchRecordModal"
+						class="btn btn-primary">Firmar actas</button>
 					</div>
 
 					<form action = "/playerTab" method="get"  class="btn-group teamButtonsStyle" id = "playerTab">
 						<button type="submit" class="btn btn-primary">Gestionar fichas</button>
 						<input type="hidden" name = "id" value="${team.id}">
 					</form>
-					<form action = "" method="get"  class="btn-group teamButtonsStyle" id = "notifications">
-						<button type="submit" class="btn btn-primary">Notificaciones</button>
-						<input type="hidden" name = "id" value="${team.id}">
-					</form>
+					<div class="btn-group teamButtonsStyle" id = "notificationsDiv">
+						<button id = "notifications" type="button" data-toggle="modal" data-target="#notificationModal" class="btn btn-primary">Notificaciones</button>
+					</div>
 					<div class="btn-group teamButtonsStyle" id = "playersRequests">
 						<button type="submit" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalLong">Gestionar Ingresos</button>
 						<input type="hidden" name = "id" value="${team.id}">
@@ -75,8 +74,8 @@
         	</div>
     	</div>
 	</div>
-	
-	<!-- Modal -->
+
+	<!-- Modal matchRecord-->
 	<div class="modal fade" id="matchRecordModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
 	    <div class="modal-dialog modal-dialog-centered" role="document">
 	        <div class="modal-content">
@@ -112,7 +111,7 @@
 	        </div>
 	    </div>
 	</div>
-	
+
 		<!-- Modal players requests-->
 	<div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
 	    <div class="modal-dialog" role="document">
@@ -156,9 +155,68 @@
 	        </div>
 	    </div>
 	</div>
-	
-	
-	
+
+	<!-- Modal notifications-->
+	<div class="modal fade" id="notificationModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+	  <div class="modal-dialog modal-dialog-centered" role="document">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <h5 class="modal-title" id="exampleModalLongTitle">Mensajes recibidos</h5>
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+	          <span aria-hidden="true">&times;</span>
+	        </button>
+	      </div>
+	      <div class="modal-body">
+	      	<c:if test="${empty user.notifications}">
+	      		No hay mensajes nuevos
+	      	</c:if>
+            <c:forEach items="${user.notifications}" var="notification">
+            	<div id = "${notification.id }">
+	                <div class="row">
+	                    <div class="col-md-2 col-md-offset-1 text-left">
+	                        <h4>Nombre:</h4>
+	                    </div>
+	                    <div class="col-md-5 col-md-offset-right-2">
+	                        <h4>${notification.name}</h4>
+	                    </div>
+	                </div>
+	                <div class="row">
+	                    <div class="col-md-2 col-md-offset-1 text-left">
+	                        <h4>Email:</h4>
+	                    </div>
+	                    <div class="col-md-5 col-md-offset-right-2">
+	                        <h4>${notification.email}</h4>
+	                    </div>
+	                </div>
+	                <div class="row">
+						<div class="col-md-2 col-md-offset-1 text-left">
+						    <h4>Mensaje:</h4>
+						</div>
+	                </div>
+	                <div class="row">
+						<div class="col-md-10 col-md-offset-1 text-left">
+							<br>
+						    <p>${notification.message}</p>
+						</div>
+	                </div>
+	                <div class="row">
+	                    <div class="col-sm-12 text-center">
+	                        <button type="button" class="btn btn-success" onclick='responseNotification(${notification.id})'>Contestar</button>
+	                        <button type="button" class="btn btn-danger" onclick='deleteNotification( ${notification.id} )'>Borrar</button>
+	                    </div>
+	                </div>
+	                <hr></hr>
+                </div>
+            </c:forEach>
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+
+
 </div>
 
 <%@ include file="../jspf/footer.jspf"%>

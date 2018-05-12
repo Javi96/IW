@@ -8,7 +8,7 @@ $(function () {
 	$('#matchRecord').hide();
 	$('#playerTab').hide();
 	$('#playersRequests').hide();
-	$('#notifications').hide();
+	$('#notificationsDiv').hide();
 	update();
 });
 
@@ -18,11 +18,10 @@ function update(){
     	$('#matchRecord').show();
     	$('#playerTab').show();
     	$('#playersRequests').show();
-    	$('#notifications').show();
+    	$('#notificationsDiv').show();
     } 
 	else{ // usuario normal logueado
 		$('#contact').show();
-		$('#notifications').show();
 		if(belong){//si pertenece al equipo
 			$('#joinTeam').hide();
 		}
@@ -81,4 +80,24 @@ function addMatchRecord(){
 	});
 }
 
+function deleteNotification(id){
+	$.ajax({
+	    method: "post",  
+	    url: "/deleteNotification",
+	    data:
+	    {
+	    	id:id
+	    },
+	    success: (data)=>{
+	    	$('#'+id).remove();
+	    },
+	    error: (XMLHttpRequest, textStatus, errorThrown)=> { 
+	        alert("Ha ocurrido un error inesperado"); 
+	    }       
+	});
+}
+
+function responseNotification(id){
+	window.open("https://www.google.com/intl/es/gmail/about/");
+}
 

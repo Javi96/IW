@@ -13,15 +13,17 @@ public class Notification {
 	private User deputy;
 	private String name;
 	private String message;
+	private String email;
 	
 	public Notification() {
 		// TODO Auto-generated constructor stub
 	}
 	
-	public Notification(User deputy, String name, String message) {
+	public Notification(User deputy, String name, String message, String email) {
 		this.deputy= deputy;
 		this.name = name;
 		this.message = message;
+		this.email = email;
 	}
 	
 	@Id
@@ -42,6 +44,15 @@ public class Notification {
 	@Column
 	public String getName() {
 		return name;
+	}
+	
+	@Column(unique = true)
+	public String getEmail() {
+		return email;
+	}
+	
+	public void setEmail(String email) {
+		this.email = email;
 	}
 	
 	public void setDeputy(User deputy) {

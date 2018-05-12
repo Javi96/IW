@@ -207,12 +207,38 @@ public class RootController {
 		team.setRequests(requests);
 		//fin borrado
 		User currentUser = (User) session.getAttribute("user");
+		
+		//borrar
+		Notification n = new Notification(currentUser, "Pepe", "hola es este le mensaje?", "pepepepepepe@hotmail.com");
+		n.setId(Long.parseLong("1"));
+		List<Notification> notific = new ArrayList<Notification>();
+		notific.add(n);
+		currentUser.setNotifications(notific);
+		//fin
+		
 		if(currentUser != null) {
 			logged = true;
 		}
 		model.addAttribute("team", team);
 		model.addAttribute("logged", logged);
 		return "team";
+	}
+	
+	@RequestMapping(value = "/deleteNotification", method = RequestMethod.POST)
+	@Transactional
+	@ResponseBody
+	public boolean deleteNotification(Notification notification) {
+		boolean deleted = false;
+		try {
+			Notification n = entityManager.find(Notification.class, notification.getId());
+			entityManager.remove(n);
+			entityManager.flush();
+			deleted = true;
+		}
+		catch(Exception e) {
+			
+		}
+		return deleted;
 	}
 
 
@@ -321,11 +347,6 @@ public class RootController {
 		return "playerTab";
 	}
 
-	@GetMapping("/delegatedTeam")
-	public String delegatedTeam() {
-		return "delegatedTeam";
-	}
-
 	@RequestMapping("/contact")
 	public String contact(@RequestParam("id") long id, Model m) {
 		m.addAttribute("team", entityManager.find(Team.class, id));
@@ -339,6 +360,7 @@ public class RootController {
 		notification.setDeputy(entityManager.find(User.class, deputyId));
 		entityManager.persist(notification);
 		model.addAttribute("correct", true);
+		entityManager.flush();
 		return "contact";
 	}
 
