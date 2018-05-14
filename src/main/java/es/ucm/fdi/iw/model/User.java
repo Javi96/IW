@@ -25,7 +25,6 @@ public class User {
 
 	private List<Notification> notifications;
 
-
 	@Id
 	@GeneratedValue
 	public long getId() {
