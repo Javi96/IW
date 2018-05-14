@@ -28,8 +28,12 @@ public class Team {
 	
 	private List<RequestTeam> requests;
 	
-	private List<User> players;
-
+	//lista cambio platilla
+	private List<User> activePlayers;
+	
+	//lista de fichas activas
+	private List<User> noActivePlayers;
+	
 	private List<Match> awayMatches;
 	
 	private List<Match> homeMatches;
@@ -89,11 +93,23 @@ public class Team {
 		return training_schedule;
 	}
 	
-	@ManyToMany(targetEntity = User.class)
-	public List<User> getPlayers() {
-		return players;
+	/*
+	@Column
+	public List<Long> getPlayerActive() {
+		return playerActive;
 	}
-
+	*/
+	@ManyToMany(targetEntity = User.class)
+	public List<User> getActivePlayers() {
+		return activePlayers;
+	}
+	
+	@ManyToMany(targetEntity = User.class)
+	public List<User> getNoActivePlayers() {
+		return this.noActivePlayers;
+	}
+	
+	
 	@OneToMany(mappedBy = "team")
 	public List<RequestTeam> getRequests() {
 		return requests;
@@ -167,13 +183,15 @@ public class Team {
 		this.league = league;
 	}
 
-	public void setPlayers(List<User> players) {
-		this.players = players;
+	public void setActivePlayers(List<User> players) {
+		this.activePlayers = players;
 	}
 
 	public void setCategory(String category) {
 		this.category = category;
 	}
 
-
+	public void setNoActivePlayers(List<User> players) {
+		this.noActivePlayers = players;
+	}
 }

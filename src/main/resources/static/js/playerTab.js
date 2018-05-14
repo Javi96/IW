@@ -5,6 +5,7 @@ var playerIn = new Array();
 var playerInCopy = new Array();
 var playerOut = new Array();
 var playerInOut = new Array();
+var playerInfor = new Array();
 var idTeam;
 
 /*
@@ -18,7 +19,6 @@ $(document).ready(function() {
 	$("#btnReset").on("click", onResetClick);
 	$("#btnSave").on("click", onSaveClick);
 });
-
 
 /**
 * Funcion que captura las variables pasados por GET
@@ -112,6 +112,36 @@ function loadActive(){
 		playerInCopy = playerIn;
 		completeTitle();
 	});
+}
+
+function loadNoActive(){
+	
+	var valores = getGET();	
+	idTeam = valores['id'];
+	console.log("ID equipo:"+idTeam);
+	
+	$.get("/getPlayerInfo", {idTeam: idTeam},
+	function(data) {
+		
+		let userInfo = data.split("'");
+		
+		for(let i = 0; i < userInfo.length; i++){
+			
+			//obtenemos campos
+			let datePlayer = userInfo[i].split(":");
+			let validos = datePlayer[1].split(",");
+			
+			let idPlayer = validos[0].substring(1,validos[0].length);
+			let namePlayer = validos[1].substring(0,validos[1].length-2);
+			
+			playerInfor.push(new User(idPlayer,namePlayer,1));
+		}
+	});
+}
+
+function managePlayer(player){
+	
+	console.log(player);
 	
 }
 
@@ -214,9 +244,6 @@ function addListIn(liEvento, idPlayer, namePlayer){
 	*/
 };
 
-/**
- * funcion que le paso lista e imprimir lista
- */
 function addListOut(liEvento, idPlayer, namePlayer){
 	
 	//borramos elemento
