@@ -194,10 +194,7 @@ public class RootController {
 		Team team = entityManager.find(Team.class, id);
 
 		//borrar
-		List<User> players = new ArrayList<User>();
-		players.add(entityManager.find(User.class, Long.parseLong("5")));
-		team.setPlayers(players);
-
+		
 		List<RequestTeam> requests = new ArrayList<RequestTeam>();
 		User u = entityManager.find(User.class, Long.parseLong("4"));
 		RequestTeam rq = new RequestTeam(team,u);
@@ -336,13 +333,16 @@ public class RootController {
 		return data;
 	}
 
-
+/*
 	@RequestMapping(value = "/showPlayersByTeam",method = RequestMethod.GET)
 	@ResponseBody
 	public String showSportsByGender(@RequestParam("idTeam") long id,Model model) {
 
 		Team team = entityManager.find(Team.class, id);
 
+		List<User> players = team.getPlayers();
+		
+		/*
 		//obtenemos usuarios para meterlos en el equipo
 		List<User> users = entityManager.createQuery("select us from User us",User.class).getResultList();
 
@@ -353,7 +353,8 @@ public class RootController {
 			u.setTeams(teamUser);
 		}
 
-		team.setPlayers(users); //Asignamos los usuarios al equipo
+		team.setPlayers(players);
+		//team.setPlayers(users);
 		List<String> data = new ArrayList<>();
 
 		for (User u : team.getPlayers()) {
@@ -363,16 +364,27 @@ public class RootController {
 
 		return String.join("'", data);
 	}
+	*/
+/*
+	@RequestMapping(value = "/getPlayerInfo",method = RequestMethod.GET)
+	@ResponseBody
+	public String getPlayerInfo(@RequestParam("idTeam") long id,Model model) {
 
-	@GetMapping("/gallery_good")
-	public String gallery_good(@RequestParam("id") String id, Model model) {
-		model.addAttribute("team",id);
-		model.addAttribute("files", localData.getFile(id, "").listFiles().length);
-		return "gallery_good";
+		Team team = entityManager.find(Team.class, id);
+
+		List<String> data = new ArrayList<>();
+		for (User u : team.getPlayers()) {
+			String datoUser = u.getId()+","+u.getName();
+			data.add("{" + "\"players\":" + "\"" + datoUser  + "\"" + "}");
+		}
+
+		return String.join("'", data);
 	}
-
-	@GetMapping("/playerTab")
-	public String playerTab() {
+	*/
+	@RequestMapping(value ="/playerTab",method = RequestMethod.GET)
+	public String playerTab(Model model,@RequestParam("id")long id) {
+		Team t = entityManager.find(Team.class, id);
+		model.addAttribute("team", t);
 		return "playerTab";
 	}
 	
@@ -381,6 +393,13 @@ public class RootController {
 	public String savePlayerTab(@SessionAttribute("user") User u, Model model){
 
 		return "";
+	}
+	
+	@GetMapping("/gallery_good")
+	public String gallery_good(@RequestParam("id") String id, Model model) {
+		model.addAttribute("team",id);
+		model.addAttribute("files", localData.getFile(id, "").listFiles().length);
+		return "gallery_good";
 	}
 
 	@RequestMapping("/contact")

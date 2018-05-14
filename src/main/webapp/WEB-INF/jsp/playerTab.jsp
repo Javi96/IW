@@ -7,7 +7,7 @@
 <%@ include file="../jspf/header.jspf"%>
 <link type="text/css" media="screen" rel="stylesheet" href="${s}/css/playerTab.css" />
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-<script src = "${s}/js/playerTab.js"></script>
+<!--<script src = "${s}/js/playerTab.js"></script>-->
 
 
  <div class="container" id="tabs">
@@ -24,7 +24,20 @@
      </div>
      <div class="left_container">
          <div class="playertabin">	<!-- lista oeste -->
-             <ul id="in" class="list-group list-group-flush"></ul> 
+             <ul id="in" class="list-group list-group-flush">
+             
+             	<c:forEach items="${team.noActivePlayers}" var="player">
+             		
+             		<li class="list-group-item">
+          
+             			${player.name}
+             			<button type="button" class="close" aria-label="Close"> 
+             				<span aria-hidden="true">&times;</span>
+             			</button>
+             		</li>
+				</c:forEach>
+				
+             </ul> 
          </div>
          <div class="playertabout">	<!-- lista este -->
              <ul id="out" class="list-group list-group-flush"></ul> 
