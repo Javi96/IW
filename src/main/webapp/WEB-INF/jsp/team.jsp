@@ -9,10 +9,16 @@
 	var teamId = ${team.id};
 	var isUserDeputy = ${team.deputy.id == user.id ? "true" : "false"};
 	var belong = false;
-	<c:forEach items="${team.players}" var="player">
+	<c:forEach items="${team.activePlayers}" var="player">
     	if(${player.id == user.id}){
     		belong = true;
     	};
+	</c:forEach>
+
+	<c:forEach items="${team.noActivePlayers}" var="player">
+	if(${player.id == user.id}){
+		belong = true;
+	};
 	</c:forEach>
 
 </script>

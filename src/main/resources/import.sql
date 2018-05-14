@@ -17,3 +17,8 @@ INSERT INTO team (id,name,school,sport,deputy_id,category,training_schedule,next
 INSERT INTO team (id,name,school,sport,deputy_id,category,training_schedule,next_match_schedule,next_match_facilities) values  (6,'Futbol Sala Historia', 'Facultad de Historia', 'Futbol Sala', 6, 'Masculino', 'Lunes y Jueves 17:00h','Viernes 16:30h', 'Polideportivo UCM');
 
 INSERT INTO match(home_team_id,away_team_id,home_team_points,away_team_points,match_date,record_checked) values (1,2,50,70,'2018-05-23',0);
+
+INSERT INTO team_active_players(team_id,active_players_id) values (1,5);
+INSERT INTO team_active_players(active_teams_id,active_players_id) values (1,6);
+
+--INSERT INTO team_no_active_players(no_active_teams_id,no_active_players_id) values (1,4);

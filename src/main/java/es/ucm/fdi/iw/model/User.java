@@ -21,8 +21,12 @@ public class User {
 	private String idCard;
 	private byte enabled;
 
-	private List<Team> teams;
+	//equipos en los que el jugador esta convocado
+	private List<Team> activeTeams;
 
+	//equipos en los que el jugador  NO esta convocado
+	private List<Team> noActiveTeams;
+		
 	private List<Notification> notifications;
 
 	@Id
@@ -40,9 +44,14 @@ public class User {
 		return login;
 	}
 
-	@ManyToMany(mappedBy = "players")
-	public List<Team> getTeams() {
-		return teams;
+	@ManyToMany(mappedBy = "activePlayers")
+	public List<Team> getActiveTeams() {
+		return activeTeams;
+	}
+	
+	@ManyToMany(mappedBy = "activePlayers")
+	public List<Team> getNoActiveTeams() {
+		return noActiveTeams;
 	}
 
 	@Column
@@ -105,7 +114,10 @@ public class User {
 		this.enabled = enabled;
 	}
 
-	public void setTeams(List<Team> teams) {
-		this.teams = teams;
+	public void setActiveTeams(List<Team> teams) {
+		this.activeTeams = teams;
+	}
+	public void setNoActiveTeams(List<Team> teams) {
+		this.noActiveTeams = teams;
 	}
 }
