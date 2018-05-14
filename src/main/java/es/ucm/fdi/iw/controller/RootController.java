@@ -333,54 +333,6 @@ public class RootController {
 		return data;
 	}
 
-/*
-	@RequestMapping(value = "/showPlayersByTeam",method = RequestMethod.GET)
-	@ResponseBody
-	public String showSportsByGender(@RequestParam("idTeam") long id,Model model) {
-
-		Team team = entityManager.find(Team.class, id);
-
-		List<User> players = team.getPlayers();
-		
-		/*
-		//obtenemos usuarios para meterlos en el equipo
-		List<User> users = entityManager.createQuery("select us from User us",User.class).getResultList();
-
-		//Asignamos equipo a los usuarios
-		for (User u: users) {
-			List<Team> teamUser = u.getTeams();
-			teamUser.add(team);
-			u.setTeams(teamUser);
-		}
-
-		team.setPlayers(players);
-		//team.setPlayers(users);
-		List<String> data = new ArrayList<>();
-
-		for (User u : team.getPlayers()) {
-			String datoUser = u.getId()+","+u.getName();
-			data.add("{" + "\"players\":" + "\"" + datoUser  + "\"" + "}");
-		}
-
-		return String.join("'", data);
-	}
-	*/
-/*
-	@RequestMapping(value = "/getPlayerInfo",method = RequestMethod.GET)
-	@ResponseBody
-	public String getPlayerInfo(@RequestParam("idTeam") long id,Model model) {
-
-		Team team = entityManager.find(Team.class, id);
-
-		List<String> data = new ArrayList<>();
-		for (User u : team.getPlayers()) {
-			String datoUser = u.getId()+","+u.getName();
-			data.add("{" + "\"players\":" + "\"" + datoUser  + "\"" + "}");
-		}
-
-		return String.join("'", data);
-	}
-	*/
 	@RequestMapping(value ="/playerTab",method = RequestMethod.GET)
 	public String playerTab(Model model,@RequestParam("id")long id) {
 		Team t = entityManager.find(Team.class, id);

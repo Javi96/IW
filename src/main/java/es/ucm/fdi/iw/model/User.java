@@ -49,7 +49,7 @@ public class User {
 		return activeTeams;
 	}
 	
-	@ManyToMany(mappedBy = "activePlayers")
+	@ManyToMany(mappedBy = "noActivePlayers")
 	public List<Team> getNoActiveTeams() {
 		return noActiveTeams;
 	}

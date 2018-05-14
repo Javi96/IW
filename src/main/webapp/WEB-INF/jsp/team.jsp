@@ -14,12 +14,14 @@
     		belong = true;
     	};
 	</c:forEach>
-
-	<c:forEach items="${team.noActivePlayers}" var="player">
-	if(${player.id == user.id}){
-		belong = true;
-	};
-	</c:forEach>
+	
+   	if(!belong){
+		<c:forEach items="${team.noActivePlayers}" var="player">
+		if(${player.id == user.id}){
+			belong = true;
+		};
+		</c:forEach>
+   	}
 
 </script>
 <script src="${s}/js/team.js"></script>
