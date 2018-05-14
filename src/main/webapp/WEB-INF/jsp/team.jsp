@@ -127,34 +127,36 @@
 	            <div class="modal-header">
 	                <h5 class="modal-title" id="exampleModalLongTitle">Solicitudes de ingreso a ${team.name}</h5>
 	            </div>
-	            <div class="modal-body">
+	            <div class="modal-body" id = "modalRequest">
 	            	<c:if test="${empty team.requests}">
 	            		<h4>No hay solicitudes</h4>
 	            	</c:if>
 	                <c:forEach items="${team.requests}" var="request">
-	                    <div class="row">
-	                        <div class="col-md-4 col-md-offset-1 text-right">
-	                            <h4>Nombre:</h4>
-	                        </div>
-	                        <div class="col-md-5 col-md-offset-right-1">
-	                            <h4>${request.user.name}</h4>
-	                        </div>
+	                	<div id = "${request.id}">
+		                    <div class="row">
+		                        <div class="col-md-4 col-md-offset-1 text-right">
+		                            <h4>Nombre:</h4>
+		                        </div>
+		                        <div class="col-md-5 col-md-offset-right-1">
+		                            <h4>${request.user.name}</h4>
+		                        </div>
+		                    </div>
+		                    <div class="row">
+		                        <div class="col-md-4 col-md-offset-1 text-right">
+		                            <h4>Dni:</h4>
+		                        </div>
+		                        <div class="col-md-5 col-md-offset-right-1">
+		                            <h4>${request.user.idCard}</h4>
+		                        </div>
+		                    </div>
+		                    <div class="row">
+		                        <div class="col-sm-12 text-center">
+		                            <button type="button" onclick='acceptNewPlayer(${request.id})' class="btn btn-success">Aceptar</button>
+		                            <button type="button" onclick='deleteRequestPlayer(${request.id})' class="btn btn-warning">Rechazar</button>
+		                        </div>
+		                    </div>
+		                    <hr></hr>
 	                    </div>
-	                    <div class="row">
-	                        <div class="col-md-4 col-md-offset-1 text-right">
-	                            <h4>Dni:</h4>
-	                        </div>
-	                        <div class="col-md-5 col-md-offset-right-1">
-	                            <h4>${request.user.idCard}</h4>
-	                        </div>
-	                    </div>
-	                    <div class="row">
-	                        <div class="col-sm-12 text-center">
-	                            <button type="button" class="btn btn-success">Aceptar</button>
-	                            <button type="button" class="btn btn-warning">Rechazar</button>
-	                        </div>
-	                    </div>
-	                    <hr></hr>
 	                </c:forEach>
 	            </div>
 	            <div class="modal-footer">
@@ -174,7 +176,7 @@
 	          <span aria-hidden="true">&times;</span>
 	        </button>
 	      </div>
-	      <div class="modal-body">
+	      <div class="modal-body" id = "modalNotifications">
 	      	<c:if test="${empty user.notifications}">
 	      		No hay mensajes nuevos
 	      	</c:if>

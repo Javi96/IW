@@ -90,6 +90,8 @@ function deleteNotification(id){
 	    },
 	    success: (data)=>{
 	    	$('#'+id).remove();
+	    	if($('#modalNotifications').children().length === 0)
+	    		$('#modalNotifications').text("No hay mas notificaciones");
 	    },
 	    error: (XMLHttpRequest, textStatus, errorThrown)=> { 
 	        alert("Ha ocurrido un error inesperado"); 
@@ -99,5 +101,46 @@ function deleteNotification(id){
 
 function responseNotification(id){
 	window.open("https://www.google.com/intl/es/gmail/about/");
+}
+
+function acceptNewPlayer(id){
+	$.ajax({
+	    method: "post",  
+	    url: "/acceptNewPlayer",
+	    contentType:'application/json',
+	    data:
+	    {
+	    	id:id
+	    },
+	    success: (data)=>{
+	    	$('#'+id).remove();
+	    	console.log($('#modalRequest'));
+	    	if($('#modalRequest').children().length === 0)
+	    		$('#modalRequest').text("No hay mas solicitudes");
+	    },
+	    error: (XMLHttpRequest, textStatus, errorThrown)=> { 
+	        alert("Ha ocurrido un error inesperado"); 
+	    }       
+	});
+}
+
+function deleteRequestPlayer(id) {
+	$.ajax({
+	    method: "post",  
+	    url: "/deleteRequest",
+	    contentType:'application/json',
+	    data:
+	    {
+	    	id:id
+	    },
+	    success: (data)=>{
+	    	$('#'+id).remove();
+	    	if($('#modalRequest').children().length === 0)
+	    		$('#modalRequest').text("No hay mas solicitudes");
+	    },
+	    error: (XMLHttpRequest, textStatus, errorThrown)=> { 
+	        alert("Ha ocurrido un error inesperado"); 
+	    }       
+	});
 }
 

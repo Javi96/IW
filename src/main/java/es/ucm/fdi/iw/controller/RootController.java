@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -31,6 +32,7 @@ import es.ucm.fdi.iw.model.Ranking;
 import es.ucm.fdi.iw.model.RequestTeam;
 import es.ucm.fdi.iw.model.Team;
 import es.ucm.fdi.iw.model.User;
+
 
 @Controller
 public class RootController {
@@ -169,16 +171,8 @@ public class RootController {
 
    @RequestMapping(value = "/ranking",method = RequestMethod.GET)
 	public String classification(Model model, @RequestParam("sport") String sport) {
-	   //borrar esta linea
-	   List<Team> teams = entityManager.createQuery("select ts from Team ts where sport = :sport",Team.class)
-				.setParameter("sport", sport).getResultList();
-
-	   //No borrar
 	   League league = entityManager.createQuery("select l from League l where sport = :sport",League.class)
 				.setParameter("sport", sport).getSingleResult();
-
-	   //borrar solo esta linea
-	   league.setTeams(teams);
 
 	   Ranking ranking = new Ranking(league);
 	   model.addAttribute("ranking",ranking.getRanking());
@@ -189,35 +183,12 @@ public class RootController {
 
 	@RequestMapping("/team")
 	public String team(@RequestParam("id") long id, Model model, HttpSession session) {
-
 		boolean logged = false;
-		Team team = entityManager.find(Team.class, id);
-
-		//borrar
-		
-		List<RequestTeam> requests = new ArrayList<RequestTeam>();
-		User u = entityManager.find(User.class, Long.parseLong("4"));
-		RequestTeam rq = new RequestTeam(team,u);
-		User u2 = entityManager.find(User.class, Long.parseLong("3"));
-		RequestTeam rq2 = new RequestTeam(team,u2);
-		requests.add(rq);
-		requests.add(rq2);
-		team.setRequests(requests);
-		//fin borrado
 		User currentUser = (User) session.getAttribute("user");
-
-		//borrar
-		Notification n = new Notification(currentUser, "Pepe", "hola es este le mensaje?", "pepepepepepe@hotmail.com");
-		n.setId(Long.parseLong("1"));
-		List<Notification> notific = new ArrayList<Notification>();
-		notific.add(n);
-		currentUser.setNotifications(notific);
-		//fin
-
 		if(currentUser != null) {
 			logged = true;
 		}
-		model.addAttribute("team", team);
+		model.addAttribute("team", entityManager.find(Team.class, id));
 		model.addAttribute("logged", logged);
 		return "team";
 	}
@@ -238,7 +209,45 @@ public class RootController {
 		}
 		return deleted;
 	}
+	
+	@RequestMapping(value = "/acceptNewPlayer", method = RequestMethod.POST)
+	@Transactional
+	@ResponseBody
+	public boolean acceptNewPlayer(@RequestBody String body) {
+		boolean accepted = false;
 
+		try {
+			entityManager.getTransaction().begin();
+			RequestTeam rq = entityManager.find(RequestTeam.class, Long.parseLong(body.replace("id=", "")));
+			rq.getTeam().getNoActivePlayers().add(rq.getUser()); // añadimos al nuevo jugador al equipo
+			entityManager.remove(rq); // borramos la peticion
+			entityManager.getTransaction().commit();
+			accepted = true;
+		}
+		catch(Exception e) {
+
+		}
+		return accepted;
+	}
+	
+	@RequestMapping(value = "/deleteRequest", method = RequestMethod.POST)
+	@Transactional
+	@ResponseBody
+	public boolean deleteRequest(@RequestBody String body) {
+		boolean deleted = false;
+
+		try {
+			entityManager.getTransaction().begin();
+			RequestTeam rq = entityManager.find(RequestTeam.class, Long.parseLong(body.replace("id=", "")));
+			entityManager.remove(rq); // borramos la peticion
+			entityManager.getTransaction().commit();
+			deleted = true;
+		}
+		catch(Exception e) {
+
+		}
+		return deleted;
+	}
 
 	@RequestMapping(value = "/matchRecord", method = RequestMethod.POST,consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
 	@Transactional

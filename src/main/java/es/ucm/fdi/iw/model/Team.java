@@ -194,4 +194,5 @@ public class Team {
 	public void setNoActivePlayers(List<User> players) {
 		this.noActivePlayers = players;
 	}
+	
 }
