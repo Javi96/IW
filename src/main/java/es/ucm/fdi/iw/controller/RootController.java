@@ -126,7 +126,7 @@ public class RootController {
 		entityManager.persist(t);
 		return "prueba";
 	}
-	
+
 	@RequestMapping(path = "/home",method = RequestMethod.GET)
 	public String home() {
 		return "home";
@@ -189,6 +189,7 @@ public class RootController {
 
 	@RequestMapping("/team")
 	public String team(@RequestParam("id") long id, Model model, HttpSession session) {
+
 		boolean logged = false;
 		Team team = entityManager.find(Team.class, id);
 
@@ -207,7 +208,7 @@ public class RootController {
 		team.setRequests(requests);
 		//fin borrado
 		User currentUser = (User) session.getAttribute("user");
-		
+
 		//borrar
 		Notification n = new Notification(currentUser, "Pepe", "hola es este le mensaje?", "pepepepepepe@hotmail.com");
 		n.setId(Long.parseLong("1"));
@@ -215,7 +216,7 @@ public class RootController {
 		notific.add(n);
 		currentUser.setNotifications(notific);
 		//fin
-		
+
 		if(currentUser != null) {
 			logged = true;
 		}
@@ -223,7 +224,7 @@ public class RootController {
 		model.addAttribute("logged", logged);
 		return "team";
 	}
-	
+
 	@RequestMapping(value = "/deleteNotification", method = RequestMethod.POST)
 	@Transactional
 	@ResponseBody
@@ -236,7 +237,7 @@ public class RootController {
 			deleted = true;
 		}
 		catch(Exception e) {
-			
+
 		}
 		return deleted;
 	}
@@ -335,6 +336,34 @@ public class RootController {
 		return data;
 	}
 
+
+	@RequestMapping(value = "/showPlayersByTeam",method = RequestMethod.GET)
+	@ResponseBody
+	public String showSportsByGender(@RequestParam("idTeam") long id,Model model) {
+
+		Team team = entityManager.find(Team.class, id);
+
+		//obtenemos usuarios para meterlos en el equipo
+		List<User> users = entityManager.createQuery("select us from User us",User.class).getResultList();
+
+		//Asignamos equipo a los usuarios
+		for (User u: users) {
+			List<Team> teamUser = u.getTeams();
+			teamUser.add(team);
+			u.setTeams(teamUser);
+		}
+
+		team.setPlayers(users); //Asignamos los usuarios al equipo
+		List<String> data = new ArrayList<>();
+
+		for (User u : team.getPlayers()) {
+			String datoUser = u.getId()+","+u.getName();
+			data.add("{" + "\"players\":" + "\"" + datoUser  + "\"" + "}");
+		}
+
+		return String.join("'", data);
+	}
+
 	@GetMapping("/gallery_good")
 	public String gallery_good(@RequestParam("id") String id, Model model) {
 		model.addAttribute("team",id);
@@ -345,6 +374,13 @@ public class RootController {
 	@GetMapping("/playerTab")
 	public String playerTab() {
 		return "playerTab";
+	}
+	
+	@RequestMapping(path = "/savePlayerTab",method = RequestMethod.POST)
+	@Transactional
+	public String savePlayerTab(@SessionAttribute("user") User u, Model model){
+
+		return "";
 	}
 
 	@RequestMapping("/contact")
@@ -443,7 +479,7 @@ public class RootController {
 	public String teamHome() {
 		return "teamHome";
 	}
-	
+
 	@GetMapping("/mainPage")
 	public String mainPage() {
 		return "mainPage";
