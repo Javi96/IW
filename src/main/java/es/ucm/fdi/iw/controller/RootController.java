@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
@@ -345,15 +346,133 @@ public class RootController {
 	@RequestMapping(value ="/playerTab",method = RequestMethod.GET)
 	public String playerTab(Model model,@RequestParam("id")long id) {
 		Team t = entityManager.find(Team.class, id);
+		
 		model.addAttribute("team", t);
+		model.addAttribute("activo", t.getActivePlayers().size());
+		model.addAttribute("noActivo", t.getNoActivePlayers().size());
 		return "playerTab";
 	}
 	
-	@RequestMapping(path = "/savePlayerTab",method = RequestMethod.POST)
-	@Transactional
-	public String savePlayerTab(@SessionAttribute("user") User u, Model model){
+	@RequestMapping(value = "/savePlayerActive",method = RequestMethod.GET)
+	@ResponseBody
+	public String savePlayerActive(@RequestParam("idTeam") long id) {
 
-		return "";
+		Team team = entityManager.find(Team.class, id);
+
+		List<String> data = new ArrayList<>();
+		for (User u : team.getActivePlayers()) {
+			String datoUser = u.getId()+","+u.getName();
+			data.add("{" + "\"players\":" + "\"" + datoUser  + "\"" + "}");
+		}
+
+		return String.join("'", data);
+	}
+	
+	@RequestMapping(value = "/savePlayerNoActive",method = RequestMethod.GET)
+	@ResponseBody
+	public String savePlayerNoActive(@RequestParam("idTeam") long id) {
+
+		Team team = entityManager.find(Team.class, id);
+
+		List<String> data = new ArrayList<>();
+		for (User u : team.getNoActivePlayers()) {
+			String datoUser = u.getId()+","+u.getName();
+			data.add("{" + "\"players\":" + "\"" + datoUser  + "\"" + "}");
+		}
+
+		return String.join("'", data);
+	}
+	
+	@RequestMapping(value = "/savePlayerTab",method = RequestMethod.POST)
+	@Transactional
+	public String savePlayerTab(HttpServletRequest request){
+		
+		//obtenemos datos
+		long idTeam = Long.parseLong(request.getParameter("idTeam"));
+		Team t = entityManager.find(Team.class, idTeam);
+		String cadenaActivos = request.getParameter("activePlayer");
+		String cadenaNoActivos = request.getParameter("noActivePlayer");
+					
+		//quitamos los []
+		cadenaActivos = cadenaActivos.substring(1, cadenaActivos.length()-1);
+		cadenaNoActivos = cadenaNoActivos.substring(1, cadenaNoActivos.length()-1);
+		
+		/*
+		 * ACTUALIZAMOS LOS DATOS DEL EQUIPO Y DE USER LISTA ACTIVA
+		 */	
+		String[] datos = cadenaActivos.split(",");
+		
+		for(int i = 0; i < datos.length; i++) {
+			
+			char[] idUsu = datos[i].toCharArray();
+			
+			long id = Character.getNumericValue(idUsu[1]);
+			
+			User u = entityManager.find(User.class, id);
+			
+			/*
+			 * TEAM
+			 */
+			List<User> listaUserActive = t.getActivePlayers();
+			List<User> listaUserNoActive = t.getNoActivePlayers();
+			//el usuario no estaba en la lista de activos
+			if(!listaUserActive.contains(u)) {
+				listaUserActive.add(u);
+				listaUserNoActive.remove(u);
+			}
+			
+			/*
+			 * USER
+			 */
+			List<Team> listaTeamActive = u.getActiveTeams();
+			List<Team> listaTeamNoActive = u.getNoActiveTeams();
+			
+			//si no tiene como team activo lo ponemos
+			if(!listaTeamActive.contains(t)){
+				listaTeamActive.add(t);
+				listaTeamNoActive.remove(t);
+			}
+			
+		}//for
+		
+		
+		/*
+		 * ACTUALIZAMOS LOS DATOS DE LA LISTA DE ACTIVOS
+		 */
+		datos = cadenaNoActivos.split(",");
+		
+		for(int i = 0; i < datos.length; i++) {
+			
+			char[] idUsu = datos[i].toCharArray();
+			
+			long id = Character.getNumericValue(idUsu[1]);
+			User u = entityManager.find(User.class, id);
+			
+			/*
+			 * TEAM
+			 */
+			List<User> listaUserActive = t.getActivePlayers();
+			List<User> listaUserNoActive = t.getNoActivePlayers();
+			//el usuario no estaba en la lista de activos
+			if(listaUserActive.contains(u)) {
+				listaUserNoActive.add(u);
+				listaUserActive.remove(u);
+			}
+			
+			/*
+			 * USER
+			 */
+			List<Team> listaTeamActive = u.getActiveTeams();
+			List<Team> listaTeamNoActive = u.getNoActiveTeams();
+			
+			//si no tiene como team activo lo ponemos
+			if(listaTeamActive.contains(t)){
+				listaTeamNoActive.add(t);
+				listaTeamActive.remove(t);
+			}
+		}//for
+		
+		return "team";
 	}
 	
 	@GetMapping("/gallery_good")
@@ -453,11 +572,6 @@ public class RootController {
 	@GetMapping("/rugbyTeams")
 	public String rugbyTeams() {
 		return "rugbyTeams";
-	}
-
-	@GetMapping("/teamHome")
-	public String teamHome() {
-		return "teamHome";
 	}
 
 	@GetMapping("/mainPage")

@@ -3,9 +3,11 @@
 
 var playerIn = new Array();
 var playerInCopy = new Array();
+
 var playerOut = new Array();
+var playerOutCopy = new Array();
+
 var playerInOut = new Array();
-var playerInfor = new Array();
 var idTeam;
 
 /*
@@ -13,11 +15,11 @@ var idTeam;
  */
 $(document).ready(function() {
 	
-	
-	loadActive();
-	
 	$("#btnReset").on("click", onResetClick);
 	$("#btnSave").on("click", onSaveClick);
+	
+	loadActive();
+	loadNoActive();
 });
 
 /**
@@ -74,9 +76,8 @@ function loadActive(){
 	
 	var valores = getGET();	
 	idTeam = valores['id'];
-	console.log("ID equipo:"+idTeam);
 	
-	$.get("/showPlayersByTeam", {idTeam: idTeam},
+	$.get("/savePlayerActive", {idTeam: idTeam},
 	function(data) {
 		
 		let userInfo = data.split("'");
@@ -86,31 +87,14 @@ function loadActive(){
 			//obtenemos campos
 			let datePlayer = userInfo[i].split(":");
 			let validos = datePlayer[1].split(",");
-			
 			let idPlayer = validos[0].substring(1,validos[0].length);
 			let namePlayer = validos[1].substring(0,validos[1].length-2);
 			
 			playerIn.push(new User(idPlayer,namePlayer,1));
 			
-			let li = $('<li class="list-group-item" >' + namePlayer+
-					'<button type="button" class="close" aria-label="Close"> <span aria-hidden="true">&times;</span></button>'
-			+"</li>").prop('id',idPlayer);
-			
-			//colocamos le id
-			let playerID = $('<input>').attr('type','hidden').attr('name',"id").prop('value',idPlayer);
-			
-			//asignamos evento a cada elemento de la lista
-			 li.click(function(o) {
-		          addListIn(this, idPlayer, namePlayer);
-		      });
-			 
-			li.append(playerID);
-			
-			$('#in').append(li);
 		}
 		
-		playerInCopy = playerIn;
-		completeTitle();
+		playerInCopy = playerIn.slice();
 	});
 }
 
@@ -120,7 +104,7 @@ function loadNoActive(){
 	idTeam = valores['id'];
 	console.log("ID equipo:"+idTeam);
 	
-	$.get("/getPlayerInfo", {idTeam: idTeam},
+	$.get("/savePlayerNoActive", {idTeam: idTeam},
 	function(data) {
 		
 		let userInfo = data.split("'");
@@ -134,63 +118,15 @@ function loadNoActive(){
 			let idPlayer = validos[0].substring(1,validos[0].length);
 			let namePlayer = validos[1].substring(0,validos[1].length-2);
 			
-			playerInfor.push(new User(idPlayer,namePlayer,1));
+			playerOut.push(new User(idPlayer,namePlayer,2));
 		}
+		playerOutCopy = playerOut.slice();
 	});
 }
 
-function managePlayer(player){
+function onPlayerActive(event){
 	
-	console.log(player);
-	
-}
-
-
-function addListInOut(liEvento, idPlayer, namePlayer){
-	
-	//borramos elemento
-	$("#"+idPlayer).remove();
-	
-	var user = getUser(playerInOut,idPlayer);
-	borrarElem(playerInOut,idPlayer);
-	
-	if(user.ref == 2){
-		
-		borrarElem(playerInOut,idPlayer);
-		borrarElem(playerIn,idPlayer);
-		$("#in #"+idPlayer).remove();
-		
-		if(!existe(playerOut,idPlayer)){
-			playerOut.push(user);
-			cargarLista("out",idPlayer, namePlayer);
-		}else
-			completeTitle();
-		
-	}else{
-		
-		borrarElem(playerOut,idPlayer);
-		$("#out #"+idPlayer).remove();
-		
-		playerIn.push(user);
-		cargarLista("in",idPlayer, namePlayer);
-	}
-	
-	/*
-	var user = getUser(playerInOut,idPlayer);
-	borrarElem(playerInOut,idPlayer);
-	
-	
-	borrarElem(playerInOut,idPlayer);
-	$("#out #"+idPlayer).remove();
-	
-	playerIn.push(user);
-	cargarLista("in",idPlayer, namePlayer);
-	*/
-};
-
-function addListIn(liEvento, idPlayer, namePlayer){ 
-	
-	//borramos elemento
+	var idPlayer = event.id;
 	$("#"+idPlayer).remove();
 	
 	var user = getUser(playerIn,idPlayer);
@@ -204,7 +140,6 @@ function addListIn(liEvento, idPlayer, namePlayer){
 		$("#"+idPlayer).remove();
 		
 	}else{
-		user.ref = 2;
 		
 		//out
 		playerInOut.push(user);
@@ -212,41 +147,44 @@ function addListIn(liEvento, idPlayer, namePlayer){
 		if(playerInOut.length == 1)
 			$("#inout").empty();
 		
-		cargarLista("inout",idPlayer, namePlayer);
+		cargarLista("inout",idPlayer, user.name);
 	}
 	
-	//in
+	//out
 	playerOut.push(user);
-	cargarLista("out",idPlayer, namePlayer);
+	cargarLista("out",idPlayer, user.name);
 	
+}
 
-	/*
-	 SIN REFERENCIAS
-	 * 
-	var user = getUser(playerIn,idPlayer);//obtenemos el usuario que vamso a borrar
-	borrarElem(playerIn,idPlayer); //eliminamos de la lista
+function onPlayerInOut(event){
+	
+	var idPlayer = event.id;
+	$("#"+idPlayer).remove();
+	
+	var user = getUser(playerInOut,idPlayer);
+	borrarElem(playerInOut,idPlayer);
+	
+	if(user.ref == 2){
+		
+		borrarElem(playerIn,idPlayer);
+		$("#in #"+idPlayer).remove();
+		
+		playerOut.push(user);
+		cargarLista("out",idPlayer, user.name);
+		
+	}else{
+		
+		borrarElem(playerOut,idPlayer);
+		$("#out #"+idPlayer).remove();
+		
+		playerIn.push(user);
+		cargarLista("in",idPlayer, user.name);
+	}
+}
 
-	//cambiamos referencia de origen en InOut
-	var userCopy = user;
-	userCopy.ref = 2;
+function onPlayerNoActive(event){ 
 	
-	//Actualizamso listas
-	playerInOut.push(user);
-	playerOut.push(user);
-	
-	
-	if(playerInOut.length == 1)
-		$("#inout").empty();
-	
-	//añadimos a la lista de activas
-	cargarLista("inout",idPlayer, namePlayer);
-	cargarLista("out",idPlayer, namePlayer);
-	*/
-};
-
-function addListOut(liEvento, idPlayer, namePlayer){
-	
-	//borramos elemento
+	var idPlayer = event.id;
 	$("#out #"+idPlayer).remove();
 	
 	 var user = getUser(playerOut,idPlayer);
@@ -254,16 +192,13 @@ function addListOut(liEvento, idPlayer, namePlayer){
 	 
 	if(user.ref == 2){
 		
-		//para el momento que pasa a ser de refe 2 por primera vez, que no se repita
-		if(!existe(playerInOut,idPlayer)){
-			playerInOut.push(user);
-			
-			if(playerInOut.length == 1)
-				$("#inout").empty();
-			
-			cargarLista("inout",idPlayer, namePlayer);
-		}
+		playerInOut.push(user);
 		
+		if(playerInOut.length == 1)
+			$("#inout").empty();
+		
+		cargarLista("inout",idPlayer, user.name);
+	
 	}else{
 		borrarElem(playerInOut,idPlayer);
 		 $("#inout #"+idPlayer).remove();
@@ -271,19 +206,53 @@ function addListOut(liEvento, idPlayer, namePlayer){
 
 	//si o si se tiene que insertar en la lista de in
 	 playerIn.push(user);
-	 cargarLista("in",idPlayer, namePlayer);
+	 cargarLista("in",idPlayer, user.name);
 	
-	/*
-	 var user = getUser(playerOut,idPlayer);
+}
+
+//lista ==> lista destino
+function cargarLista(lista,idPlayer, namePlayer){
 	
-	 borrarElem(playerOut,idPlayer);
-	 borrarElem(playerInOut,idPlayer);
-	 $("#inout #"+idPlayer).remove();
-	 
-	playerIn.push(user);
-	cargarLista("in",idPlayer, namePlayer);
-	*/
-};
+	let li = $('<li class="list-group-item" id='+idPlayer+' >' + namePlayer+
+			'<button type="button" class="close" aria-label="Close"> <span aria-hidden="true">&times;</span></button>'
+	+"</li>").prop('id',idPlayer);
+	
+	//colocamos le id
+	let playerID = $('<input>').attr('type','hidden').attr('name',"id").prop('value',idPlayer);
+	li.append(playerID);
+	
+	switch(lista){
+		
+	//si nos mandan a lista in ponemos action in
+		case "in":
+			li.click(function(o) {
+				onPlayerActive(this, idPlayer, namePlayer);
+		      });
+		break;
+		
+		case "inout":
+			$(li).css("color","red");
+			li.click(function(o) {
+				onPlayerInOut(this, idPlayer, namePlayer);
+		      });
+		break;
+		
+		case "out":
+			li.click(function(o) {
+				onPlayerNoActive(this, idPlayer, namePlayer);
+		      });
+		break;
+	}
+	
+	$('#'+lista).append(li);
+	completeTitle();
+}
+
+function User(id, n, r) { 
+	this.id = id;
+	this.name = n;
+	this.ref = r;
+}
 
 function getUser(lista,idPlayer){
 	
@@ -310,26 +279,6 @@ function borrarElem(lista, idPlayer){
 	});
 }
 
-function existe(lista, idPlayer){
-	
-	var enc = false;
-	
-	lista.forEach(function(elem){
-		
-		if(elem.id == idPlayer)
-			enc = true;
-	});
-	
-	return enc;
-}
-
-//objetos tipos user
-function User(id, n, r) { 
-	this.id = id;
-	this.name = n;
-	this.ref = r;
-}
-
 function onSaveClick(){
 	
     var opcion = confirm("¿Desea guardar los cambios?");
@@ -339,22 +288,51 @@ function onSaveClick(){
 	 
 }
 
+function vuelveATeam(){
+	
+	//var loc=location.href ="http://localhost:8000/team?id="+idTeam;
+	console.log("IDDDD TEAM:"+teamId);
+	$.ajax({
+	    method: "get",  
+	    url: "/team",
+	    data: {teamId: teamId},
+	    success: (data)=>{}       
+	});
+		
+}
+
 function redireccionar(){
 	
-	var loc=location.href ="http://localhost:8000/team?id="+idTeam;
+var loc=location.href ="http://localhost:8000/team?id="+idTeam;
+	
+	var activos = new Array();
+	var noActivos = new Array();
+
+	//convertimos los datos para leerlos mejor
+	playerIn.forEach(function(elem){
+		var cadena = elem.id;
+		activos.push(cadena);
+	});
+	
+	//convertimos los datos para leerlos mejor
+	playerOut.forEach(function(elem){
+		var cadena = elem.id;
+		noActivos.push(cadena);
+	});
+
+	
 	$.ajax({
-	    method: "get",  //"post",
-	    url: loc,
-	    data:{
-	    		players: playerIn
+	    method: "post",  
+	    url: "/savePlayerTab",
+	    datatype: 'json',
+	    data:
+	    {
+	    	activePlayer:JSON.stringify(activos),
+	    	noActivePlayer:JSON.stringify(noActivos),
+	    	idTeam: idTeam
 	    },
 	    success: (data)=>{
-		    	if(data != "Correct"){
-		    		alert("datos guardados correctamente");
-		    	}
-		    error: (XMLHttpRequest, textStatus, errorThrown)=> { 
-		        alert("Error inesperado"); 
-		    }
+	    		vuelveATeam();
 	    }
 	});
 	
@@ -366,55 +344,18 @@ function onResetClick(){
 	$("#out").empty();
 	$("#in").empty();
 	
-	//vaciamos arrys
-	 playerIn = [];
-	 playerInCopy = [];
-	 playerOut = [];
+	
+	 playerIn = playerInCopy;
+	 for(let i = 0; i < playerIn.length; i++){
+		 cargarLista("in",playerIn[i].id, playerIn[i].name);
+	 }
+	 
+	 playerOut = playerOutCopy;
+	 for(let i = 0; i < playerOut.length; i++){
+		 cargarLista("out",playerOut[i].id, playerOut[i].name);
+	 }
+	 
 	 playerInOut = [];
-	 
-	 
-	$("#in_token").text('');
-	$("#inout_token").text('');
-	$("#out_token").text('');
-	
-	loadActive();
-	
-}
 
-//lista ==> lista destino
-function cargarLista(lista,idPlayer, namePlayer){
-	
-	let li = $('<li class="list-group-item" >' + namePlayer+
-			'<button type="button" class="close" aria-label="Close"> <span aria-hidden="true">&times;</span></button>'
-	+"</li>").prop('id',idPlayer);
-	
-	//colocamos le id
-	let playerID = $('<input>').attr('type','hidden').attr('name',"id").prop('value',idPlayer);
-	li.append(playerID);
-	
-	switch(lista){
-		
-	//si nos mandan a lista in ponemos action in
-		case "in":
-			li.click(function(o) {
-		          addListIn(this, idPlayer, namePlayer);
-		      });
-		break;
-		
-		case "inout":
-			$(li).css("color","red");
-			li.click(function(o) {
-		          addListInOut(this, idPlayer, namePlayer);
-		      });
-		break;
-		
-		case "out":
-			li.click(function(o) {
-				addListOut(this, idPlayer, namePlayer);
-		      });
-		break;
-	}
-	
-	$('#'+lista).append(li);
 	completeTitle();
 }
