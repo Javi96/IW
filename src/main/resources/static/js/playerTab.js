@@ -50,7 +50,6 @@ function getGET()
 
 function completeTitle(){
 	
-	
 	$("#in_token").text('');
 	$("#inout_token").text('');
 	$("#out_token").text('');
@@ -69,7 +68,6 @@ function completeTitle(){
     }
     
     $("#inout_token").append('Cambios en la plantilla: ' + playerInOut.length);
-    
 }
 
 function loadActive(){
