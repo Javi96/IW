@@ -365,6 +365,7 @@ public class RootController {
 	@ResponseBody
 	public String savePlayerActive(@RequestParam("idTeam") long id) {
 
+
 		Team team = entityManager.find(Team.class, id);
 
 		List<String> data = new ArrayList<>();
@@ -372,6 +373,7 @@ public class RootController {
 			String datoUser = u.getId()+","+u.getName();
 			data.add("{" + "\"players\":" + "\"" + datoUser  + "\"" + "}");
 		}
+
 
 		return String.join("'", data);
 	}
