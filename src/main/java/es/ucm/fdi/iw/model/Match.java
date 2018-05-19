@@ -1,24 +1,37 @@
 package es.ucm.fdi.iw.model;
 
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 @Entity
 public class Match {
 	
 	private long id;
-	private int homeTeamId;
-	private int awayTeamId;
+	private Team homeTeam;
+	private Team awayTeam;
 	private int homeTeamPoints;
 	private int awayTeamPoints;
+	private Date matchDate;
+
+	private boolean recordChecked; // true si se ha confirmado el acta del partido
 	
-	public Match(int homeTeamId, int awayTeamId, int homeTeamPoints, int awayTeamPoints) {
-		this.homeTeamId = homeTeamId;
-		this.awayTeamId = awayTeamId;
+	public Match() {
+		// TODO Auto-generated constructor stub
+	}
+	
+	public Match(Team homeTeam, Team awayTeam, int homeTeamPoints, int awayTeamPoints, Date matchDate) {
+		this.homeTeam = homeTeam;
+		this.awayTeam = awayTeam;
 		this.homeTeamPoints = homeTeamPoints;
 		this.awayTeamPoints = awayTeamPoints;
+		this.matchDate = matchDate;
 	}
 	
 	@Id
@@ -27,9 +40,14 @@ public class Match {
 		return id;
 	}
 
-	@Column
-	public int getAwayTeamId() {
-		return awayTeamId;
+	@ManyToOne
+	public Team getAwayTeam() {
+		return awayTeam;
+	}
+	
+	@ManyToOne
+	public Team getHomeTeam() {
+		return homeTeam;
 	}
 	
 	@Column
@@ -42,25 +60,38 @@ public class Match {
 		return homeTeamPoints;
 	}
 	
+	@Temporal(TemporalType.DATE)
 	@Column
-	public int getHomeTeamId() {
-		return homeTeamId;
+	public Date getMatchDate() {
+		return matchDate;
+	}
+	
+	@Column
+	public boolean isRecordChecked() {
+		return recordChecked;
+	}
+	public void setRecordChecked(boolean recordChecked) {
+		this.recordChecked = recordChecked;
+	}
+	
+	public void setMatchDate(Date matchDate) {
+		this.matchDate = matchDate;
 	}
 	
 	public void setId(long id) {
 		this.id = id;
 	}	
 	
-	public void setAwayTeamId(int awayTeamId) {
-		this.awayTeamId = awayTeamId;
+	public void setAwayTeam(Team awayTeam) {
+		this.awayTeam = awayTeam;
 	}
 	
 	public void setAwayTeamPoints(int awayTeamPoints) {
 		this.awayTeamPoints = awayTeamPoints;
 	}
 	
-	public void setHomeTeamId(int homeTeamId) {
-		this.homeTeamId = homeTeamId;
+	public void setHomeTeam(Team homeTeam) {
+		this.homeTeam = homeTeam;
 	}
 	
 	public void setHomeTeamPoints(int homeTeamPoints) {

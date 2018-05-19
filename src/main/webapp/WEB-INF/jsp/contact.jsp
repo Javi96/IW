@@ -21,6 +21,13 @@
 							<input id="name" name="name" type="text" placeholder="Tu nombre" class="form-control">
 							</div>
 						</div>
+						<!-- Email input-->
+						<div class="form-group">
+							<label class="col-md-3 control-label" for="name">Email</label>
+								<div class="col-md-9">
+							<input id="email" name="email" type="text" placeholder="Tu email" class="form-control">
+							</div>
+						</div>
 						<!-- Message body -->
 						<div class="form-group">
 							<label class="col-md-3 control-label" for="message">Mensaje</label>

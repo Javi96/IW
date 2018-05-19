@@ -1,20 +1,12 @@
 package es.ucm.fdi.iw.controller;
 
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.PrintStream;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
-import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
@@ -23,10 +15,9 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
-import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -35,11 +26,14 @@ import org.springframework.web.bind.annotation.SessionAttribute;
 
 import es.ucm.fdi.iw.LocalData;
 import es.ucm.fdi.iw.model.League;
+import es.ucm.fdi.iw.model.Match;
 import es.ucm.fdi.iw.model.MatchRecord;
 import es.ucm.fdi.iw.model.Notification;
+import es.ucm.fdi.iw.model.Ranking;
 import es.ucm.fdi.iw.model.RequestTeam;
 import es.ucm.fdi.iw.model.Team;
 import es.ucm.fdi.iw.model.User;
+
 
 @Controller
 public class RootController {
@@ -48,7 +42,7 @@ public class RootController {
 
 	@Autowired
 	private LocalData localData;
-	
+
 	@Autowired
 	private EntityManager entityManager;
 
@@ -66,6 +60,14 @@ public class RootController {
                 .setParameter("login", principal.getName())
                 .getSingleResult();
 			session.setAttribute("user", u);
+			ArrayList<Team> myTeams = new ArrayList<Team>();
+			for(int i = 0; i < u.getActiveTeams().size(); i++) {
+				myTeams.add(entityManager.createQuery("from Team where id = :teamId", Team.class)
+		                .setParameter("teamId", u.getActiveTeams().get(i))
+		                .getSingleResult());
+				
+			}
+			session.setAttribute("myTeams", myTeams);
 		}
 		return "mainPage";
 	}
@@ -131,25 +133,16 @@ public class RootController {
 			t.setNext_match_schedule(nextMatch);
 		if(facilities != null)
 			t.setNext_match_facilities(facilities);
-		
+
 		entityManager.persist(t);
 		return "prueba";
 	}
 
-
-	@RequestMapping(path = "/addRecord",method = RequestMethod.POST)
-	@Transactional
-	public String delegateCreateRecord(@ModelAttribute("matchrecord") MatchRecord matchRecord) {
-		entityManager.persist(matchRecord);
-		entityManager.flush();
-		return "addRecord test";
-	}
-	
 	@RequestMapping(path = "/home",method = RequestMethod.GET)
 	public String home() {
 		return "home";
 	}
-	
+
 	@RequestMapping(value = "/showTeamsBySportsAndGender",method = RequestMethod.GET)
 	@ResponseBody
 	public String showTeamsBySportsAndGender(Model model, @RequestParam("category") String category,  @RequestParam("sport") String sport ) {
@@ -165,15 +158,15 @@ public class RootController {
 	@RequestMapping(value = "/showSportsByGender",method = RequestMethod.GET)
 	@ResponseBody
 	public String showSportsByGender(Model model, @RequestParam("category") String category ) {
-		List<Team> teams = entityManager.createQuery("select ts from Team ts where category = :category",Team.class)
+		List<String> sports = entityManager.createQuery("select distinct ts.sport from Team ts where category = :category",String.class)
 				.setParameter("category", category).getResultList();
 		List<String> data = new ArrayList<>();
-		for (Team t : teams) {
-			data.add("{" + "\"sport\":" + "\"" + t.getSport()  + "\"" + "}");
+		for (String s : sports) {
+			data.add("{" + "\"sport\":" + "\"" + s  + "\"" + "}");
 		}
 		return String.join("'", data);
 	}
-	
+
 	@RequestMapping(value = "/showImages",method = RequestMethod.GET)
 	@ResponseBody
 	public String showImages(Model model, @RequestParam("team") String team, @RequestParam("files") int files ) {
@@ -183,110 +176,318 @@ public class RootController {
 		}
 		return String.join("'", data);
 	}
-	
-	
+
+
    @RequestMapping(value = "/ranking",method = RequestMethod.GET)
 	public String classification(Model model, @RequestParam("sport") String sport) {
-		//esta en la tabla ligas, pero es necesario ahora para la prueba, se cambia cuando tengamos bd
-		/*Team team1 = new Team("Rugby Fisicas","Rugby", "Facultad de Fisicas", 1,"Lunes y Miercoles / 14:00 - 15:30 h","Viernes / 13:30 - 15:30","Paraninfo Norte");
-		Team team2 = new Team("Rugby Geologicas","Rugby", "Facultad de Geologia", 2,"Lunes y Jueves / 17:00 - 18:30 h","Viernes / 13:30 - 15:30","Cantarranas");
-		Team team3 = new Team("Rugby Filosofia","Rugby", "Facultad de Filosofia", 3,"Miercoles y Jueves / 14:00 - 16:30 h","Lunes / 13:30 - 15:30","Cantarranas");
-		team3.setId(2);
-		team2.setId(1);
+	   League league = entityManager.createQuery("select l from League l where sport = :sport",League.class)
+				.setParameter("sport", sport).getSingleResult();
 
-		//Esta info viene de la tabla partidos con ese formato
-		Match m1 = new Match(0,1,2,3);//Fisicas vs Geo 2-3 gana Geo
-		Match m2 = new Match(1, 2, 3, 1); //Geo vs Filo gana Geo
-		Match m3 = new Match(0,2,3,2); // Fisicas vs Filo gana fisicas
+	   Ranking ranking = new Ranking(league);
+	   model.addAttribute("ranking",ranking.getRanking());
+	   model.addAttribute("leagueName", league.getName());
 
-		List<Match> listOfGames = new ArrayList<Match>();
-		listOfGames.add(m1);
-		listOfGames.add(m2);
-		listOfGames.add(m3);
-		//fin tabla partidos
-
-		//La tabla liga
-		League l = new League("Rugby");
-		l.addTeam(team1);
-		l.addTeam(team2);
-		l.addTeam(team3);
-		//fin tabla liga
-
-		Ranking ranking = new Ranking();
-		RankingInfoByTeam info;
-
-		for(Team t : l.getTeams()) {
-			int wins = 0;
-			int draws = 0;
-			int defeats = 0;
-			long teamId = t.getId();
-			for(Match m : listOfGames) {
-				int homeTeamPoints = m.getHomeTeamPoints();
-				int awayTeamPoints = m.getAwayTeamPoints();
-				if(teamId == m.getHomeTeamId()) {
-					if(homeTeamPoints > awayTeamPoints)//si somos el local y ganamos
-						wins++;
-					else if (homeTeamPoints == awayTeamPoints)
-						draws++;
-					else
-						defeats++;
-				}
-				else if (teamId == m.getAwayTeamId()) {
-					if(awayTeamPoints > homeTeamPoints)//si somos el visitante y ganamos
-						wins++;
-					else if (homeTeamPoints == awayTeamPoints)
-						draws++;
-					else
-						defeats++;
-				}
-			}
-			info = new RankingInfoByTeam(teamId,t.getName(),wins,draws,defeats);
-			ranking.addTeamInfo(info);
-		}
-		model.addAttribute("ranking",ranking.getRanking());
-		model.addAttribute("league", l);*/
 		return "ranking";
 	}
-	
+
 	@RequestMapping("/team")
 	public String team(@RequestParam("id") long id, Model model, HttpSession session) {
 		boolean logged = false;
-		Team team = entityManager.find(Team.class, id);
-		List<User> players = new ArrayList<User>();
-		players.add(entityManager.find(User.class, Long.parseLong("5")));
-		team.setPlayers(players);
 		User currentUser = (User) session.getAttribute("user");
 		if(currentUser != null) {
 			logged = true;
 		}
-		model.addAttribute("team", team);
+		model.addAttribute("team", entityManager.find(Team.class, id));
 		model.addAttribute("logged", logged);
 		return "team";
 	}
 
+	@RequestMapping(value = "/deleteNotification", method = RequestMethod.POST)
+	@Transactional
+	@ResponseBody
+	public boolean deleteNotification(Notification notification) {
+		boolean deleted = false;
+		try {
+			Notification n = entityManager.find(Notification.class, notification.getId());
+			entityManager.remove(n);
+			entityManager.flush();
+			deleted = true;
+		}
+		catch(Exception e) {
+
+		}
+		return deleted;
+	}
+	
+	@RequestMapping(value = "/acceptNewPlayer", method = RequestMethod.POST)
+	@Transactional
+	@ResponseBody
+	public boolean acceptNewPlayer(@RequestBody String body) {
+		boolean accepted = false;
+
+		try {
+			entityManager.getTransaction().begin();
+			RequestTeam rq = entityManager.find(RequestTeam.class, Long.parseLong(body.replace("id=", "")));
+			rq.getTeam().getNoActivePlayers().add(rq.getUser()); // añadimos al nuevo jugador al equipo
+			entityManager.remove(rq); // borramos la peticion
+			entityManager.getTransaction().commit();
+			accepted = true;
+		}
+		catch(Exception e) {
+
+		}
+		return accepted;
+	}
+	
+	@RequestMapping(value = "/deleteRequest", method = RequestMethod.POST)
+	@Transactional
+	@ResponseBody
+	public boolean deleteRequest(@RequestBody String body) {
+		boolean deleted = false;
+
+		try {
+			entityManager.getTransaction().begin();
+			RequestTeam rq = entityManager.find(RequestTeam.class, Long.parseLong(body.replace("id=", "")));
+			entityManager.remove(rq); // borramos la peticion
+			entityManager.getTransaction().commit();
+			deleted = true;
+		}
+		catch(Exception e) {
+
+		}
+		return deleted;
+	}
+
+	@RequestMapping(value = "/matchRecord", method = RequestMethod.POST,consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+	@Transactional
+	@ResponseBody
+	public String matchRecord(MatchRecord bodyMatch) {
+		String result = "Correct";
+
+		try {
+			List<MatchRecord> list = entityManager.createQuery("select m from MatchRecord m where matchId = :matchId",MatchRecord.class)
+					.setParameter("matchId", bodyMatch.getMatchId()).getResultList();
+			if (list.size() == 0) {
+				entityManager.persist(bodyMatch);
+			}
+			else if(list.size() == 1) {
+				MatchRecord one = list.get(0);
+				if(one.getTeamId() != bodyMatch.getTeamId()) {// si el equipo ya ha enviado un acta
+					entityManager.persist(bodyMatch);
+
+					MatchRecord two = bodyMatch;
+					if(one.getAwayTeamPoints() == two.getAwayTeamPoints() && one.getHomeTeamPoints() == two.getHomeTeamPoints()) {
+						Match match = entityManager.find(Match.class,bodyMatch.getMatchId());
+						match.setRecordChecked(true);
+						entityManager.flush();
+					}
+					else {
+						result = "El resultado de las actas no coincide, reintroduce el resultado del partido";
+						list.clear();
+					}
+				}
+				else
+					result = "Ya has enviado el acta para el pardio";
+			}
+		}
+		catch(NoResultException e) {
+
+		}
+		return result;
+	}
+
+	@RequestMapping("/getLastMatch")
+	@ResponseBody
+	public String getLastMatch(@RequestParam("teamId") long teamId) {
+		String data;
+		Match lastAwayMatch = null;
+		Match lastHomeMatch = null;
+		Team t = entityManager.find(Team.class, teamId);
+		List<Match> awayMatches = t.getAwayMatches();
+		List<Match> homeMatches = t.getHomeMatches();
+
+		if(awayMatches.size() > 0)
+			lastAwayMatch = awayMatches.get(awayMatches.size()-1);
+		if(homeMatches.size() > 0)
+			lastHomeMatch = homeMatches.get(homeMatches.size()-1);
+
+		if(lastAwayMatch == null && lastHomeMatch == null) {
+			data = "";
+		}
+		else if(lastAwayMatch == null && lastHomeMatch != null ) {
+			data = "{" + "\"homeTeamName\":" + "\"" + lastHomeMatch.getHomeTeam().getName()  + "\"" + "," +
+					"\"homeTeamPoints\":" + "\"" + lastHomeMatch.getHomeTeamPoints()  + "\""+ "," +
+					"\"awayTeamName\":" + "\"" + lastHomeMatch.getAwayTeam().getName()  + "\"" + "," +
+					"\"awayTeamPoints\":" + "\"" + lastHomeMatch.getAwayTeamPoints()  + "\"" + "," +
+					"\"date\":" + "\"" + lastHomeMatch.getMatchDate()  + "\"" + "," +
+					"\"matchId\":" + "\"" + lastHomeMatch.getId()  + "\"" +"}";
+		}
+		else if (lastAwayMatch != null && lastHomeMatch == null ) {
+			data = "{" + "\"homeTeamName\":" + "\"" + lastAwayMatch.getHomeTeam().getName()  + "\"" + "," +
+					"\"homeTeamPoints\":" + "\"" + lastAwayMatch.getHomeTeamPoints()  + "\""+  "," +
+					"\"awayTeamName\":" + "\"" + lastAwayMatch.getAwayTeam().getName()  + "\"" + "," +
+					"\"awayTeamPoints\":" + "\"" + lastAwayMatch.getAwayTeamPoints()  + "\"" + "," +
+					"\"date\":" + "\"" + lastAwayMatch.getMatchDate()  + "\"" + "," +
+					"\"matchId\":" + "\"" + lastAwayMatch.getId()  + "\"" +"}";
+		}
+		else {
+			if(lastAwayMatch.getMatchDate().compareTo(lastHomeMatch.getMatchDate()) > 0) {
+				data = "{" + "\"homeTeamName\":" + "\"" + lastHomeMatch.getHomeTeam().getName()  + "\"" + "," +
+						"\"homeTeamPoints\":" + "\"" + lastHomeMatch.getHomeTeamPoints()  + "\""+ "," +
+						"\"awayTeamName\":" + "\"" + lastHomeMatch.getAwayTeam().getName()  + "\"" + "," +
+						"\"awayTeamPoints\":" + "\"" + lastHomeMatch.getAwayTeamPoints()  + "\"" + ","+
+						"\"date\":" + "\"" + lastHomeMatch.getMatchDate()  + "\"" + "," +
+						"\"matchId\":" + "\"" + lastHomeMatch.getId()  + "\"" + "}";
+			}
+			else {
+				data = "{" + "\"homeTeamName\":" + "\"" + lastAwayMatch.getHomeTeam().getName()  + "\"" + "," +
+						"\"homeTeamPoints\":" + "\"" + lastAwayMatch.getHomeTeamPoints()  + "\""+ "," +
+						"\"awayTeamName\":" + "\"" + lastAwayMatch.getAwayTeam().getName()  + "\"" + "," +
+						"\"awayTeamPoints\":" + "\"" + lastAwayMatch.getAwayTeamPoints()  + "\"" + "," +
+						"\"date\":" + "\"" + lastAwayMatch.getMatchDate()  + "\"" + "," +
+						"\"matchId\":" + "\"" + lastAwayMatch.getId()  + "\"" +"}";
+			}
+		}
+		return data;
+	}
+
+	@RequestMapping(value ="/playerTab",method = RequestMethod.GET)
+	public String playerTab(Model model,@RequestParam("id")long id) {
+		Team t = entityManager.find(Team.class, id);
+		
+		model.addAttribute("team", t);
+		model.addAttribute("activo", t.getActivePlayers().size());
+		model.addAttribute("noActivo", t.getNoActivePlayers().size());
+		return "playerTab";
+	}
+	
+	@RequestMapping(value = "/savePlayerActive",method = RequestMethod.GET)
+	@ResponseBody
+	public String savePlayerActive(@RequestParam("idTeam") long id) {
+
+		Team team = entityManager.find(Team.class, id);
+
+		List<String> data = new ArrayList<>();
+		for (User u : team.getActivePlayers()) {
+			String datoUser = u.getId()+","+u.getName();
+			data.add("{" + "\"players\":" + "\"" + datoUser  + "\"" + "}");
+		}
+
+		return String.join("'", data);
+	}
+	
+	@RequestMapping(value = "/savePlayerNoActive",method = RequestMethod.GET)
+	@ResponseBody
+	public String savePlayerNoActive(@RequestParam("idTeam") long id) {
+
+		Team team = entityManager.find(Team.class, id);
+
+		List<String> data = new ArrayList<>();
+		for (User u : team.getNoActivePlayers()) {
+			String datoUser = u.getId()+","+u.getName();
+			data.add("{" + "\"players\":" + "\"" + datoUser  + "\"" + "}");
+		}
+
+		return String.join("'", data);
+	}
+	
+	@RequestMapping(value = "/savePlayerTab",method = RequestMethod.POST)
+	@Transactional
+	public String savePlayerTab(HttpServletRequest request){
+		
+		//obtenemos datos
+		long idTeam = Long.parseLong(request.getParameter("idTeam"));
+		Team t = entityManager.find(Team.class, idTeam);
+		String cadenaActivos = request.getParameter("activePlayer");
+		String cadenaNoActivos = request.getParameter("noActivePlayer");
+					
+		//quitamos los []
+		cadenaActivos = cadenaActivos.substring(1, cadenaActivos.length()-1);
+		cadenaNoActivos = cadenaNoActivos.substring(1, cadenaNoActivos.length()-1);
+		
+		/*
+		 * ACTUALIZAMOS LOS DATOS DEL EQUIPO Y DE USER LISTA ACTIVA
+		 */	
+		String[] datos = cadenaActivos.split(",");
+		
+		for(int i = 0; i < datos.length; i++) {
+			
+			char[] idUsu = datos[i].toCharArray();
+			
+			long id = Character.getNumericValue(idUsu[1]);
+			
+			User u = entityManager.find(User.class, id);
+			
+			/*
+			 * TEAM
+			 */
+			List<User> listaUserActive = t.getActivePlayers();
+			List<User> listaUserNoActive = t.getNoActivePlayers();
+			//el usuario no estaba en la lista de activos
+			if(!listaUserActive.contains(u)) {
+				listaUserActive.add(u);
+				listaUserNoActive.remove(u);
+			}
+			
+			/*
+			 * USER
+			 */
+			List<Team> listaTeamActive = u.getActiveTeams();
+			List<Team> listaTeamNoActive = u.getNoActiveTeams();
+			
+			//si no tiene como team activo lo ponemos
+			if(!listaTeamActive.contains(t)){
+				listaTeamActive.add(t);
+				listaTeamNoActive.remove(t);
+			}
+			
+		}//for
+		
+		
+		/*
+		 * ACTUALIZAMOS LOS DATOS DE LA LISTA DE ACTIVOS
+		 */
+		datos = cadenaNoActivos.split(",");
+		
+		for(int i = 0; i < datos.length; i++) {
+			
+			char[] idUsu = datos[i].toCharArray();
+			
+			long id = Character.getNumericValue(idUsu[1]);
+			User u = entityManager.find(User.class, id);
+			
+			/*
+			 * TEAM
+			 */
+			List<User> listaUserActive = t.getActivePlayers();
+			List<User> listaUserNoActive = t.getNoActivePlayers();
+			//el usuario no estaba en la lista de activos
+			if(listaUserActive.contains(u)) {
+				listaUserNoActive.add(u);
+				listaUserActive.remove(u);
+			}
+			
+			/*
+			 * USER
+			 */
+			List<Team> listaTeamActive = u.getActiveTeams();
+			List<Team> listaTeamNoActive = u.getNoActiveTeams();
+			
+			//si no tiene como team activo lo ponemos
+			if(listaTeamActive.contains(t)){
+				listaTeamNoActive.add(t);
+				listaTeamActive.remove(t);
+			}
+		}//for
+		
+		return "team";
+	}
+	
 	@GetMapping("/gallery_good")
 	public String gallery_good(@RequestParam("id") String id, Model model) {
 		model.addAttribute("team",id);
 		model.addAttribute("files", localData.getFile(id, "").listFiles().length);
 		return "gallery_good";
-	}
-	
-	@GetMapping("/playerTab")
-	public String playerTab() {
-		return "playerTab";
-	}
-
-
-	
-	
-	@GetMapping("/delegatedTeam")
-	public String delegatedTeam() {
-		return "delegatedTeam";
-	}
-
-	@GetMapping("/matchRecord")
-	public String matchRecord() {
-		return "matchRecord";
 	}
 
 	@RequestMapping("/contact")
@@ -294,7 +495,7 @@ public class RootController {
 		m.addAttribute("team", entityManager.find(Team.class, id));
 		return "contact";
 	}
-	
+
 	@RequestMapping(value = "/contactDeputy",method = RequestMethod.POST)
 	@Transactional
 	public String contactDeputy(@ModelAttribute("notification") Notification notification, @RequestParam("deputyId") long deputyId, Model model) {
@@ -302,6 +503,7 @@ public class RootController {
 		notification.setDeputy(entityManager.find(User.class, deputyId));
 		entityManager.persist(notification);
 		model.addAttribute("correct", true);
+		entityManager.flush();
 		return "contact";
 	}
 
@@ -310,7 +512,7 @@ public class RootController {
 		m.addAttribute("team", entityManager.find(Team.class, id));
 		return "joinTeam";
 	}
-	
+
 	@RequestMapping(path = "/sentRequestTeam",method = RequestMethod.POST)
 	@Transactional
 	public String sentRequestTeam(@RequestParam("teamId") long teamId,@ModelAttribute("requestTeam") RequestTeam requestTeam, @SessionAttribute("user") User u, Model model){
@@ -321,7 +523,7 @@ public class RootController {
 					.setParameter("userId", u.getId()).getSingleResult();
 		}
 		catch(NoResultException ex) {
-			
+
 		}
 		if(rq == null) {
 			requestTeam.setUser(u);
@@ -334,7 +536,6 @@ public class RootController {
 		model.addAttribute("team", t);//por si hace dos peticiones seguidas
 		return "joinTeam";
 	}
-	
 
 	@GetMapping("/logout")
 	public String logout() {
@@ -380,17 +581,12 @@ public class RootController {
 	public String rugbyTeams() {
 		return "rugbyTeams";
 	}
-	
-	@GetMapping("/teamHome")
-	public String teamHome() {
-		return "teamHome";
-	}
-	
+
 	@GetMapping("/mainPage")
 	public String mainPage() {
 		return "mainPage";
 	}
-	
 
-	
+
+
 }

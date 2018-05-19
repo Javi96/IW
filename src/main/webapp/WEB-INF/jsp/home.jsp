@@ -1,10 +1,10 @@
 <%@ page pageEncoding="UTF-8"%>
-    <%@ taglib prefix="s" uri="http://www.springframework.org/tags"%>
-        <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-            <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%>
-                <%@ include file="../jspf/header.jspf"%>
-                <link type="text/css" media="screen" rel="stylesheet" href="${s}/css/home.css" />
-                <script src = "${s}/js/homeScript.js"></script>			
+<%@ taglib prefix="s" uri="http://www.springframework.org/tags"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%>
+<%@ include file="../jspf/header.jspf"%>
+<link type="text/css" media="screen" rel="stylesheet" href="${s}/css/home.css" />
+<script src = "${s}/js/homeScript.js"></script>			
 
 <div class="container">
 	<h1 class = "col-md-12 text-center">Categoria</h1>
@@ -31,9 +31,9 @@
       	</div>
       	
 		<div class="col-sm-4" id = "teamHeader">
-			<form action="/team" method="get">
+			
 				<div class="list-group" id="teams"></div>
-			</form>
+		
 		</div>
 	</div>
 </div>

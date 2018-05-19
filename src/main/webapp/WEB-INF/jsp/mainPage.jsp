@@ -11,6 +11,8 @@
 
 //JavaScript Document
 $(function() {
+	
+	console.log(${myTeams});
 	// ordenar los menus de bootstrap
 	var viewportWidth = $(window).width();
     if (viewportWidth <= 767) {
@@ -142,15 +144,7 @@ $(function() {
 						<li><a href="https://www.ucm.es/noticias/seis-universidades-europeas-firman-en-bolonia-un-acuerdo-para-abrir-un-espacio-academico-compartido-multilingue-y-multidisciplinar" title="Seis universidades europeas firman en Bolonia un acuerdo para abrir un espacio académico compartido, multilingüe  y multidisciplinar" class="enlace">Seis universidades europeas firman en Bolonia un acuerdo para abrir un espacio académico compartido, multilingüe  y multidisciplinar</a></li>
 						<li><a href="https://www.ucm.es/deportes" title="Trofeo deportivo Alfonso XIII. Finales femeninas y masculinas de baloncesto, balonmano, fútbol sala, rugby y voleibol. Jueves 10 de mayo, a partir de las 11:00 h" class="enlace">Trofeo deportivo Alfonso XIII. Finales femeninas y masculinas de baloncesto, balonmano, fútbol sala, rugby y voleibol. Jueves 10 de mayo, a partir de las 11:00 h</a></li>
 					</ul>
-					<div class="news_mas">
-						<div class="news_mas_left">
-							<a href="http://eventos.ucm.es/" title="UCM Eventos"><img src="/themes/ucm16/media/img/ucm-eventos.jpg" alt="UCM Eventos" /></a>
-					</div>
-						<div class="news_mas_right">
-							<a href="https://www.ucm.es/noticias" class="enlace texto-gris" title="Más noticias">Más noticias</a>
-							<a href="http://www.tribuna.ucm.es/" class="enlace texto-gris news_tribuna" title="Tribuna Complutense"><img src="/themes/ucm16/media/img/tribuna-complutense.jpg" alt="Tribuna Complutense" /></a>
-						</div>
-					</div>
+
 				</section>
 				<section class="col-sm-6 col-xs-12" id="avisos">
 			<header class="rayabaja"><h2>Avisos y Destacados</h2></header>
@@ -167,24 +161,6 @@ $(function() {
 				</section>
 			</div>
 		</div>		
-		
-		<section class="container recursos">
-			<header><h2>Recursos</h2></header>
-			<div class="row">
-				<div class="">
-					<ul class="iconos">
-						<li><a href="http://www.ucm.es/informacion" class="enlace"><img alt="Información" src="/themes/ucm16/media/img/icono-informacion.png" /><p class="caption texto-gris text-center">INFORMACIÓN</p></a></li>
-						<li><a href="https://www.ucm.es/portaldetransparencia" class="enlace"><img alt="Transparencia" src="/themes/ucm16/media/img/icono-transparencia.png" /><p class="caption texto-cielo text-center">TRANSPARENCIA</p></a></li>
-						<li><a href="http://e-administracion.ucm.es" class="enlace"><img alt="Sede Electrónica" src="/themes/ucm16/media/img/icono-sede.png" /><p class="caption texto-rojo text-center">SEDE<br/>ELECTRÓNICA</p></a></li>
-						<li><a href="https://www.ucm.es/becas-y-ayudas" class="enlace"><img alt="Becas y Ayudas" src="/themes/ucm16/media/img/icono-becas.png" /><p class="caption texto-verde text-center">BECAS Y <br/> AYUDAS</p></a></li>
-						<li><a href="http://www.ucm.es/ucm-en-linea" class="enlace"><img alt="UCM Online" src="/themes/ucm16/media/img/icono-recursos.png" /><p class="caption texto-amarillo text-center">UCM ONLINE</p></a></li>
-						<li><a href="http://www.ucm.es/perfilcontratante" class="enlace"><img alt="Perfil del contratante" src="/themes/ucm16/media/img/icono-contratante.png" /><p class="caption texto-bourdeos text-center">PERFIL DEL<br/>CONTRATANTE</p></a></li>         
-						<li><a href="http://biblioteca.ucm.es/" class="enlace"><img alt="Biblioteca" src="/themes/ucm16/media/img/icono-biblioteca.png" /><p class="caption texto-azul text-center">BIBLIOTECA</p></a></li>
-						<li><a href="http://www.ucm.es/campusvirtual" class="enlace"><img alt="Campus Virtual" src="/themes/ucm16/media/img/icono-campus-virtual.png" /><p class="caption texto-ocre text-center">CAMPUS VIRTUAL</p></a></li>			         											
-					</ul>
-		     	</div>
-			</div>
-		</section>		<div class="container">
 	<div class="row">
 		<div class="col-sm-6 col-xs-12" id="marco_01">
 			<div class="column" id="lista_1">

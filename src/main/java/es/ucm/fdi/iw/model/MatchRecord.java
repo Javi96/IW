@@ -9,13 +9,18 @@ import javax.persistence.Id;
 public class MatchRecord {
 	
 	private long id;
+	private long matchId; // no he puesto el tipo Match porque me viene mejor el match id par enviar los datos en el post
+	private long teamId; // el equipo que ha creado el acta
 	private int homeTeamPoints;
 	private int awayTeamPoints;
 	
-	//Se podria suprimir el id y poner homeTeamId y awayteamId de clave primaria
+	public MatchRecord() {
+		// TODO Auto-generated constructor stub
+	}
 	
-	public MatchRecord(long id, int homeTeamPoints, int awayTeamPoints) {
+	public MatchRecord(long id, long match, int homeTeamPoints, int awayTeamPoints) {
 		this.id = id;
+		this.matchId = match;
 		this.homeTeamPoints = homeTeamPoints;
 		this.awayTeamPoints = awayTeamPoints;
 	}
@@ -24,6 +29,11 @@ public class MatchRecord {
 	@GeneratedValue
 	public long getId() {
 		return id;
+	}
+	
+	@Column
+	public long getMatchId() {
+		return matchId;
 	}
 	
 	@Column
@@ -36,6 +46,15 @@ public class MatchRecord {
 		return homeTeamPoints;
 	}
 	
+	@Column
+	public long getTeamId() {
+		return teamId;
+	}
+	
+	public void setTeamId(long teamId) {
+		this.teamId = teamId;
+	}
+	
 	public void setAwayTeamPoints(int awayTeamPoints) {
 		this.awayTeamPoints = awayTeamPoints;
 	}
@@ -44,8 +63,11 @@ public class MatchRecord {
 		this.homeTeamPoints = homeTeamPoints;
 	}
 	
+	public void setMatchId(long matchId) {
+		this.matchId = matchId;
+	}
+	
 	public void setId(long id) {
 		this.id = id;
 	}
-	
 }

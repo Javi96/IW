@@ -221,7 +221,6 @@ function loadSlices() {
         let data = $('<div class="column"><img src="'+slides[i]+'" style="width:100%; max-height: 320px;" onclick="window.open("https://www.w3schools.com"); class="hover-shadow cursor"></div>');
         $("#images").append(data);
     }
-    
 }
 
 function loadCarousel() {

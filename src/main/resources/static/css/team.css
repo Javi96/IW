@@ -35,3 +35,46 @@
 #joinTeamStyle .btn.btn-info{
     margin-left: 40%;
 }
+
+.centerDivs{
+	text-align: center;
+	display: flex;
+	justify-content: center;
+	font-size:medium;
+}
+
+#homeTeamName{
+	padding-left: 60px;
+	
+}
+#awayTeamName{
+	padding-left: 10px;
+}
+
+#homeTeamDiv{
+	padding-right: 15px;
+}
+#awayTeamDiv{
+	padding-left: 15px;
+}
+
+.modal-body{
+	font: -webkit-control;
+	margin-left: 3px;
+	margin-right: 3px;
+}
+
+#hyphen{
+	padding-top: 6px;
+}
+
+.modal-header{
+	font: -webkit-control;
+	text-align: center;
+}
+.modal-title{
+	font-size: large;
+}
+.playersRequestsBox{
+	border: solid;
+}

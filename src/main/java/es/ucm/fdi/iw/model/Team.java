@@ -26,12 +26,18 @@ public class Team {
 	private User deputy;
 	private League league;
 	
-	
 	private List<RequestTeam> requests;
 	
+	//lista cambio platilla
+	private List<User> activePlayers;
 	
-	private List<User> players;
-
+	//lista de fichas activas
+	private List<User> noActivePlayers;
+	
+	private List<Match> awayMatches;
+	
+	private List<Match> homeMatches;
+	
 //	private byte enabled; // esto que es?
 
 	public Team() {
@@ -87,11 +93,23 @@ public class Team {
 		return training_schedule;
 	}
 	
-	@ManyToMany(targetEntity = User.class)
-	public List<User> getPlayers() {
-		return players;
+	/*
+	@Column
+	public List<Long> getPlayerActive() {
+		return playerActive;
 	}
-
+	*/
+	@ManyToMany(targetEntity = User.class)
+	public List<User> getActivePlayers() {
+		return activePlayers;
+	}
+	
+	@ManyToMany(targetEntity = User.class)
+	public List<User> getNoActivePlayers() {
+		return this.noActivePlayers;
+	}
+	
+	
 	@OneToMany(mappedBy = "team")
 	public List<RequestTeam> getRequests() {
 		return requests;
@@ -109,6 +127,24 @@ public class Team {
 	@Column
 	public String getCategory() {
 		return category;
+	}
+
+	@OneToMany(mappedBy = "awayTeam")
+	public List<Match> getAwayMatches() {
+		return awayMatches;
+	}
+	
+	@OneToMany(mappedBy = "homeTeam")
+	public List<Match> getHomeMatches() {
+		return homeMatches;
+	}
+	
+	public void setAwayMatches(List<Match> awayMatches) {
+		this.awayMatches = awayMatches;
+	}
+	
+	public void setHomeMatches(List<Match> homeMatches) {
+		this.homeMatches = homeMatches;
 	}
 
 	public void setName(String name) {
@@ -147,13 +183,16 @@ public class Team {
 		this.league = league;
 	}
 
-	public void setPlayers(List<User> players) {
-		this.players = players;
+	public void setActivePlayers(List<User> players) {
+		this.activePlayers = players;
 	}
 
 	public void setCategory(String category) {
 		this.category = category;
 	}
 
-
+	public void setNoActivePlayers(List<User> players) {
+		this.noActivePlayers = players;
+	}
+	
 }

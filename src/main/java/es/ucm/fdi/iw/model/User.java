@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
@@ -17,61 +18,69 @@ public class User {
 	private String password;
 	private String roles; // split by , to separate roles
 	private String name;
+	private String idCard;
 	private byte enabled;
-	
-	private List<Team> teams;
-	
+
+	//equipos en los que el jugador esta convocado
+	private List<Team> activeTeams;
+
+	//equipos en los que el jugador  NO esta convocado
+	private List<Team> noActiveTeams;
+		
 	private List<Notification> notifications;
-	
-	private List<RequestTeam> requests;
-	
+
 	@Id
 	@GeneratedValue
 	public long getId() {
 	return id;
 	}
-	
+
 	public void setId(long id) {
 		this.id = id;
-	}	
+	}
 
 	@Column(unique=true)
 	public String getLogin() {
 		return login;
 	}
 
-	@ManyToMany(mappedBy = "players")
-	public List<Team> getTeams() {
-		return teams;
+	@ManyToMany(mappedBy = "activePlayers")
+	public List<Team> getActiveTeams() {
+		return activeTeams;
 	}
 	
+	@ManyToMany(mappedBy = "noActivePlayers")
+	public List<Team> getNoActiveTeams() {
+		return noActiveTeams;
+	}
+
 	@Column
 	public String getName() {
 		return name;
 	}
-	
-	@OneToMany(targetEntity = Notification.class , mappedBy = "deputy")
+
+	@OneToMany(targetEntity = Notification.class , mappedBy = "deputy", fetch=FetchType.EAGER)
 	public List<Notification> getNotifications() {
 		return notifications;
 	}
-	
-	@OneToMany(mappedBy = "user")
-	public List<RequestTeam> getRequests() {
-		return requests;
+
+	@Column(unique=true)
+	public String getIdCard() {
+		return idCard;
 	}
-	
-	public void setRequests(List<RequestTeam> requests) {
-		this.requests = requests;
+
+	public void setIdCard(String idCard) {
+		this.idCard = idCard;
 	}
-	
+
 	public void setNotifications(List<Notification> notifications) {
 		this.notifications = notifications;
 	}
-	
+
 	public void setName(String name) {
 		this.name = name;
 	}
-	
+
 	public void setLogin(String login) {
 		this.login = login;
 	}
@@ -79,7 +88,7 @@ public class User {
 	public String getPassword() {
 		return password;
 	}
-	
+
 	public void setPassword(String password) {
 		this.password = password;
 	}
@@ -91,7 +100,7 @@ public class User {
 	public void setRoles(String roles) {
 		this.roles = roles;
 	}
-	
+
 	@Transient
 	public boolean isAdmin() {
 		return roles.contains("ADMIN");
@@ -104,8 +113,11 @@ public class User {
 	public void setEnabled(byte enabled) {
 		this.enabled = enabled;
 	}
-	
-	public void setTeams(List<Team> teams) {
-		this.teams = teams;
+
+	public void setActiveTeams(List<Team> teams) {
+		this.activeTeams = teams;
+	}
+	public void setNoActiveTeams(List<Team> teams) {
+		this.noActiveTeams = teams;
 	}
 }

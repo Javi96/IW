@@ -6,16 +6,22 @@
 
 <%@ include file="../jspf/header.jspf"%>
 <script>
-
+	var teamId = ${team.id};
 	var isUserDeputy = ${team.deputy.id == user.id ? "true" : "false"};
 	var belong = false;
-	console.log("El id del user es" + ${user.id});
-	<c:forEach items="${team.players}" var="player">
+	<c:forEach items="${team.activePlayers}" var="player">
     	if(${player.id == user.id}){
     		belong = true;
     	};
-
 	</c:forEach>
+	
+   	if(!belong){
+		<c:forEach items="${team.noActivePlayers}" var="player">
+		if(${player.id == user.id}){
+			belong = true;
+		};
+		</c:forEach>
+   	}
 
 </script>
 <script src="${s}/js/team.js"></script>
@@ -56,18 +62,171 @@
 						<button type="submit" class="btn btn-primary">Ver clasificacion</button>
 						<input type="hidden" name = "sport" value="${team.sport}">
 					</form>
-					<form action = "/matchRecord" method="get"  class="btn-group teamButtonsStyle" id = "matchRecord">
-						<button type="submit" class="btn btn-primary">Firmar actas</button>
-						<input type="hidden" name = "id" value="${team.id}">
-					</form>
+					<div class="btn-group teamButtonsStyle" id = "matchRecord">
+						<button type="button" onClick = "getLastMatchRecord()" data-toggle="modal" data-target="#matchRecordModal"
+						class="btn btn-primary">Firmar actas</button>
+					</div>
+
 					<form action = "/playerTab" method="get"  class="btn-group teamButtonsStyle" id = "playerTab">
 						<button type="submit" class="btn btn-primary">Gestionar fichas</button>
 						<input type="hidden" name = "id" value="${team.id}">
 					</form>
+					<div class="btn-group teamButtonsStyle" id = "notificationsDiv">
+						<button id = "notifications" type="button" data-toggle="modal" data-target="#notificationModal" class="btn btn-primary">Notificaciones</button>
+					</div>
+					<div class="btn-group teamButtonsStyle" id = "playersRequests">
+						<button type="submit" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalLong">Gestionar Ingresos</button>
+						<input type="hidden" name = "id" value="${team.id}">
+					</div>
 				</div>
         	</div>
     	</div>
 	</div>
+
+	<!-- Modal matchRecord-->
+	<div class="modal fade" id="matchRecordModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+	    <div class="modal-dialog modal-dialog-centered" role="document">
+	        <div class="modal-content">
+	            <div class="modal-header">
+	                <h5 class="modal-title"></h5>
+	            </div>
+	            <div class="modal-body">
+	                <div class="centerDivs">
+	                    <div class="col-md-4" id="homeTeamName"></div>
+	                    <div class="col-md-1">vs</div>
+	                    <div class="col-md-4" id="awayTeamName"></div>
+	                </div>
+	                <hr></hr>
+	                <div class="centerDivs">
+	                    <div id="homeTeamDiv">
+	                       <input class="form-control" id = "homeTeamPoints" type="number" placeholder="Puntos equipo local">
+	                    </div>
+	                    <div id = "hyphen">-</div>
+	                    <div id="awayTeamDiv">
+	                        <input class="form-control" id = "awayTeamPoints" type="number" placeholder="Puntos equipo visitante">
+	                    </div>
+	                </div>
+	            </div>
+				<div class="modal-footer">
+				    <div class="form-group">
+				        <div class="col-sm-12 text-center">
+				            <button type="button" onClick="addMatchRecord()" id="sendMatchRecord" class="btn btn-success preview-add-button"><span class="glyphicon glyphicon-send"></span>
+				            Enviar Acta</button>
+				            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+				        </div>
+				    </div>
+				</div>
+	        </div>
+	    </div>
+	</div>
+
+		<!-- Modal players requests-->
+	<div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+	    <div class="modal-dialog" role="document">
+	        <div class="modal-content">
+	            <div class="modal-header">
+	                <h5 class="modal-title" id="exampleModalLongTitle">Solicitudes de ingreso a ${team.name}</h5>
+	            </div>
+	            <div class="modal-body" id = "modalRequest">
+	            	<c:if test="${empty team.requests}">
+	            		<h4>No hay solicitudes</h4>
+	            	</c:if>
+	                <c:forEach items="${team.requests}" var="request">
+	                	<div id = "${request.id}">
+		                    <div class="row">
+		                        <div class="col-md-4 col-md-offset-1 text-right">
+		                            <h4>Nombre:</h4>
+		                        </div>
+		                        <div class="col-md-5 col-md-offset-right-1">
+		                            <h4>${request.user.name}</h4>
+		                        </div>
+		                    </div>
+		                    <div class="row">
+		                        <div class="col-md-4 col-md-offset-1 text-right">
+		                            <h4>Dni:</h4>
+		                        </div>
+		                        <div class="col-md-5 col-md-offset-right-1">
+		                            <h4>${request.user.idCard}</h4>
+		                        </div>
+		                    </div>
+		                    <div class="row">
+		                        <div class="col-sm-12 text-center">
+		                            <button type="button" onclick='acceptNewPlayer(${request.id})' class="btn btn-success">Aceptar</button>
+		                            <button type="button" onclick='deleteRequestPlayer(${request.id})' class="btn btn-warning">Rechazar</button>
+		                        </div>
+		                    </div>
+		                    <hr></hr>
+	                    </div>
+	                </c:forEach>
+	            </div>
+	            <div class="modal-footer">
+	                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+	            </div>
+	        </div>
+	    </div>
+	</div>
+
+	<!-- Modal notifications-->
+	<div class="modal fade" id="notificationModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+	  <div class="modal-dialog modal-dialog-centered" role="document">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <h5 class="modal-title" id="exampleModalLongTitle">Mensajes recibidos</h5>
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+	          <span aria-hidden="true">&times;</span>
+	        </button>
+	      </div>
+	      <div class="modal-body" id = "modalNotifications">
+	      	<c:if test="${empty user.notifications}">
+	      		No hay mensajes nuevos
+	      	</c:if>
+            <c:forEach items="${user.notifications}" var="notification">
+            	<div id = "${notification.id }">
+	                <div class="row">
+	                    <div class="col-md-2 col-md-offset-1 text-left">
+	                        <h4>Nombre:</h4>
+	                    </div>
+	                    <div class="col-md-5 col-md-offset-right-2">
+	                        <h4>${notification.name}</h4>
+	                    </div>
+	                </div>
+	                <div class="row">
+	                    <div class="col-md-2 col-md-offset-1 text-left">
+	                        <h4>Email:</h4>
+	                    </div>
+	                    <div class="col-md-5 col-md-offset-right-2">
+	                        <h4>${notification.email}</h4>
+	                    </div>
+	                </div>
+	                <div class="row">
+						<div class="col-md-2 col-md-offset-1 text-left">
+						    <h4>Mensaje:</h4>
+						</div>
+	                </div>
+	                <div class="row">
+						<div class="col-md-10 col-md-offset-1 text-left">
+							<br>
+						    <p>${notification.message}</p>
+						</div>
+	                </div>
+	                <div class="row">
+	                    <div class="col-sm-12 text-center">
+	                        <button type="button" class="btn btn-success" onclick='responseNotification(${notification.id})'>Contestar</button>
+	                        <button type="button" class="btn btn-danger" onclick='deleteNotification( ${notification.id} )'>Borrar</button>
+	                    </div>
+	                </div>
+	                <hr></hr>
+                </div>
+            </c:forEach>
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+
+
 </div>
 
 <%@ include file="../jspf/footer.jspf"%>
