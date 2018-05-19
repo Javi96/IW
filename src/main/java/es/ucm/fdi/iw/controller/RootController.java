@@ -403,6 +403,9 @@ public class RootController {
 		String cadenaActivos = request.getParameter("activePlayer");
 		String cadenaNoActivos = request.getParameter("noActivePlayer");
 					
+		System.out.println("ACTIVOS: "+cadenaActivos);
+		System.out.println("NO ACTIVOS: "+cadenaNoActivos);
+		
 		//quitamos los []
 		cadenaActivos = cadenaActivos.substring(1, cadenaActivos.length()-1);
 		cadenaNoActivos = cadenaNoActivos.substring(1, cadenaNoActivos.length()-1);

@@ -15,7 +15,9 @@
      <h1 id="inout_token" class="changesMix">Cambios en plantilla 0</h1>
 
      <div class="playerslist" >     <!-- lista norte  -->
-             <ul id="inout" class="list-group list-group-flush"></ul> 
+             <ul id="inout" class="list-group list-group-flush">
+             	<li class="list-group-flush text-center text">(no hay elementos disponibles)</li>
+             </ul> 
      </div> 
      
      <div class="left_container">
@@ -28,7 +30,7 @@
          <div class="playertabin">  <!-- lista este -->
              <ul id="in" class="list-group list-group-flush">
                 <c:forEach items="${team.activePlayers}" var="player">
-                    <li class="list-group-item" id=${player.id}>${player.name}
+                    <li class="list-group-item" id=${player.id} onclick=onPlayerActive(this)>${player.name}
                         <button type="button" class="close" onclick=onPlayerActive(this) id=${player.id} aria-label="Close"> 
                             <span aria-hidden="true" >&times;</span>
                         </button>
@@ -41,7 +43,7 @@
          <div class="playertabout"> <!-- lista oeste -->
              <ul id="out" class="list-group list-group-flush">
                 <c:forEach items="${team.noActivePlayers}" var="player">
-                    <li class="list-group-item" id=${player.id} >${player.name}
+                    <li class="list-group-item" id=${player.id} onclick=onPlayerNoActive(this)>${player.name}
                         <button type="button" class="close" onclick=onPlayerNoActive(this) id=${player.id} aria-label="Close"> 
                             <span aria-hidden="true">&times;</span>
                         </button>
