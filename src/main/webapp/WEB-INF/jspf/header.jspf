@@ -42,51 +42,7 @@
 		
 		<script type="text/javascript">
 			$(document).ready(function(){
-				let popularSports = ["Rugby", "Fútbol Sala", "Fútbol", "Voleibol", "Balonmano"];
-				let menu = $("#contenidomenu");
-				let a = $('<li class="dropdown resalte lead"></li>');
-				let b = $('<a class="dropdown-toggle" id="depDr" data-toggle="dropdown">Tú</a>');
-				let c  =$('<ul class="dropdown-menu" role="menu"></ul>');
-					let d = $('<li></li>');
-					d.append($('<a  href="">Reservar pista</a>'))
-					let e = $('<li></li>');
-					e.append($('<a  href="/calendarPrueba">Horario deportivo</a>'))
-					let f = $('<li></li>');
-					f.append($('<a  href="/teamHome">Mis equipos</a>'));
-					
-				c.append(d);
-				c.append(e);
-				c.append(f);
-				c.append($('<li></li>'))
-				a.append(b);
-				a.append(c);
-				
-				menu.append(a);
-				for(let s of popularSports){
-					let li = $("<li class='dropdown resalte lead'></li>")
-					let a = $("<a class='dropdown-toggle' id='depDr' data-toggle='dropdown'>" + s + "</a>");
-					let ul = $("<ul class='dropdown-menu' role='menu'>")
-					let li1 = $("<li></li>");
-					//let a1 = $("<a  href='/home'" + s + "male>Masculino</a>")
-					let a1 = $("<a  href='/home'>Masculino</a>")
-					li2 = $("<li></li>");
-					//let a2 = $("<a  href='/home/'" + s + "female>Femenino</a>")
-					let a2 = $("<a  href='/home'>Femenino</a>")
-					let li3 = $("<li></li>");
-					li1.append(a1);
-					li2.append(a2);
-					ul.append(li1);
-					ul.append(li2);
-					ul.append(li3);
-					li.append(a);
-					li.append(ul);
-					menu.append(li);
-				}
-				
-				let fin = $('<li class="dropdown resalte lead"></li>');
-				let fin2 = $('<a href="/home" id="depDr" >Más</a>');
-				fin.append(fin2);
-				menu.append(fin);
+				console.log(${myTeams});
 			})
 		</script>
 	</head>
@@ -117,10 +73,10 @@
                            <ul class="nav navbar-nav">
                               <c:choose>
                               	<c:when test="${empty user}">
-									<li class="iniciasesion"><a href="https://www.ucm.es/login_sso/" title="Navegar identificado">Navegar identificado</a></li>
+									<li class="iniciasesion"><a href="/login" title="Navegar identificado">Navegar identificado</a></li>
                               	</c:when>
                               	<c:otherwise>
-									<li class="iniciasesion"><a href="https://www.ucm.es/login_sso/" title="Navegar identificado">Bienvenidx: ${user.id}</a></li>
+									<li class="iniciasesion"><a href="" title="Navegar identificado">Bienvenidx: ${user.name}</a></li>
                               	</c:otherwise>
                               </c:choose>
                            </ul>
@@ -151,7 +107,34 @@
 			<nav class="container navbar navbar-default" role="navigation" id="menu" 
 			style="margin-top:30px">
 			<div class="collapse navbar-collapse navbar-ex1-collapse">
-    		<ul class="nav nav-justified" id="contenidomenu"></ul>
+    		<ul class="nav nav-justified" id="contenidomenu">
+				<li class="dropdown resalte lead">
+					<a title="UCM" href="/laucm" class="dropdown-toggle" data-toggle="dropdown">Tú</a>
+					<!-- Tú -->
+						<ul class="dropdown-menu" role="menu">
+							<li><a title="Reserva" href="">Reservar pista</a></li>
+							<li><a title="agenda" href="/agenda">Agenda deportiva</a></li>
+							<li><a href="/laucm" title="UCM" aria-label="UCM"><span class="fa fa-plus-circle" aria-hidden="true" title="UCM"></span></a></li>
+						</ul>
+					<!-- Deportes -->
+						<li><a title="Sports" href="/home">Deportes</a></li>
+					<!-- Mis Deportes -->
+						<li><a title="mySport_1" href="/home">${myTeams[0].name}</a></li>
+						<li><a title="mySport_2" href="/home">${myTeams[1].name}</a></li>
+						<li><a title="mySport_3" href="/home">${myTeams[2].name}</a></li>
+						
+						<c:choose>
+                              	<c:when test="${empty myTeams[4]}">
+									<li><a title="mySport_4" href="/home">${myTeams[3].name}</a></li>
+                              	</c:when>
+                              	<c:otherwise>
+									<li><a title="mySport_4" href="/home">MAS</a></li>
+                              	</c:otherwise>
+                        </c:choose>
+						 
+						
+				</li>    		
+    		</ul>
     	</div>	
 	</nav>
           </div>

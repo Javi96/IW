@@ -60,6 +60,14 @@ public class RootController {
                 .setParameter("login", principal.getName())
                 .getSingleResult();
 			session.setAttribute("user", u);
+			ArrayList<Team> myTeams = new ArrayList<Team>();
+			for(int i = 0; i < u.getActiveTeams().size(); i++) {
+				myTeams.add(entityManager.createQuery("from Team where id = :teamId", Team.class)
+		                .setParameter("teamId", u.getActiveTeams().get(i))
+		                .getSingleResult());
+				
+			}
+			session.setAttribute("myTeams", myTeams);
 		}
 		return "mainPage";
 	}
@@ -357,6 +365,7 @@ public class RootController {
 	@ResponseBody
 	public String savePlayerActive(@RequestParam("idTeam") long id) {
 
+
 		Team team = entityManager.find(Team.class, id);
 
 		List<String> data = new ArrayList<>();
@@ -364,6 +373,7 @@ public class RootController {
 			String datoUser = u.getId()+","+u.getName();
 			data.add("{" + "\"players\":" + "\"" + datoUser  + "\"" + "}");
 		}
+
 
 		return String.join("'", data);
 	}
