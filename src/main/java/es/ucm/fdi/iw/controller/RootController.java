@@ -82,7 +82,6 @@ public class RootController {
 		return "adminFormTeam";
 	}
 
-
 	@GetMapping("/showFormDelegateSets")
 	public String adminFormDelegateSets(Model m, @SessionAttribute("user") User u) {
 		Team t = entityManager.createQuery("select t from Team t where deputy = :deputyName", Team.class)
@@ -102,10 +101,14 @@ public class RootController {
 
 		League league = entityManager.createQuery("select l from League l where sport = :sportName",League.class)
 				.setParameter("sportName", t.getSport()).getSingleResult();
-		league.addTeam(t);
-		entityManager.persist(t);
-		entityManager.persist(league);
-		entityManager.flush();
+		if(league.addTeam(t)) {
+			entityManager.persist(t);
+			entityManager.persist(league);
+			entityManager.flush();
+		}
+		else {
+			
+		}
 		return "prueba";
 	}
 
@@ -138,7 +141,7 @@ public class RootController {
 		return "prueba";
 	}
 
-	@RequestMapping(path = "/home",method = RequestMethod.GET)
+	@GetMapping("/home")
 	public String home() {
 		return "home";
 	}
@@ -176,7 +179,6 @@ public class RootController {
 		}
 		return String.join("'", data);
 	}
-
 
    @RequestMapping(value = "/ranking",method = RequestMethod.GET)
 	public String classification(Model model, @RequestParam("sport") String sport) {
@@ -487,7 +489,7 @@ public class RootController {
 		
 		return "team";
 	}
-	
+
 	@GetMapping("/gallery_good")
 	public String gallery_good(@RequestParam("id") String id, Model model) {
 		model.addAttribute("team",id);
@@ -572,26 +574,9 @@ public class RootController {
 		return "calendarSport";
 	}
 
-	@GetMapping("/calendarPrueba")
-	public String calendarPrueba() {
-		return "calendarPrueba";
-	}
-
-	@GetMapping("/allTeams")
-	public String allTeams() {
-		return "allTeams";
-	}
-
-	@GetMapping("/rugbyTeams")
-	public String rugbyTeams() {
-		return "rugbyTeams";
-	}
-
 	@GetMapping("/mainPage")
 	public String mainPage() {
 		return "mainPage";
 	}
-
-
 
 }
