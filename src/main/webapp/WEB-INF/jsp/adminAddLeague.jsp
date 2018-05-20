@@ -4,8 +4,6 @@
 <%@ taglib prefix="sec"
 	uri="http://www.springframework.org/security/tags"%>
 
-<%@ include file="../jspf/header.jspf"%>
-
 <div class = "container">
 	<form class = "form-horizontal" name = "league" method="POST" action = "/addLeague">
 		<!-- Form Name -->
@@ -40,4 +38,3 @@
 	</form>
 </div>
 
-<%@ include file="../jspf/footer.jspf"%>

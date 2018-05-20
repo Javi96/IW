@@ -53,6 +53,8 @@ public class RootController {
 
 	@GetMapping({"/", "/index"})
 	public String root(Model model, HttpSession session, Principal principal) {
+		String page = "mainPage";
+		boolean isAdmin = false;
 		log.info(principal.getName() + " de tipo " + principal.getClass());
 		// org.springframework.security.core.userdetails.User
 		if (principal != null) {
@@ -60,26 +62,34 @@ public class RootController {
                 .setParameter("login", principal.getName())
                 .getSingleResult();
 			session.setAttribute("user", u);
-			ArrayList<Team> myTeams = new ArrayList<Team>();
-			for(int i = 0; i < u.getActiveTeams().size(); i++) {
-				myTeams.add(entityManager.createQuery("from Team where id = :teamId", Team.class)
-		                .setParameter("teamId", u.getActiveTeams().get(i))
-		                .getSingleResult());
-				
+			isAdmin =  u.isAdmin();
+			model.addAttribute("isAdmin",isAdmin);
+			if(!isAdmin) {
+				ArrayList<Team> myTeams = new ArrayList<Team>();
+				for(int i = 0; i < u.getActiveTeams().size(); i++) {
+					myTeams.add(entityManager.createQuery("from Team where id = :teamId", Team.class)
+			                .setParameter("teamId", u.getActiveTeams().get(i))
+			                .getSingleResult());
+				}
+				session.setAttribute("myTeams", myTeams);
 			}
-			session.setAttribute("myTeams", myTeams);
+			else {
+				page = "adminHome";
+			}
 		}
-		return "mainPage";
+		return page;
 	}
 
 	@GetMapping("/login")
-	public String login() {
+	public String login(Model m) {
+		m.addAttribute("isLogin", true);
 		return "login";
 	}
-
-	@GetMapping("/showFormAddTeam")
-	public String adminFormTeam() {
-		return "adminFormTeam";
+	
+	@RequestMapping(value = "/addTeamView",method = RequestMethod.GET)
+	public String adminAddTeam(Model model) {
+		model.addAttribute("option", "adminAddTeam");
+		return "adminHome";
 	}
 
 	@GetMapping("/showFormDelegateSets")
@@ -90,17 +100,18 @@ public class RootController {
 		return "adminDelegateSets";
 	}
 
-	@GetMapping("/showFormAddLeague")
-	public String adminFormLeague() {
-		return "adminFormLeague";
+	@RequestMapping(value = "/addLeagueView",method = RequestMethod.GET)
+	public String adminAddLeague(Model model) {
+		model.addAttribute("option", "adminAddLeague");
+		return "adminHome";
 	}
 
 	@RequestMapping(path = "/addTeam",method = RequestMethod.POST)
 	@Transactional
 	public String adminCreateTeam(@ModelAttribute("team") Team t) {
 
-		League league = entityManager.createQuery("select l from League l where sport = :sportName",League.class)
-				.setParameter("sportName", t.getSport()).getSingleResult();
+		League league = entityManager.createQuery("select l from League l where sport = :sportName and category =:category",League.class)
+				.setParameter("sportName", t.getSport()).setParameter("category", t.getCategory()).getSingleResult();
 		if(league.addTeam(t)) {
 			entityManager.persist(t);
 			entityManager.persist(league);
