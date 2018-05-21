@@ -67,9 +67,7 @@ public class RootController {
 			if(!isAdmin) {
 				ArrayList<Team> myTeams = new ArrayList<Team>();
 				for(int i = 0; i < u.getActiveTeams().size(); i++) {
-					myTeams.add(entityManager.createQuery("from Team where id = :teamId", Team.class)
-			                .setParameter("teamId", u.getActiveTeams().get(i))
-			                .getSingleResult());
+					myTeams.addAll(u.getActiveTeams());
 				}
 				session.setAttribute("myTeams", myTeams);
 			}
@@ -108,16 +106,22 @@ public class RootController {
 
 	@RequestMapping(path = "/addTeam",method = RequestMethod.POST)
 	@Transactional
-	public String adminCreateTeam(@ModelAttribute("team") Team t) {
-
-		League league = entityManager.createQuery("select l from League l where sport = :sportName and category =:category",League.class)
-				.setParameter("sportName", t.getSport()).setParameter("category", t.getCategory()).getSingleResult();
-		if(league.addTeam(t)) {
-			entityManager.persist(t);
-			entityManager.persist(league);
-			entityManager.flush();
+	public String adminCreateTeam(@ModelAttribute("team") Team t, @RequestParam("email") String deputyEmail) {
+		try {
+			League league = entityManager.createQuery("select l from League l where sport = :sportName and category =:category",League.class)
+					.setParameter("sportName", t.getSport()).setParameter("category", t.getCategory()).getSingleResult();
+			User deputy = entityManager.createQuery("select d from Users u where email =:email ", User.class).setParameter("email", deputyEmail).getSingleResult();
+			t.setDeputy(deputy);
+			if(league.addTeam(t)) {
+				entityManager.persist(t);
+				entityManager.persist(league);
+				entityManager.flush();
+			}
+			else {
+				
+			}
 		}
-		else {
+		catch(Exception e ) {
 			
 		}
 		return "prueba";

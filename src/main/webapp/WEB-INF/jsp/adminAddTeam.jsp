@@ -28,9 +28,9 @@
 		         </div>
 		      </div>
 		      <div class="form-group">
-		         <label class="col-md-5 control-label" >Delegado</label>
+		         <label class="col-md-5 control-label" >Correo del delegado</label>
 		         <div class="col-md-3 col-md-offset-1">
-		            <input id = "deputy" name = "deputy" type="text" class = "from-control">
+		            <input  name = "email" type="text" class = "from-control">
 		         </div>
 		      </div>
 		      <div class="form-group">

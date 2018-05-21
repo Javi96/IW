@@ -19,6 +19,7 @@ public class User {
 	private String roles; // split by , to separate roles
 	private String name;
 	private String idCard;
+	private String email;
 	private byte enabled;
 
 	//equipos en los que el jugador esta convocado
@@ -67,6 +68,15 @@ public class User {
 	@Column(unique=true)
 	public String getIdCard() {
 		return idCard;
+	}
+	
+	@Column(unique=true)
+	public String getEmail() {
+		return email;
+	}
+	
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
 	public void setIdCard(String idCard) {
