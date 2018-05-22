@@ -106,16 +106,15 @@ public class RootController {
 
 	@RequestMapping(path = "/addTeam",method = RequestMethod.POST)
 	@Transactional
-	public String adminCreateTeam(@ModelAttribute("team") Team t, @RequestParam("email") String deputyEmail) {
+	public String adminCreateTeam(@ModelAttribute("team") Team t, @RequestParam String email) {
 		try {
 			League league = entityManager.createQuery("select l from League l where sport = :sportName and category =:category",League.class)
 					.setParameter("sportName", t.getSport()).setParameter("category", t.getCategory()).getSingleResult();
-			User deputy = entityManager.createQuery("select d from Users u where email =:email ", User.class).setParameter("email", deputyEmail).getSingleResult();
+			User deputy = entityManager.createQuery("select d from Users u where email =:email ", User.class).setParameter("email", email).getSingleResult();
 			t.setDeputy(deputy);
 			if(league.addTeam(t)) {
 				entityManager.persist(t);
 				entityManager.persist(league);
-				entityManager.flush();
 			}
 			else {
 				
