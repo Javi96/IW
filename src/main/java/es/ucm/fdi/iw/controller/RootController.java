@@ -106,32 +106,68 @@ public class RootController {
 
 	@RequestMapping(path = "/addTeam",method = RequestMethod.POST)
 	@Transactional
-	public String adminCreateTeam(@ModelAttribute("team") Team t, @RequestParam String email) {
+	public String adminCreateTeam(@ModelAttribute Team team, @RequestParam String email, Model model) {
+		League league = null;
+		User deputy = null;
 		try {
-			League league = entityManager.createQuery("select l from League l where sport = :sportName and category =:category",League.class)
-					.setParameter("sportName", t.getSport()).setParameter("category", t.getCategory()).getSingleResult();
-			User deputy = entityManager.createQuery("select d from Users u where email =:email ", User.class).setParameter("email", email).getSingleResult();
-			t.setDeputy(deputy);
-			if(league.addTeam(t)) {
-				entityManager.persist(t);
-				entityManager.persist(league);
+			if(team.getName().equals("") || team.getCategory().equals("") || team.getSport().equals("") || team.getSchool().equals("")) {
+				model.addAttribute("info", "Todos los campos son obligatorios");
 			}
 			else {
-				
+				league = entityManager.createQuery("select l from League l where sport = :sportName and category =:category",League.class)
+					.setParameter("sportName", team.getSport()).setParameter("category", team.getCategory()).getSingleResult();
+				deputy = entityManager.createQuery("select u from User u where email =:email ", User.class).setParameter("email", email).getSingleResult();
+				team.setDeputy(deputy);
+				boolean ok = league.addTeam(team);
+				if(ok) {
+					entityManager.persist(team);
+					entityManager.persist(league);
+					model.addAttribute("correct", "Equipo creado correctamente");
+				}
+				else {
+					model.addAttribute("info", "Error, el equipo " + team.getName() + " ya pertenece a esta liga");
+				}
 			}
 		}
 		catch(Exception e ) {
-			
+			if(league == null) {
+				model.addAttribute("info", "Error, no hay una liga disponible para este tipo de equipo");
+			}
+			else if (deputy == null) {
+				model.addAttribute("info", "Error, delegado no encontrado");
+			}
+			else {
+				System.out.println(e);
+			}
 		}
-		return "prueba";
+		model.addAttribute("option","adminAddTeam");
+		return "adminHome";
 	}
 
 	@RequestMapping(path = "/addLeague",method = RequestMethod.POST)
 	@Transactional
-	public String adminCreateLeague(@ModelAttribute("league") League league) {
-		entityManager.persist(league);
-		entityManager.flush();
-		return "prueba";
+	public String adminCreateLeague(@ModelAttribute League league, Model model) {
+		int l = 0;
+		entityManager.clear();
+		try {
+			if(league.getCategory().equals("") || league.getName().equals("") || league.getSport().equals(""))
+				model.addAttribute("info", "Todos los campos son obligatorios");
+			else {
+				l = entityManager.createQuery("select l from League l where name =:name and sport =:sport", League.class)
+						.setParameter("name",league.getName()).setParameter("sport", league.getSport()).getResultList().size();
+				if(l == 0) {
+					entityManager.persist(league);
+					model.addAttribute("correct", "Liga creada correctamente");
+				}
+				else
+					model.addAttribute("info", "Error, ya hay una liga con ese nombre, para " + league.getSport());
+			}
+		}
+		catch(Exception e) {
+				System.out.print(e);
+		}
+		model.addAttribute("option","adminAddLeague");
+		return "adminHome";
 	}
 
 	@RequestMapping(path = "/changeTeamInfo",method = RequestMethod.POST)

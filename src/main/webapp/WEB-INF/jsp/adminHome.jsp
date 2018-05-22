@@ -28,11 +28,22 @@
 		<p id = "msg" class="text-center">Bienvenido al sistema de administración de deportes de la Universidad Complutense de Madrid.<br>
 		En esta parte podrás administrar los equipos y las ligas de la universidad.</p>
 	</c:if>
+	
 	<c:if test='${option == "adminAddTeam"}'>
 		<%@ include file="../jsp/adminAddTeam.jsp"%>
 	</c:if>
+	
 	<c:if test='${option == "adminAddLeague"}'>
 		<%@ include file="../jsp/adminAddLeague.jsp"%>
 	</c:if>
+	
+	<c:if test="${not empty correct}">
+			<div class="col-md-6 col-md-offset-3 text-center alert alert-success">${correct} </div>
+	</c:if>
+		
+	<c:if test="${not empty info}">
+		<div class="col-md-6 col-md-offset-3 text-center alert alert-danger"> ${info} </div>
+	</c:if>
+	
 </div>
 <%@ include file="../jspf/footer.jspf"%>

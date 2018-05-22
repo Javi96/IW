@@ -4,6 +4,7 @@
 <%@ taglib prefix="sec"	uri="http://www.springframework.org/security/tags"%>
 
 <div class = "container">
+
 	<div class = "row">
 		<div class= "col-md-12">
 		   <form class = "form-horizontal" name = "team" method="POST" action = "/addTeam">
@@ -36,12 +37,12 @@
 		      <div class="form-group">
 			<label class="col-md-5 control-label" >Categoria:</label>
 			<div class="col-md-3 col-md-offset-1">
-				<input  name = "gender" type="Radio" value="Masculino" class = "from-control">Masculino
-				<input  name = "gender" type="Radio" value="Femenino" class = "from-control">Femenino
+				<input  name = "category" type="Radio" value="Masculino" class = "from-control">Masculino
+				<input  name = "category" type="Radio" value="Femenino" class = "from-control">Femenino
 			</div>
 		</div>
 		      <div class="col-sm-12 text-center">
-		         <button type="submit" class="btn btn-success " id = "newTeamButton" >Success</button>
+		         <button type="submit" class="btn btn-success " id = "newTeamButton" style="margin: 8px;">Success</button>
 		      </div>
 		   </form>
 	   </div>

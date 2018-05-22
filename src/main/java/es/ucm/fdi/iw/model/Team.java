@@ -93,12 +93,6 @@ public class Team {
 		return training_schedule;
 	}
 	
-	/*
-	@Column
-	public List<Long> getPlayerActive() {
-		return playerActive;
-	}
-	*/
 	@ManyToMany(targetEntity = User.class)
 	public List<User> getActivePlayers() {
 		return activePlayers;

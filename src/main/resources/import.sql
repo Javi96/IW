@@ -9,7 +9,7 @@ INSERT INTO user(id,enabled,login,password,roles,name,id_card,email) VALUES (5, 
 INSERT INTO user(id,enabled,login,password,roles,name,id_card,email) VALUES (6, 1, 'a6', '$2a$04$N78IYN6VzrWZzpsy6Xvz2uCdUm7Su9FDpAqhXjAcSzCgreVM2sUnC', 'USER','Pepe6','423456789','example@correo6.es');
 INSERT INTO user(id,enabled,login,password,roles,name,id_card,email) VALUES (7, 1, 'a7', '$2a$04$N78IYN6VzrWZzpsy6Xvz2uCdUm7Su9FDpAqhXjAcSzCgreVM2sUnC', 'USER','Pepe7','423456799','example@correo7.es');
 
-INSERT INTO league (id,name,sport,gender) values (1,'Torneo Rector','Rugby','Masculino');
+INSERT INTO league (id,name,sport,category) values (1,'Torneo Rector','Rugby','Masculino');
 
 INSERT INTO team (id,name,school,sport,deputy_id,category,training_schedule,next_match_schedule,next_match_facilities,league_id) values (1,'Rugby Fisicas', 'Facultad de Fisicas', 'Rugby', 1,'Masculino','Lunes y Miercoles 14:00h','Viernes 13:30h', 'Paraninfo',1);
 INSERT INTO team (id,name,school,sport,deputy_id,category,training_schedule,next_match_schedule,next_match_facilities,league_id) values (2,'Rugby Matematicas', 'Facultad de Matematicas', 'Rugby', 2, 'Masculino','Lunes y Miercoles 14:00h','Viernes 13:30h', 'Cantarranas',1);
