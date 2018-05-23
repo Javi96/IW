@@ -1,5 +1,12 @@
 package es.ucm.fdi.iw.controller;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
@@ -7,24 +14,30 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttribute;
+import org.springframework.web.multipart.MultipartFile;
 
 import es.ucm.fdi.iw.LocalData;
+import es.ucm.fdi.iw.model.Gallery;
 import es.ucm.fdi.iw.model.League;
 import es.ucm.fdi.iw.model.Match;
 import es.ucm.fdi.iw.model.MatchRecord;
@@ -540,13 +553,6 @@ public class RootController {
 		return "team";
 	}
 
-	@GetMapping("/gallery_good")
-	public String gallery_good(@RequestParam("id") String id, Model model) {
-		model.addAttribute("team",id);
-		model.addAttribute("files", localData.getFile(id, "").listFiles().length);
-		return "gallery_good";
-	}
-
 	@RequestMapping("/contact")
 	public String contact(@RequestParam("id") long id, Model m) {
 		m.addAttribute("team", entityManager.find(Team.class, id));
@@ -615,11 +621,6 @@ public class RootController {
 		return "upload";
 	}
 
-	@GetMapping("/gallery")
-	public String gallery() {
-		return "gallery";
-	}
-
 	@GetMapping("/images")
 	public String images() {
 		return "images";
@@ -638,6 +639,147 @@ public class RootController {
 	@GetMapping("/mainPage")
 	public String mainPage() {
 		return "mainPage";
+	}
+	
+	@GetMapping("/gallery_images")
+	public String gallery_images(@RequestParam("team") String team,@RequestParam("gallery") String gallery, Model model) {
+		model.addAttribute("team",team);
+		model.addAttribute("gallery",gallery);
+		System.out.println(team + " " + gallery + " " + localData.getFile(team+"/"+gallery, "").listFiles().length);
+		System.out.println(localData.getFile(team, "").listFiles().length);
+		System.out.println(localData.getFile(team, "").getAbsolutePath());
+		//model.addAttribute("files", localData.getFile("team", id).listFiles().length);		
+		ArrayList<String> images = new ArrayList<>();
+		//ArrayList<String> galleries = new ArrayList<>();
+		
+		for (File file : localData.getFile(team+"/"+gallery, "").listFiles()) {
+			//galleries.add(folder.getName());
+			//for (File file : folder.listFiles()) {
+				System.out.println("photo/" + team + "/" + gallery + "/" + file.getName());
+				images.add("photo/" + team + "/" + gallery + "/" + file.getName());
+			//}
+		}
+		
+		/*for (File f : localData.getFile(id, "").listFiles()) {
+			images.add("photo/team/" + id + "/" + f.getName());
+		}*/
+	    model.addAttribute("images", images);
+	    //model.addAttribute("galleries", galleries);
+		return "gallery_images";
+	}
+
+	@RequestMapping(value="/photo/{team}/{gallery}/{name}", method = RequestMethod.GET, produces = MediaType.IMAGE_PNG_VALUE)
+	public void userPhoto(@PathVariable("team") String team,@PathVariable("gallery") String gallery,
+			@PathVariable("name") String name,
+			HttpServletResponse response,Model model) {
+		model.addAttribute("team",team);
+		model.addAttribute("gallery",gallery);
+
+		File f = localData.getFile(team+"/"+gallery, name);
+		InputStream in = null;
+	    try {
+		    if (f.exists()) {
+		    	in = new BufferedInputStream(new FileInputStream(f));
+		    } else {
+		    	in = new BufferedInputStream(
+		    			this.getClass().getClassLoader().getResourceAsStream("unknown-user.jpg"));
+		    }
+	    	FileCopyUtils.copy(in, response.getOutputStream());
+	    } catch (IOException ioe) {
+	    	log.info("Error retrieving file: " + f + " -- " + ioe.getMessage());
+	    }
+	}
+	
+	@RequestMapping(value="/photo/{team}/{gallery}", method=RequestMethod.POST)
+    public @ResponseBody String handleFileUpload(@RequestParam("photo") MultipartFile photo,
+    		@PathVariable("team") String team,@PathVariable("gallery") String gallery){
+        if (!photo.isEmpty()) {
+            try {
+            	File f = new File("/tmp/iw/"+team+"/"+gallery);
+            	System.out.println("/tmp/iw/"+team+"/"+gallery);
+            	if(!f.exists() || (f.exists() && !f.isDirectory())) {
+            		new File("/tmp/iw/"+team+"/"+gallery).mkdirs();
+            	}
+            	
+            	int files = new File("/tmp/iw/"+team+"/"+gallery).listFiles().length;
+                byte[] bytes = photo.getBytes();
+                BufferedOutputStream stream =
+                        new BufferedOutputStream(
+                        		new FileOutputStream(localData.getFile(team+"/"+gallery, Integer.toString(files+1))));
+                stream.write(bytes);
+                stream.close();
+
+                return "ok";
+            } catch (Exception e) {
+                return "You failed to upload " + team + " => " + e.getMessage();
+            }
+        } else {
+            return "You failed to upload a photo for " + team + " because the file was empty.";
+        }
+	}
+	
+	
+	@GetMapping("/gallery")
+	public String gallery(@RequestParam("team") String team, Model model) {
+		model.addAttribute("team",team);
+		ArrayList<Gallery> gallery = new ArrayList<>();		
+		for (File folder : localData.getFile(team, "").listFiles()) {
+			gallery.add(new Gallery(folder.getName(), localData.getFile(team + "/" + folder.getName(), "").listFiles().length));
+		}
+	    model.addAttribute("gallery", gallery);
+		return "gallery";
+	}
+	
+	@RequestMapping(value="/fillGallery",method = RequestMethod.GET)
+	@ResponseBody
+	public String fillGallery(@RequestParam("team") String team, Model model) {
+	    List<String> data = new ArrayList<>();
+		for (File folder : localData.getFile(team, "").listFiles()) {
+			data.add("{" + "\"gallery\":{" + 
+					"\"name\":" + "\"" + folder.getName() + "\"" +
+					",\"files\":" + "\"" + localData.getFile(team + "/" + folder.getName(), "").listFiles().length + 
+			 "\"}" + "}");
+		}
+		return String.join("'", data);
+	}
+	
+	@RequestMapping(path = "/createGallery/{team}", method = RequestMethod.POST)
+	public String createGallery(@PathVariable("team") String team, HttpServletRequest request) {
+		try{
+			new File("/tmp/iw/"+team+"/"+request.getParameter("data")).mkdirs();
+		}catch(Exception e) {
+			
+		}
+		return "gallery";
+	}
+	
+	@RequestMapping(value = "/removeGallery/{team}", method = RequestMethod.POST)
+	public String removeGallery(@PathVariable("team") String team, HttpServletRequest request) {
+		try {
+			String data = request.getParameter("selectionbox");
+			System.out.println(request.getParameter("selectionbox").substring(1, data.length()-1));
+			FileUtils.deleteDirectory(localData.getFile(team +"/"+request.getParameter("selectionbox").substring(1, data.length()-1), ""));
+		}catch(Exception e) {
+			
+		}
+		return "gallery";
+	}
+	
+	@GetMapping("/diary")
+	public String diary(Model model, @SessionAttribute("user") User u) {
+		// aqui hay que cambiar la query por los datos de u pero me salen listas vacias, revisar despues de la entrega
+		List<Team> teamMatch = entityManager.createQuery("select tm from Team tm where tm.id = :id order by tm.name",Team.class).setParameter("id", u.getId()).getResultList();	
+		model.addAttribute("teams", teamMatch);
+	
+		
+		
+		//entityManager.createQuery("select rq from RequestTeam rq where user_id = :userId",RequestTeam.class).setParameter("userId", u.getId()).getSingleResult();
+		
+		
+		
+		
+		
+		return "diary";
 	}
 
 }

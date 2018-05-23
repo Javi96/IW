@@ -55,8 +55,9 @@
 							<input type="hidden" name = "id" value="${team.id}">
 						</form>
 					</c:if>
-					<form action = "/gallery_good" method="get"  class="btn-group teamButtonsStyle" id = "gallery">
+					<form action = "/gallery" method="get"  class="btn-group teamButtonsStyle" id = "gallery">
 						<button type="submit" class="btn btn-primary">Galeria</button>
+						<input type="hidden" name = "team" value="${team.id}">
 					</form>
 					<form action = "/ranking" method="get" class="btn-group teamButtonsStyle" id = "ranking">
 						<button type="submit" class="btn btn-primary">Ver clasificacion</button>
