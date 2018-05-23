@@ -90,6 +90,19 @@ public class RootController {
 		}
 		return page;
 	}
+	
+	@GetMapping("/adminHome")
+	public String adminHome(Model model,HttpSession session ) {
+		User user = (User) session.getAttribute("user");
+		boolean isAdmin =  false;
+		if(user != null)
+			isAdmin = user.isAdmin();
+		if(isAdmin) {
+			model.addAttribute("isAdmin",isAdmin);
+			return "adminHome";
+		}
+		return "login";
+	}
 
 	@GetMapping("/login")
 	public String login(Model m) {
