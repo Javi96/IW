@@ -10,6 +10,7 @@
 <link type="text/css" media="screen" rel="stylesheet" href="${s}/css/gallery_good.css" />
 
 
+
 <body>
 <h2 style="text-align:center">Galleria de imagenes</h2>
 

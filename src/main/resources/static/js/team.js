@@ -9,6 +9,7 @@ $(function () {
 	$('#playerTab').hide();
 	$('#playersRequests').hide();
 	$('#notificationsDiv').hide();
+	$('#deputyPower').hide();
 	update();
 });
 

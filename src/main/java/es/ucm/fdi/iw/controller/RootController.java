@@ -744,25 +744,24 @@ public class RootController {
 	}
 	
 	@RequestMapping(path = "/createGallery/{team}", method = RequestMethod.POST)
-	public String createGallery(@PathVariable("team") String team, HttpServletRequest request) {
+	public String createGallery(@PathVariable("team") String team, HttpServletRequest request, Model model) {
 		try{
 			new File("/tmp/iw/"+team+"/"+request.getParameter("data")).mkdirs();
+			
 		}catch(Exception e) {
 			
 		}
-		return "gallery";
+		return "redirect:/gallery?team=/"+team;
 	}
 	
 	@RequestMapping(value = "/removeGallery/{team}", method = RequestMethod.POST)
-	public String removeGallery(@PathVariable("team") String team, HttpServletRequest request) {
+	public String removeGallery(@PathVariable String team, HttpServletRequest request) {
 		try {
-			String data = request.getParameter("selectionbox");
-			System.out.println(request.getParameter("selectionbox").substring(1, data.length()-1));
-			FileUtils.deleteDirectory(localData.getFile(team +"/"+request.getParameter("selectionbox").substring(1, data.length()-1), ""));
+			FileUtils.deleteDirectory(localData.getFile(team +"/"+request.getParameter("selectionbox"), ""));
 		}catch(Exception e) {
 			
 		}
-		return "gallery";
+		return "redirect:/gallery?team=/"+team;
 	}
 	
 	@GetMapping("/diary")
@@ -770,15 +769,9 @@ public class RootController {
 		// aqui hay que cambiar la query por los datos de u pero me salen listas vacias, revisar despues de la entrega
 		List<Team> teamMatch = entityManager.createQuery("select tm from Team tm where tm.id = :id order by tm.name",Team.class).setParameter("id", u.getId()).getResultList();	
 		model.addAttribute("teams", teamMatch);
-	
-		
-		
+
 		//entityManager.createQuery("select rq from RequestTeam rq where user_id = :userId",RequestTeam.class).setParameter("userId", u.getId()).getSingleResult();
-		
-		
-		
-		
-		
+
 		return "diary";
 	}
 

@@ -67,7 +67,7 @@
 		  	<div class="form-group" style="float: center; width: 100%;">
 				<select class="form-control" id="sel1" required="required" name="selectionbox">
 				<c:forEach items="${gallery}" var="i">
-					<option>"${i.name}"</option>
+					<option>${i.name}</option>
 				</c:forEach>
 				</select>
 			</div>
@@ -112,8 +112,8 @@
 	<tbody id='gallery_body'>
 		<c:forEach items="${gallery}" var="i">
 		<tr>
-			<td style="text-align: left">"${i.name}"</td>
-			<th style="text-align: left">"${i.item}"</th>
+			<td style="text-align: left">${i.name}</td>
+			<th style="text-align: left">${i.item}</th>
 			<th style="text-align: right">
 			<form action = "/gallery_images" method="get"  class="btn-group teamButtonsStyle" id = "gallery">
 				<button type="submit" class="btn btn-primary">Ver galería</button>
