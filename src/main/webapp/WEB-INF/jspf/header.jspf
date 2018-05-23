@@ -114,7 +114,7 @@
 					<!-- Tú -->
 						<ul class="dropdown-menu" role="menu">
 							<li><a title="Reserva" href="">Reservar pista</a></li>
-							<li><a title="agenda" href="/agenda">Agenda deportiva</a></li>
+							<li><a title="agenda" href="/diary">Agenda deportiva</a></li>
 							<li><a href="/laucm" title="UCM" aria-label="UCM"><span class="fa fa-plus-circle" aria-hidden="true" title="UCM"></span></a></li>
 						</ul>
 					<!-- Deportes -->
