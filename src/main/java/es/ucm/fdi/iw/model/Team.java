@@ -32,7 +32,7 @@ public class Team {
 	private List<User> activePlayers;
 	
 	//lista de fichas activas
-	private List<User> noActivePlayers;
+	private List<User> nonActivePlayers;
 	
 	private List<Match> awayMatches;
 	
@@ -83,14 +83,16 @@ public class Team {
 		return nextMatchSchedule;
 	}
 	
-	@ManyToMany(targetEntity = User.class)
+
+	@ManyToMany(targetEntity = User.class,fetch = FetchType.EAGER)
+
 	public List<User> getActivePlayers() {
 		return activePlayers;
 	}
 	
-	@ManyToMany(targetEntity = User.class)
-	public List<User> getNoActivePlayers() {
-		return this.noActivePlayers;
+	@ManyToMany(targetEntity = User.class,fetch = FetchType.EAGER)
+	public List<User> getNonActivePlayers() {
+		return nonActivePlayers;
 	}
 	
 	
@@ -185,8 +187,8 @@ public class Team {
 		this.category = category;
 	}
 
-	public void setNoActivePlayers(List<User> players) {
-		this.noActivePlayers = players;
+	public void setNonActivePlayers(List<User> players) {
+		this.nonActivePlayers = players;
 	}
 	
 }

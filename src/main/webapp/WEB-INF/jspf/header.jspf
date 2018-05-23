@@ -126,6 +126,7 @@
 						<c:choose>
                               	<c:when test="${empty myTeams[3]}">
 									<li><a title="mySport_4" href="/team?id=${myTeams[i].id}">${myTeams[4].name}</a></li>
+
                               	</c:when>
                               	<c:otherwise>
 									<li><a title="MAS" href="/laucm" class="dropdown-toggle" data-toggle="dropdown">MÁS</a>

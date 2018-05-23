@@ -42,7 +42,8 @@
          
          <div class="playertabout"> <!-- lista oeste -->
              <ul id="out" class="list-group list-group-flush">
-                <c:forEach items="${team.noActivePlayers}" var="player">
+                <c:forEach items="${team.nonActivePlayers}" var="player">
+
                     <li class="list-group-item" id=${player.id} onclick=onPlayerNoActive(this)>${player.name}
                         <button type="button" class="close" onclick=onPlayerNoActive(this) id=${player.id} aria-label="Close"> 
                             <span aria-hidden="true">&times;</span>
