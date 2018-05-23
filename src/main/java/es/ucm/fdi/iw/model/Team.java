@@ -83,7 +83,9 @@ public class Team {
 		return nextMatchSchedule;
 	}
 	
+
 	@ManyToMany(targetEntity = User.class,fetch = FetchType.EAGER)
+
 	public List<User> getActivePlayers() {
 		return activePlayers;
 	}

@@ -24,7 +24,20 @@ INSERT INTO match(home_team_id,away_team_id,home_team_points,away_team_points,ma
 
 INSERT INTO team_active_players(active_teams_id,active_players_id) values (1,5);
 INSERT INTO team_active_players(active_teams_id,active_players_id) values (1,6);
+
+INSERT INTO team_active_players(active_teams_id,active_players_id) values (2,5);
+
+INSERT INTO team_active_players(active_teams_id,active_players_id) values (3,5);
+
+INSERT INTO team_active_players(active_teams_id,active_players_id) values (4,5);
+
+INSERT INTO team_active_players(active_teams_id,active_players_id) values (5,5);
+
+INSERT INTO team_active_players(active_teams_id,active_players_id) values (6,5);
+
+
 INSERT INTO team_non_active_players(non_active_teams_id,non_active_players_id) values (1,4);
+
 
 INSERT INTO request_team(team_id,user_id) values (1,3);
 INSERT INTO request_team(team_id,user_id) values (1,7);
