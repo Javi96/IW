@@ -78,11 +78,12 @@ public class RootController {
 			isAdmin =  u.isAdmin();
 			model.addAttribute("isAdmin",isAdmin);
 			if(!isAdmin) {
-				ArrayList<Team> myTeams = new ArrayList<Team>();
-				for(int i = 0; i < u.getActiveTeams().size(); i++) {
-					myTeams.addAll(u.getActiveTeams());
-				}
-				session.setAttribute("myTeams", myTeams);
+				List<Team> myTeams = u.getActiveTeams();
+				myTeams.addAll(u.getNonActiveTeams());
+ 				session.setAttribute("myTeams", u.getActiveTeams());
+				
+				session.setAttribute("l", myTeams.size());
+				System.out.println(myTeams.size());
 			}
 			else {
 				page = "adminHome";
@@ -293,7 +294,9 @@ public class RootController {
 		try {
 			//entityManager.getTransaction().begin();
 			RequestTeam rq = entityManager.find(RequestTeam.class,id);
+
 			rq.getTeam().getNonActivePlayers().add(rq.getUser()); // añadimos al nuevo jugador al equipo
+
 			entityManager.remove(rq); // borramos la peticion
 			//entityManager.getTransaction().commit();
 			accepted = true;
@@ -679,7 +682,7 @@ public class RootController {
 	    	log.info("Error retrieving file: " + f + " -- " + ioe.getMessage());
 	    }
 	}
-	
+
 	@RequestMapping(value="/photo/{team}/{gallery}", method=RequestMethod.POST)
     public @ResponseBody String handleFileUpload(@RequestParam("photo") MultipartFile photo,
     		@PathVariable("team") String team,@PathVariable("gallery") String gallery){
@@ -752,10 +755,12 @@ public class RootController {
 			
 		}
 		return "redirect:/gallery?team=/"+team;
+
 	}
 	
 	@GetMapping("/diary")
 	public String diary(Model model, @SessionAttribute("user") User u) {
+
 		
 		List<Team> teamMatch = u.getActiveTeams();
 		teamMatch.addAll(u.getNonActiveTeams());
