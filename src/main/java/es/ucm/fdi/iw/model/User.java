@@ -26,7 +26,7 @@ public class User {
 	private List<Team> activeTeams;
 
 	//equipos en los que el jugador  NO esta convocado
-	private List<Team> noActiveTeams;
+	private List<Team> nonActiveTeams;
 		
 	private List<Notification> notifications;
 
@@ -45,14 +45,14 @@ public class User {
 		return login;
 	}
 
-	@ManyToMany(mappedBy = "activePlayers")
+	@ManyToMany(mappedBy = "activePlayers",fetch = FetchType.EAGER)
 	public List<Team> getActiveTeams() {
 		return activeTeams;
 	}
 	
-	@ManyToMany(mappedBy = "noActivePlayers")
-	public List<Team> getNoActiveTeams() {
-		return noActiveTeams;
+	@ManyToMany(mappedBy = "nonActivePlayers",fetch = FetchType.EAGER)
+	public List<Team> getNonActiveTeams() {
+		return nonActiveTeams;
 	}
 
 	@Column
@@ -127,7 +127,7 @@ public class User {
 	public void setActiveTeams(List<Team> teams) {
 		this.activeTeams = teams;
 	}
-	public void setNoActiveTeams(List<Team> teams) {
-		this.noActiveTeams = teams;
+	public void setNonActiveTeams(List<Team> teams) {
+		this.nonActiveTeams = teams;
 	}
 }

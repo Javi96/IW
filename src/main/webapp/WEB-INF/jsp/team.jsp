@@ -16,7 +16,7 @@
 	</c:forEach>
 	
    	if(!belong){
-		<c:forEach items="${team.noActivePlayers}" var="player">
+		<c:forEach items="${team.nonActivePlayers}" var="player">
 		if(${player.id == user.id}){
 			belong = true;
 		};

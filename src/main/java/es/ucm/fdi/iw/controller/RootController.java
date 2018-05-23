@@ -293,7 +293,7 @@ public class RootController {
 		try {
 			//entityManager.getTransaction().begin();
 			RequestTeam rq = entityManager.find(RequestTeam.class,id);
-			rq.getTeam().getNoActivePlayers().add(rq.getUser()); // añadimos al nuevo jugador al equipo
+			rq.getTeam().getNonActivePlayers().add(rq.getUser()); // añadimos al nuevo jugador al equipo
 			entityManager.remove(rq); // borramos la peticion
 			//entityManager.getTransaction().commit();
 			accepted = true;
@@ -422,7 +422,7 @@ public class RootController {
 		
 		model.addAttribute("team", t);
 		model.addAttribute("activo", t.getActivePlayers().size());
-		model.addAttribute("noActivo", t.getNoActivePlayers().size());
+		model.addAttribute("noActivo", t.getNonActivePlayers().size());
 		return "playerTab";
 	}
 	
@@ -450,7 +450,7 @@ public class RootController {
 		Team team = entityManager.find(Team.class, id);
 
 		List<String> data = new ArrayList<>();
-		for (User u : team.getNoActivePlayers()) {
+		for (User u : team.getNonActivePlayers()) {
 			String datoUser = u.getId()+","+u.getName();
 			data.add("{" + "\"players\":" + "\"" + datoUser  + "\"" + "}");
 		}
@@ -492,7 +492,7 @@ public class RootController {
 			 * TEAM
 			 */
 			List<User> listaUserActive = t.getActivePlayers();
-			List<User> listaUserNoActive = t.getNoActivePlayers();
+			List<User> listaUserNoActive = t.getNonActivePlayers();
 			//el usuario no estaba en la lista de activos
 			if(!listaUserActive.contains(u)) {
 				listaUserActive.add(u);
@@ -503,7 +503,7 @@ public class RootController {
 			 * USER
 			 */
 			List<Team> listaTeamActive = u.getActiveTeams();
-			List<Team> listaTeamNoActive = u.getNoActiveTeams();
+			List<Team> listaTeamNoActive = u.getNonActiveTeams();
 			
 			//si no tiene como team activo lo ponemos
 			if(!listaTeamActive.contains(t)){
@@ -530,7 +530,7 @@ public class RootController {
 			 * TEAM
 			 */
 			List<User> listaUserActive = t.getActivePlayers();
-			List<User> listaUserNoActive = t.getNoActivePlayers();
+			List<User> listaUserNoActive = t.getNonActivePlayers();
 			//el usuario no estaba en la lista de activos
 			if(listaUserActive.contains(u)) {
 				listaUserNoActive.add(u);
@@ -541,7 +541,7 @@ public class RootController {
 			 * USER
 			 */
 			List<Team> listaTeamActive = u.getActiveTeams();
-			List<Team> listaTeamNoActive = u.getNoActiveTeams();
+			List<Team> listaTeamNoActive = u.getNonActiveTeams();
 			
 			//si no tiene como team activo lo ponemos
 			if(listaTeamActive.contains(t)){
@@ -624,16 +624,6 @@ public class RootController {
 	@GetMapping("/images")
 	public String images() {
 		return "images";
-	}
-
-	@GetMapping("/calendar")
-	public String calendar() {
-		return "calendar";
-	}
-
-	@GetMapping("/calendarSport")
-	public String calendarSport() {
-		return "calendarSport";
 	}
 
 	@GetMapping("/mainPage")
@@ -766,11 +756,10 @@ public class RootController {
 	
 	@GetMapping("/diary")
 	public String diary(Model model, @SessionAttribute("user") User u) {
-		// aqui hay que cambiar la query por los datos de u pero me salen listas vacias, revisar despues de la entrega
-		List<Team> teamMatch = entityManager.createQuery("select tm from Team tm where tm.id = :id order by tm.name",Team.class).setParameter("id", u.getId()).getResultList();	
+		
+		List<Team> teamMatch = u.getActiveTeams();
+		teamMatch.addAll(u.getNonActiveTeams());
 		model.addAttribute("teams", teamMatch);
-
-		//entityManager.createQuery("select rq from RequestTeam rq where user_id = :userId",RequestTeam.class).setParameter("userId", u.getId()).getSingleResult();
 
 		return "diary";
 	}
