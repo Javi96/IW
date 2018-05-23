@@ -38,12 +38,12 @@
 	               <h2>${team.name} - ${team.category}</h2>
 	            </div>
 	            <ul class="container details teamInfoStyle">
-	               <li><p><span class="glyphicon glyphicon-calendar one space" ></span> Entrenamientos: ${team.training_schedule} </p></li>
-	               <li><p><span class="glyphicon glyphicon-calendar one space" ></span> Siguiente partido: ${team.next_match_schedule} </p></li>
-	               <li><p><span class="glyphicon glyphicon-map-marker one space"></span> Instalaciones: ${team.next_match_facilities} </p></li>
+	               <li><p><span class="glyphicon glyphicon-calendar one space" ></span> Entrenamientos: ${team.trainingSchedule} </p></li>
+	               <li><p><span class="glyphicon glyphicon-calendar one space" ></span> Siguiente partido: ${team.nextMatchSchedule} </p></li>
+	               <li><p><span class="glyphicon glyphicon-map-marker one space"></span> Instalaciones: ${team.nextMatchFacilities} </p></li>
 	               <li><p><span class="glyphicon glyphicon-user one space"></span>Delegado: ${team.deputy.name}</p></li>
 	            </ul>
-	            <div >
+	            <div>
 	            	<c:if test = "${logged}">
 		            	<form action = "/contact" method="get" class="btn-group teamButtonsStyle" id = "contact">
 							<button type="submit" class="btn btn-primary">Contactar delegado</button>
@@ -77,6 +77,10 @@
 					<div class="btn-group teamButtonsStyle" id = "playersRequests">
 						<button type="submit" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalLong">Gestionar Ingresos</button>
 						<input type="hidden" name = "id" value="${team.id}">
+					</div>
+					
+					<div class="btn-group teamButtonsStyle" id = "deputyPower">
+						<button id = "deputyPowerBtn" type="button" data-toggle="modal" data-target="#teamModalInfo" class="btn btn-primary">Modificar información</button>
 					</div>
 				</div>
         	</div>
@@ -225,7 +229,51 @@
 	    </div>
 	  </div>
 	</div>
-
+	
+	<!-- Modal change team info -->
+	<div class="modal fade" id="teamModalInfo" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+	  <div class="modal-dialog modal-dialog-centered" role="document">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <h5 class="modal-title" id="exampleModalLongTitle">Modificar informacion del equipo</h5>
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+	          <span aria-hidden="true">&times;</span>
+	        </button>
+	      </div>
+	      <div class="modal-body">
+	        
+	        <div class="row">
+               <div class="col-md-4 col-md-offset-2 text-left">
+                   <h4>Entrenamientos:</h4>
+               </div>
+               <div class="col-md-5 col-md-offset-right-2">
+                   <input type=text id="trainingSchedule">
+               </div>
+           </div>
+           
+           <div class="row">
+               <div class="col-md-4 col-md-offset-2 text-left">
+                   <h4>Siguiente partido:</h4>
+               </div>
+               <div class="col-md-5 col-md-offset-right-2">
+                   <input type=text id="nextMatchSchedule">
+               </div>
+           </div>
+           <div class="row">
+               <div class="col-md-4 col-md-offset-2 text-left">
+                   <h4>Instalaciones:</h4>
+               </div>
+               <div class="col-md-5 col-md-offset-right-2">
+                   <input type=text id="nextMatchFacilities">
+               </div>
+           </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-success" onclick='changeTeamInfo(${team.id})'>Guardar cambios</button>
+	        <button type="button" class="btn btn-danger" id = "closeChangeInfo" data-dismiss="modal">Cerrar</button>
+	      </div>
+	    </div>
+	  </div>
+	</div>
 
 </div>
 

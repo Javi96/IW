@@ -171,24 +171,23 @@ public class RootController {
 	}
 
 	@RequestMapping(path = "/changeTeamInfo",method = RequestMethod.POST)
+	@ResponseBody
 	@Transactional
-	public String adminTeamInfo(@ModelAttribute("teamInfo") Team team, @SessionAttribute("user") User u) {
+	public String changeTeamInfo(@SessionAttribute("user") User u, @RequestParam long teamId, @RequestParam String trainingSchedule,
+			@RequestParam String nextMatchFacilities, @RequestParam String nextMatchSchedule) {
 
-		//Coge el equipo de la bd, donde el usuario logueado es el encargado.
-		Team t = entityManager.find(Team.class, team.getId());
+		Team t = entityManager.find(Team.class, teamId);
 
-		String training = team.getTraining_schedule();
-		String nextMatch = team.getNext_match_schedule();
-		String facilities = team.getNext_match_facilities();
-		if(training != null)
-			t.setTraining_schedule(training);
-		if(nextMatch != null)
-			t.setNext_match_schedule(nextMatch);
-		if(facilities != null)
-			t.setNext_match_facilities(facilities);
+		if(trainingSchedule != null)
+			t.setTrainingSchedule(trainingSchedule);
+		if(nextMatchSchedule != null)
+			t.setNextMatchSchedule(nextMatchSchedule);
+		if(nextMatchFacilities != null)
+			t.setNextMatchFacilities(nextMatchFacilities);
 
 		entityManager.persist(t);
-		return "prueba";
+
+		return "correcto";
 	}
 
 	@GetMapping("/home")
@@ -198,7 +197,7 @@ public class RootController {
 
 	@RequestMapping(value = "/showTeamsBySportsAndGender",method = RequestMethod.GET)
 	@ResponseBody
-	public String showTeamsBySportsAndGender(Model model, @RequestParam("category") String category,  @RequestParam("sport") String sport ) {
+	public String showTeamsBySportsAndGender(Model model, @RequestParam String category,  @RequestParam String sport ) {
 		List<Team> teams = entityManager.createQuery("select ts from Team ts where category = :category and sport = :sport",Team.class)
 				.setParameter("category", category).setParameter("sport", sport).getResultList();
 		List<String> data = new ArrayList<>();
@@ -210,7 +209,7 @@ public class RootController {
 
 	@RequestMapping(value = "/showSportsByGender",method = RequestMethod.GET)
 	@ResponseBody
-	public String showSportsByGender(Model model, @RequestParam("category") String category ) {
+	public String showSportsByGender(Model model, @RequestParam String category ) {
 		List<String> sports = entityManager.createQuery("select distinct ts.sport from Team ts where category = :category",String.class)
 				.setParameter("category", category).getResultList();
 		List<String> data = new ArrayList<>();
@@ -231,7 +230,7 @@ public class RootController {
 	}
 
    @RequestMapping(value = "/ranking",method = RequestMethod.GET)
-	public String classification(Model model, @RequestParam("sport") String sport) {
+	public String classification(Model model, @RequestParam String sport) {
 	   League league = entityManager.createQuery("select l from League l where sport = :sport",League.class)
 				.setParameter("sport", sport).getSingleResult();
 
@@ -243,13 +242,14 @@ public class RootController {
 	}
 
 	@RequestMapping("/team")
-	public String team(@RequestParam("id") long id, Model model, HttpSession session) {
+	public String team(@RequestParam long id, Model model, HttpSession session) {
 		boolean logged = false;
 		User currentUser = (User) session.getAttribute("user");
 		if(currentUser != null) {
 			logged = true;
 		}
-		model.addAttribute("team", entityManager.find(Team.class, id));
+		Team t = entityManager.find(Team.class, id);
+		model.addAttribute("team", t);
 		model.addAttribute("logged", logged);
 		return "team";
 	}
@@ -274,15 +274,15 @@ public class RootController {
 	@RequestMapping(value = "/acceptNewPlayer", method = RequestMethod.POST)
 	@Transactional
 	@ResponseBody
-	public boolean acceptNewPlayer(@RequestBody String body) {
+	public boolean acceptNewPlayer(@RequestParam long id) {
 		boolean accepted = false;
 
 		try {
-			entityManager.getTransaction().begin();
-			RequestTeam rq = entityManager.find(RequestTeam.class, Long.parseLong(body.replace("id=", "")));
+			//entityManager.getTransaction().begin();
+			RequestTeam rq = entityManager.find(RequestTeam.class,id);
 			rq.getTeam().getNoActivePlayers().add(rq.getUser()); // añadimos al nuevo jugador al equipo
 			entityManager.remove(rq); // borramos la peticion
-			entityManager.getTransaction().commit();
+			//entityManager.getTransaction().commit();
 			accepted = true;
 		}
 		catch(Exception e) {
@@ -555,42 +555,53 @@ public class RootController {
 
 	@RequestMapping(value = "/contactDeputy",method = RequestMethod.POST)
 	@Transactional
-	public String contactDeputy(@ModelAttribute("notification") Notification notification, @RequestParam("deputyId") long deputyId, Model model) {
+	public String contactDeputy(@ModelAttribute Notification notification, @RequestParam long deputyId, Model model) {
 		// se envia bien siempre
 		notification.setDeputy(entityManager.find(User.class, deputyId));
 		entityManager.persist(notification);
 		model.addAttribute("correct", true);
+		Team t = entityManager.createQuery("select t from Team t where deputy_id =:deputyId", Team.class).setParameter("deputyId", deputyId).getSingleResult();
+		model.addAttribute("team",t);
 		entityManager.flush();
 		return "contact";
 	}
 
 	@RequestMapping("/joinTeam")
-	public String joinTeam(@RequestParam("id") long id, @SessionAttribute("user") User user , Model m) {
+	public String joinTeam(@RequestParam long id, @SessionAttribute User user , Model m) {
 		m.addAttribute("team", entityManager.find(Team.class, id));
 		return "joinTeam";
 	}
 
 	@RequestMapping(path = "/sentRequestTeam",method = RequestMethod.POST)
 	@Transactional
-	public String sentRequestTeam(@RequestParam("teamId") long teamId,@ModelAttribute("requestTeam") RequestTeam requestTeam, @SessionAttribute("user") User u, Model model){
-		RequestTeam rq = null;
-		Team t = entityManager.find(Team.class, teamId);
-		try {
-			rq = entityManager.createQuery("select rq from RequestTeam rq where user_id = :userId",RequestTeam.class)
-					.setParameter("userId", u.getId()).getSingleResult();
+	public String sentRequestTeam(@RequestParam long teamId,@ModelAttribute RequestTeam requestTeam, @SessionAttribute("user") User u, Model model,
+			@RequestParam String name, @RequestParam String idCard){
+		if(!idCard.equals(u.getIdCard())) {
+			model.addAttribute("error", "Tu dni no coincide con el de ningún usuario de la UCM");
 		}
-		catch(NoResultException ex) {
-
+		else if (!name.equals(u.getName())) {
+			model.addAttribute("error", "Tu nombre no coincide con el de ningún usuario de la UCM");
 		}
-		if(rq == null) {
-			requestTeam.setUser(u);
-			requestTeam.setTeam(t);
-			entityManager.persist(requestTeam);
-			model.addAttribute("correct", true);
+		else {
+			RequestTeam rq = null;
+			Team t = entityManager.find(Team.class, teamId);
+			try {
+				rq = entityManager.createQuery("select rq from RequestTeam rq where user_id = :userId",RequestTeam.class)
+						.setParameter("userId", u.getId()).getSingleResult();
+			}
+			catch(NoResultException ex) {
+	
+			}
+			if(rq == null) {
+				requestTeam.setUser(u);
+				requestTeam.setTeam(t);
+				entityManager.persist(requestTeam);
+				model.addAttribute("correct", true);
+			}
+			else
+				model.addAttribute("error", "Error, ya has enviado una solicitud a este equipo");
+			model.addAttribute("team", t);//por si hace dos peticiones seguidas
 		}
-		else
-			model.addAttribute("error", true);
-		model.addAttribute("team", t);//por si hace dos peticiones seguidas
 		return "joinTeam";
 	}
 

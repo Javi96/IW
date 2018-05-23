@@ -17,10 +17,10 @@
 				Tu solicitud ha sido enviada correctamente</strong>
 			</div>
 		</c:if>
-		<c:if test="${error}">
+		<c:if test="${not empty error}">
 			<div class="alert alert-danger">
 				<strong> <span class="glyphicon glyphicon-alert"></span>
-				Error! Ya has enviado una solicitud a este equipo</strong>
+				${error} </strong>
 			</div>
 		</c:if>
 		</div>
@@ -39,7 +39,7 @@
 					<div class="form-group">
 						<label for="InputEmail">DNI</label>
 						<div class="input-group">
-							<input type="text" class="form-control" name="id_card_nr" placeholder="Tu DNI incluida la letra" required  >
+							<input type="text" class="form-control" name="idCard" placeholder="Tu DNI incluida la letra" required  >
 							<span class="input-group-addon"><i class="glyphicon glyphicon-ok form-control-feedback"></i></span>
 						</div>
 					</div>

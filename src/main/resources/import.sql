@@ -8,6 +8,8 @@ INSERT INTO user(id,enabled,login,password,roles,name,id_card,email) VALUES (4, 
 INSERT INTO user(id,enabled,login,password,roles,name,id_card,email) VALUES (5, 1, 'a5', '$2a$04$N78IYN6VzrWZzpsy6Xvz2uCdUm7Su9FDpAqhXjAcSzCgreVM2sUnC', 'USER','Pepe5','123456559','example@correo5.es');
 INSERT INTO user(id,enabled,login,password,roles,name,id_card,email) VALUES (6, 1, 'a6', '$2a$04$N78IYN6VzrWZzpsy6Xvz2uCdUm7Su9FDpAqhXjAcSzCgreVM2sUnC', 'USER','Pepe6','423456789','example@correo6.es');
 INSERT INTO user(id,enabled,login,password,roles,name,id_card,email) VALUES (7, 1, 'a7', '$2a$04$N78IYN6VzrWZzpsy6Xvz2uCdUm7Su9FDpAqhXjAcSzCgreVM2sUnC', 'USER','Pepe7','423456799','example@correo7.es');
+INSERT INTO user(id,enabled,login,password,roles,name,id_card,email) VALUES (9, 1, 'a9', '$2a$04$N78IYN6VzrWZzpsy6Xvz2uCdUm7Su9FDpAqhXjAcSzCgreVM2sUnC', 'USER','Pepe9','423499799','example@correo9.es');
+
 
 INSERT INTO league (id,name,sport,category) values (1,'Torneo Rector','Rugby','Masculino');
 
