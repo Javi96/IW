@@ -2,11 +2,10 @@
 <%@ taglib prefix="s" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="sec"
-    uri="http://www.springframework.org/security/tags"%>
+	uri="http://www.springframework.org/security/tags"%>
 
 <%@ include file="../jspf/header.jspf"%>
 <link type="text/css" media="screen" rel="stylesheet" href="${s}/css/playerTab.css" />
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 <script src = "${s}/js/playerTab.js"></script>
 
 
@@ -62,16 +61,7 @@
          
          <button class="btn btn-success" id="btnSave" type="submit">Guardar cambios</button>
          <input id = "save" name = "save" type="checkbox" class="hidden" />
-     </div>  
-        <!--  
-        <button class="btn btn-warning" id="btnReset" type="reset">Eliminar modificaciones</button>
-         <input id = "delete" name = "delete" type="checkbox" class="hidden" />
-         
-         <form action="/team" method="post" >
-                <button class="btn btn-success" id="btnSave" type="submit">Guardar cambios</button>
-                <input id = "save" name = "save" type="checkbox" class="hidden" />
-         </form>
-         -->
+	</div>
  </div>
         
 <%@ include file="../jspf/footer.jspf"%>

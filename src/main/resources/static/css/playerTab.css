@@ -17,10 +17,6 @@
     background: #555; 
 }
 
-form {
-    display: inline;
-}
-
 .left_container{
     float: left;
     width: 100%;
@@ -72,10 +68,6 @@ form {
 .changesMix{
     font-family: "Times New Roman", Times, serif;
     text-align: center; 
-}
-
-.cabeceraInOut{
-
 }
 
 .confirm_button{
