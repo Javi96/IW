@@ -151,7 +151,7 @@ function onPlayerActive(event){
 	//out
 	playerOut.push(user);
 	cargarLista("out",idPlayer, user.name);
-	
+	completeTitle();
 }
 
 function onPlayerInOut(event){
@@ -178,6 +178,7 @@ function onPlayerInOut(event){
 		playerIn.push(user);
 		cargarLista("in",idPlayer, user.name);
 	}
+	completeTitle();
 }
 
 function onPlayerNoActive(event){ 
@@ -205,7 +206,7 @@ function onPlayerNoActive(event){
 	//si o si se tiene que insertar en la lista de in
 	 playerIn.push(user);
 	 cargarLista("in",idPlayer, user.name);
-	
+		completeTitle();
 }
 
 //lista ==> lista destino
@@ -243,7 +244,7 @@ function cargarLista(lista,idPlayer, namePlayer){
 	}
 	
 	$('#'+lista).append(li);
-	completeTitle();
+
 }
 
 function User(id, n, r) { 
@@ -288,12 +289,10 @@ function onSaveClick(){
 
 function vuelveATeam(){
 	
-	//var loc=location.href ="http://localhost:8000/team?id="+idTeam;
-	console.log("IDDDD TEAM:"+teamId);
 	$.ajax({
 	    method: "get",  
 	    url: "/team",
-	    data: {teamId: teamId},
+	    data: {id: idTeam},
 	    success: (data)=>{}       
 	});
 		
@@ -322,7 +321,6 @@ var loc=location.href ="http://localhost:8000/team?id="+idTeam;
 	$.ajax({
 	    method: "post",  
 	    url: "/savePlayerTab",
-	    datatype: 'json',
 	    data:
 	    {
 	    	activePlayer:JSON.stringify(activos),
@@ -342,13 +340,14 @@ function onResetClick(){
 	$("#out").empty();
 	$("#in").empty();
 	
-	
-	 playerIn = playerInCopy;
+	 playerIn = playerInCopy.slice();
+	 
 	 for(let i = 0; i < playerIn.length; i++){
 		 cargarLista("in",playerIn[i].id, playerIn[i].name);
 	 }
 	 
-	 playerOut = playerOutCopy;
+	 playerOut = playerOutCopy.slice();
+	 
 	 for(let i = 0; i < playerOut.length; i++){
 		 cargarLista("out",playerOut[i].id, playerOut[i].name);
 	 }

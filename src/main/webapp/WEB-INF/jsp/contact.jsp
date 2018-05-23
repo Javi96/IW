@@ -23,7 +23,7 @@
 						</div>
 						<!-- Email input-->
 						<div class="form-group">
-							<label class="col-md-3 control-label" for="name">Email</label>
+							<label class="col-md-3 control-label" for="name">Email de la ucm</label>
 								<div class="col-md-9">
 							<input id="email" name="email" type="text" placeholder="Tu email" class="form-control">
 							</div>

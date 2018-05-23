@@ -1,11 +1,11 @@
 <%@ page pageEncoding="UTF-8"%>
 <%@ taglib prefix="s" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib uri = "http://java.sun.com/jsp/jstl/functions" prefix = "fn" %>
 <!DOCTYPE html>
 <!-- saved from url=(0023)https://www.ucm.es/ssii -->
   
   <style>
-  
 	  #depDr{
 	    border-right: 2px solid black;
 	    border-right-color: grey;
@@ -103,6 +103,7 @@
             </div>
          </div>
          
+         <c:if test="${!fn:contains(user.roles, 'ADMIN') && !isLogin}">
           <div class="container">
 			<nav class="container navbar navbar-default" role="navigation" id="menu" 
 			style="margin-top:30px">
@@ -113,31 +114,35 @@
 					<!-- Tú -->
 						<ul class="dropdown-menu" role="menu">
 							<li><a title="Reserva" href="">Reservar pista</a></li>
-							<li><a title="agenda" href="/agenda">Agenda deportiva</a></li>
+							<li><a title="agenda" href="/diary">Agenda deportiva</a></li>
 							<li><a href="/laucm" title="UCM" aria-label="UCM"><span class="fa fa-plus-circle" aria-hidden="true" title="UCM"></span></a></li>
 						</ul>
 					<!-- Deportes -->
 						<li><a title="Sports" href="/home">Deportes</a></li>
 					<!-- Mis Deportes -->
-						<li><a title="mySport_1" href="/home">${myTeams[0].name}</a></li>
-						<li><a title="mySport_2" href="/home">${myTeams[1].name}</a></li>
-						<li><a title="mySport_3" href="/home">${myTeams[2].name}</a></li>
+						<li><a title="mySport_1" href="/team?id=${myTeams[i].id}">${myTeams[0].name}</a></li>
+						<li><a title="mySport_2" href="/team?id=${myTeams[i].id}">${myTeams[1].name}</a></li>
 						
 						<c:choose>
-                              	<c:when test="${empty myTeams[4]}">
-									<li><a title="mySport_4" href="/home">${myTeams[3].name}</a></li>
+                              	<c:when test="${empty myTeams[3]}">
+									<li><a title="mySport_4" href="/team?id=${myTeams[i].id}">${myTeams[4].name}</a></li>
                               	</c:when>
                               	<c:otherwise>
-									<li><a title="mySport_4" href="/home">MAS</a></li>
+									<li><a title="MAS" href="/laucm" class="dropdown-toggle" data-toggle="dropdown">MÁS</a>
+									<ul class="dropdown-menu" role="menu">
+										<c:forEach var="i" begin = "4" end = "${l}">
+										    <li><a title="mySport_3" href="/team?id=${myTeams[i].id}">${myTeams[i].name}</a></li>
+										</c:forEach>
+										<li><a title="mySport_3" href="/team?id=${myTeams[i].id}"></a></li>
+									</ul>
                               	</c:otherwise>
                         </c:choose>
 						 
 						
-				</li>    		
     		</ul>
     	</div>	
 	</nav>
           </div>
-          
+          </c:if>
  
 </header>

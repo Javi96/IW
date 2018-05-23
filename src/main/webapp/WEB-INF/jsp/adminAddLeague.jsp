@@ -4,32 +4,30 @@
 <%@ taglib prefix="sec"
 	uri="http://www.springframework.org/security/tags"%>
 
-<%@ include file="../jspf/header.jspf"%>
-
 <div class = "container">
 	<form class = "form-horizontal" name = "league" method="POST" action = "/addLeague">
 		<!-- Form Name -->
-		<h1 class = "col-sm-12 text-center">Crear liga de deporte</h1>
+		<h1 class = "col-sm-12 text-center">Crear liga </h1>
 		
 		<div class="form-group">
-			<label class="col-md-4 control-label" >Nombre deporte:</label>
+			<label class="col-md-4 control-label" >Deporte:</label>
 			<div class="col-md-4">
 				<input  name = "sport" type="text" class = "from-control-text">
 			</div>
 		</div>
 		    
 		<div class="form-group">
-			<label class="col-md-4 control-label" >Nombre liga:</label>
+			<label class="col-md-4 control-label" >Nombre de la liga:</label>
 			<div class="col-md-4">
-				<input id = "sport" name = "sport" type="text" class = "from-control">
+				<input name = "name" type="text" class = "from-control">
 			</div>
 		</div>
 		
 		<div class="form-group">
 			<label class="col-md-4 control-label" >Categoria:</label>
 			<div class="col-md-4">
-				<input id = "sport" name = "gender" type="Radio" class = "from-control">Masculino
-				<input id = "sport" name = "gender" type="Radio" class = "from-control">Femenino
+				<input name = "category" type="Radio" value = "Masculino" class = "from-control">Masculino
+				<input name = "category" type="Radio" value = "Femenino" class = "from-control">Femenino
 			</div>
 		</div>
 		
@@ -40,4 +38,3 @@
 	</form>
 </div>
 
-<%@ include file="../jspf/footer.jspf"%>

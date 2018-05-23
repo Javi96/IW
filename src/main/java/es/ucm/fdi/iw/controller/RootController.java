@@ -1,5 +1,12 @@
 package es.ucm.fdi.iw.controller;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
@@ -7,24 +14,30 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttribute;
+import org.springframework.web.multipart.MultipartFile;
 
 import es.ucm.fdi.iw.LocalData;
+import es.ucm.fdi.iw.model.Gallery;
 import es.ucm.fdi.iw.model.League;
 import es.ucm.fdi.iw.model.Match;
 import es.ucm.fdi.iw.model.MatchRecord;
@@ -53,6 +66,8 @@ public class RootController {
 
 	@GetMapping({"/", "/index"})
 	public String root(Model model, HttpSession session, Principal principal) {
+		String page = "mainPage";
+		boolean isAdmin = false;
 		log.info(principal.getName() + " de tipo " + principal.getClass());
 		// org.springframework.security.core.userdetails.User
 		if (principal != null) {
@@ -60,28 +75,34 @@ public class RootController {
                 .setParameter("login", principal.getName())
                 .getSingleResult();
 			session.setAttribute("user", u);
-			ArrayList<Team> myTeams = new ArrayList<Team>();
-			for(int i = 0; i < u.getActiveTeams().size(); i++) {
-				myTeams.add(entityManager.createQuery("from Team where id = :teamId", Team.class)
-		                .setParameter("teamId", u.getActiveTeams().get(i))
-		                .getSingleResult());
+			isAdmin =  u.isAdmin();
+			model.addAttribute("isAdmin",isAdmin);
+			if(!isAdmin) {
+				List<Team> myTeams = u.getActiveTeams();
+				myTeams.addAll(u.getNoActiveTeams());
+ 				session.setAttribute("myTeams", u.getActiveTeams());
 				
+				session.setAttribute("l", myTeams.size());
+				System.out.println(myTeams.size());
 			}
-			session.setAttribute("myTeams", myTeams);
+			else {
+				page = "adminHome";
+			}
 		}
-		return "mainPage";
+		return page;
 	}
 
 	@GetMapping("/login")
-	public String login() {
+	public String login(Model m) {
+		m.addAttribute("isLogin", true);
 		return "login";
 	}
-
-	@GetMapping("/showFormAddTeam")
-	public String adminFormTeam() {
-		return "adminFormTeam";
+	
+	@RequestMapping(value = "/addTeamView",method = RequestMethod.GET)
+	public String adminAddTeam(Model model) {
+		model.addAttribute("option", "adminAddTeam");
+		return "adminHome";
 	}
-
 
 	@GetMapping("/showFormDelegateSets")
 	public String adminFormDelegateSets(Model m, @SessionAttribute("user") User u) {
@@ -91,61 +112,106 @@ public class RootController {
 		return "adminDelegateSets";
 	}
 
-	@GetMapping("/showFormAddLeague")
-	public String adminFormLeague() {
-		return "adminFormLeague";
+	@RequestMapping(value = "/addLeagueView",method = RequestMethod.GET)
+	public String adminAddLeague(Model model) {
+		model.addAttribute("option", "adminAddLeague");
+		return "adminHome";
 	}
 
 	@RequestMapping(path = "/addTeam",method = RequestMethod.POST)
 	@Transactional
-	public String adminCreateTeam(@ModelAttribute("team") Team t) {
-
-		League league = entityManager.createQuery("select l from League l where sport = :sportName",League.class)
-				.setParameter("sportName", t.getSport()).getSingleResult();
-		league.addTeam(t);
-		entityManager.persist(t);
-		entityManager.persist(league);
-		entityManager.flush();
-		return "prueba";
+	public String adminCreateTeam(@ModelAttribute Team team, @RequestParam String email, Model model) {
+		League league = null;
+		User deputy = null;
+		try {
+			if(team.getName().equals("") || team.getCategory().equals("") || team.getSport().equals("") || team.getSchool().equals("")) {
+				model.addAttribute("info", "Todos los campos son obligatorios");
+			}
+			else {
+				league = entityManager.createQuery("select l from League l where sport = :sportName and category =:category",League.class)
+					.setParameter("sportName", team.getSport()).setParameter("category", team.getCategory()).getSingleResult();
+				deputy = entityManager.createQuery("select u from User u where email =:email ", User.class).setParameter("email", email).getSingleResult();
+				team.setDeputy(deputy);
+				boolean ok = league.addTeam(team);
+				if(ok) {
+					entityManager.persist(team);
+					entityManager.persist(league);
+					model.addAttribute("correct", "Equipo creado correctamente");
+				}
+				else {
+					model.addAttribute("info", "Error, el equipo " + team.getName() + " ya pertenece a esta liga");
+				}
+			}
+		}
+		catch(Exception e ) {
+			if(league == null) {
+				model.addAttribute("info", "Error, no hay una liga disponible para este tipo de equipo");
+			}
+			else if (deputy == null) {
+				model.addAttribute("info", "Error, delegado no encontrado");
+			}
+			else {
+				System.out.println(e);
+			}
+		}
+		model.addAttribute("option","adminAddTeam");
+		return "adminHome";
 	}
 
 	@RequestMapping(path = "/addLeague",method = RequestMethod.POST)
 	@Transactional
-	public String adminCreateLeague(@ModelAttribute("league") League league) {
-		entityManager.persist(league);
-		entityManager.flush();
-		return "prueba";
+	public String adminCreateLeague(@ModelAttribute League league, Model model) {
+		int l = 0;
+		entityManager.clear();
+		try {
+			if(league.getCategory().equals("") || league.getName().equals("") || league.getSport().equals(""))
+				model.addAttribute("info", "Todos los campos son obligatorios");
+			else {
+				l = entityManager.createQuery("select l from League l where name =:name and sport =:sport", League.class)
+						.setParameter("name",league.getName()).setParameter("sport", league.getSport()).getResultList().size();
+				if(l == 0) {
+					entityManager.persist(league);
+					model.addAttribute("correct", "Liga creada correctamente");
+				}
+				else
+					model.addAttribute("info", "Error, ya hay una liga con ese nombre, para " + league.getSport());
+			}
+		}
+		catch(Exception e) {
+				System.out.print(e);
+		}
+		model.addAttribute("option","adminAddLeague");
+		return "adminHome";
 	}
 
 	@RequestMapping(path = "/changeTeamInfo",method = RequestMethod.POST)
+	@ResponseBody
 	@Transactional
-	public String adminTeamInfo(@ModelAttribute("teamInfo") Team team, @SessionAttribute("user") User u) {
+	public String changeTeamInfo(@SessionAttribute("user") User u, @RequestParam long teamId, @RequestParam String trainingSchedule,
+			@RequestParam String nextMatchFacilities, @RequestParam String nextMatchSchedule) {
 
-		//Coge el equipo de la bd, donde el usuario logueado es el encargado.
-		Team t = entityManager.find(Team.class, team.getId());
+		Team t = entityManager.find(Team.class, teamId);
 
-		String training = team.getTraining_schedule();
-		String nextMatch = team.getNext_match_schedule();
-		String facilities = team.getNext_match_facilities();
-		if(training != null)
-			t.setTraining_schedule(training);
-		if(nextMatch != null)
-			t.setNext_match_schedule(nextMatch);
-		if(facilities != null)
-			t.setNext_match_facilities(facilities);
+		if(trainingSchedule != null)
+			t.setTrainingSchedule(trainingSchedule);
+		if(nextMatchSchedule != null)
+			t.setNextMatchSchedule(nextMatchSchedule);
+		if(nextMatchFacilities != null)
+			t.setNextMatchFacilities(nextMatchFacilities);
 
 		entityManager.persist(t);
-		return "prueba";
+
+		return "correcto";
 	}
 
-	@RequestMapping(path = "/home",method = RequestMethod.GET)
+	@GetMapping("/home")
 	public String home() {
 		return "home";
 	}
 
 	@RequestMapping(value = "/showTeamsBySportsAndGender",method = RequestMethod.GET)
 	@ResponseBody
-	public String showTeamsBySportsAndGender(Model model, @RequestParam("category") String category,  @RequestParam("sport") String sport ) {
+	public String showTeamsBySportsAndGender(Model model, @RequestParam String category,  @RequestParam String sport ) {
 		List<Team> teams = entityManager.createQuery("select ts from Team ts where category = :category and sport = :sport",Team.class)
 				.setParameter("category", category).setParameter("sport", sport).getResultList();
 		List<String> data = new ArrayList<>();
@@ -157,7 +223,7 @@ public class RootController {
 
 	@RequestMapping(value = "/showSportsByGender",method = RequestMethod.GET)
 	@ResponseBody
-	public String showSportsByGender(Model model, @RequestParam("category") String category ) {
+	public String showSportsByGender(Model model, @RequestParam String category ) {
 		List<String> sports = entityManager.createQuery("select distinct ts.sport from Team ts where category = :category",String.class)
 				.setParameter("category", category).getResultList();
 		List<String> data = new ArrayList<>();
@@ -177,9 +243,8 @@ public class RootController {
 		return String.join("'", data);
 	}
 
-
    @RequestMapping(value = "/ranking",method = RequestMethod.GET)
-	public String classification(Model model, @RequestParam("sport") String sport) {
+	public String classification(Model model, @RequestParam String sport) {
 	   League league = entityManager.createQuery("select l from League l where sport = :sport",League.class)
 				.setParameter("sport", sport).getSingleResult();
 
@@ -191,13 +256,14 @@ public class RootController {
 	}
 
 	@RequestMapping("/team")
-	public String team(@RequestParam("id") long id, Model model, HttpSession session) {
+	public String team(@RequestParam long id, Model model, HttpSession session) {
 		boolean logged = false;
 		User currentUser = (User) session.getAttribute("user");
 		if(currentUser != null) {
 			logged = true;
 		}
-		model.addAttribute("team", entityManager.find(Team.class, id));
+		Team t = entityManager.find(Team.class, id);
+		model.addAttribute("team", t);
 		model.addAttribute("logged", logged);
 		return "team";
 	}
@@ -222,15 +288,15 @@ public class RootController {
 	@RequestMapping(value = "/acceptNewPlayer", method = RequestMethod.POST)
 	@Transactional
 	@ResponseBody
-	public boolean acceptNewPlayer(@RequestBody String body) {
+	public boolean acceptNewPlayer(@RequestParam long id) {
 		boolean accepted = false;
 
 		try {
-			entityManager.getTransaction().begin();
-			RequestTeam rq = entityManager.find(RequestTeam.class, Long.parseLong(body.replace("id=", "")));
+			//entityManager.getTransaction().begin();
+			RequestTeam rq = entityManager.find(RequestTeam.class,id);
 			rq.getTeam().getNoActivePlayers().add(rq.getUser()); // añadimos al nuevo jugador al equipo
 			entityManager.remove(rq); // borramos la peticion
-			entityManager.getTransaction().commit();
+			//entityManager.getTransaction().commit();
 			accepted = true;
 		}
 		catch(Exception e) {
@@ -403,6 +469,9 @@ public class RootController {
 		String cadenaActivos = request.getParameter("activePlayer");
 		String cadenaNoActivos = request.getParameter("noActivePlayer");
 					
+		System.out.println("ACTIVOS: "+cadenaActivos);
+		System.out.println("NO ACTIVOS: "+cadenaNoActivos);
+		
 		//quitamos los []
 		cadenaActivos = cadenaActivos.substring(1, cadenaActivos.length()-1);
 		cadenaNoActivos = cadenaNoActivos.substring(1, cadenaNoActivos.length()-1);
@@ -484,13 +553,6 @@ public class RootController {
 		
 		return "team";
 	}
-	
-	@GetMapping("/gallery_good")
-	public String gallery_good(@RequestParam("id") String id, Model model) {
-		model.addAttribute("team",id);
-		model.addAttribute("files", localData.getFile(id, "").listFiles().length);
-		return "gallery_good";
-	}
 
 	@RequestMapping("/contact")
 	public String contact(@RequestParam("id") long id, Model m) {
@@ -500,42 +562,53 @@ public class RootController {
 
 	@RequestMapping(value = "/contactDeputy",method = RequestMethod.POST)
 	@Transactional
-	public String contactDeputy(@ModelAttribute("notification") Notification notification, @RequestParam("deputyId") long deputyId, Model model) {
+	public String contactDeputy(@ModelAttribute Notification notification, @RequestParam long deputyId, Model model) {
 		// se envia bien siempre
 		notification.setDeputy(entityManager.find(User.class, deputyId));
 		entityManager.persist(notification);
 		model.addAttribute("correct", true);
+		Team t = entityManager.createQuery("select t from Team t where deputy_id =:deputyId", Team.class).setParameter("deputyId", deputyId).getSingleResult();
+		model.addAttribute("team",t);
 		entityManager.flush();
 		return "contact";
 	}
 
 	@RequestMapping("/joinTeam")
-	public String joinTeam(@RequestParam("id") long id, @SessionAttribute("user") User user , Model m) {
+	public String joinTeam(@RequestParam long id, @SessionAttribute User user , Model m) {
 		m.addAttribute("team", entityManager.find(Team.class, id));
 		return "joinTeam";
 	}
 
 	@RequestMapping(path = "/sentRequestTeam",method = RequestMethod.POST)
 	@Transactional
-	public String sentRequestTeam(@RequestParam("teamId") long teamId,@ModelAttribute("requestTeam") RequestTeam requestTeam, @SessionAttribute("user") User u, Model model){
-		RequestTeam rq = null;
-		Team t = entityManager.find(Team.class, teamId);
-		try {
-			rq = entityManager.createQuery("select rq from RequestTeam rq where user_id = :userId",RequestTeam.class)
-					.setParameter("userId", u.getId()).getSingleResult();
+	public String sentRequestTeam(@RequestParam long teamId,@ModelAttribute RequestTeam requestTeam, @SessionAttribute("user") User u, Model model,
+			@RequestParam String name, @RequestParam String idCard){
+		if(!idCard.equals(u.getIdCard())) {
+			model.addAttribute("error", "Tu dni no coincide con el de ningún usuario de la UCM");
 		}
-		catch(NoResultException ex) {
-
+		else if (!name.equals(u.getName())) {
+			model.addAttribute("error", "Tu nombre no coincide con el de ningún usuario de la UCM");
 		}
-		if(rq == null) {
-			requestTeam.setUser(u);
-			requestTeam.setTeam(t);
-			entityManager.persist(requestTeam);
-			model.addAttribute("correct", true);
+		else {
+			RequestTeam rq = null;
+			Team t = entityManager.find(Team.class, teamId);
+			try {
+				rq = entityManager.createQuery("select rq from RequestTeam rq where user_id = :userId",RequestTeam.class)
+						.setParameter("userId", u.getId()).getSingleResult();
+			}
+			catch(NoResultException ex) {
+	
+			}
+			if(rq == null) {
+				requestTeam.setUser(u);
+				requestTeam.setTeam(t);
+				entityManager.persist(requestTeam);
+				model.addAttribute("correct", true);
+			}
+			else
+				model.addAttribute("error", "Error, ya has enviado una solicitud a este equipo");
+			model.addAttribute("team", t);//por si hace dos peticiones seguidas
 		}
-		else
-			model.addAttribute("error", true);
-		model.addAttribute("team", t);//por si hace dos peticiones seguidas
 		return "joinTeam";
 	}
 
@@ -547,11 +620,6 @@ public class RootController {
 	@GetMapping("/upload")
 	public String upload() {
 		return "upload";
-	}
-
-	@GetMapping("/gallery")
-	public String gallery() {
-		return "gallery";
 	}
 
 	@GetMapping("/images")
@@ -569,26 +637,150 @@ public class RootController {
 		return "calendarSport";
 	}
 
-	@GetMapping("/calendarPrueba")
-	public String calendarPrueba() {
-		return "calendarPrueba";
-	}
-
-	@GetMapping("/allTeams")
-	public String allTeams() {
-		return "allTeams";
-	}
-
-	@GetMapping("/rugbyTeams")
-	public String rugbyTeams() {
-		return "rugbyTeams";
-	}
-
 	@GetMapping("/mainPage")
 	public String mainPage() {
 		return "mainPage";
 	}
+	
+	@GetMapping("/gallery_images")
+	public String gallery_images(@RequestParam("team") String team,@RequestParam("gallery") String gallery, Model model) {
+		model.addAttribute("team",team);
+		model.addAttribute("gallery",gallery);
+		System.out.println(team + " " + gallery + " " + localData.getFile(team+"/"+gallery, "").listFiles().length);
+		System.out.println(localData.getFile(team, "").listFiles().length);
+		System.out.println(localData.getFile(team, "").getAbsolutePath());
+		//model.addAttribute("files", localData.getFile("team", id).listFiles().length);		
+		ArrayList<String> images = new ArrayList<>();
+		//ArrayList<String> galleries = new ArrayList<>();
+		
+		for (File file : localData.getFile(team+"/"+gallery, "").listFiles()) {
+			//galleries.add(folder.getName());
+			//for (File file : folder.listFiles()) {
+				System.out.println("photo/" + team + "/" + gallery + "/" + file.getName());
+				images.add("photo/" + team + "/" + gallery + "/" + file.getName());
+			//}
+		}
+		
+		/*for (File f : localData.getFile(id, "").listFiles()) {
+			images.add("photo/team/" + id + "/" + f.getName());
+		}*/
+	    model.addAttribute("images", images);
+	    //model.addAttribute("galleries", galleries);
+		return "gallery_images";
+	}
 
+	@RequestMapping(value="/photo/{team}/{gallery}/{name}", method = RequestMethod.GET, produces = MediaType.IMAGE_PNG_VALUE)
+	public void userPhoto(@PathVariable("team") String team,@PathVariable("gallery") String gallery,
+			@PathVariable("name") String name,
+			HttpServletResponse response,Model model) {
+		model.addAttribute("team",team);
+		model.addAttribute("gallery",gallery);
 
+		File f = localData.getFile(team+"/"+gallery, name);
+		InputStream in = null;
+	    try {
+		    if (f.exists()) {
+		    	in = new BufferedInputStream(new FileInputStream(f));
+		    } else {
+		    	in = new BufferedInputStream(
+		    			this.getClass().getClassLoader().getResourceAsStream("unknown-user.jpg"));
+		    }
+	    	FileCopyUtils.copy(in, response.getOutputStream());
+	    } catch (IOException ioe) {
+	    	log.info("Error retrieving file: " + f + " -- " + ioe.getMessage());
+	    }
+	}
+	
+	@RequestMapping(value="/photo/{team}/{gallery}", method=RequestMethod.POST)
+    public @ResponseBody String handleFileUpload(@RequestParam("photo") MultipartFile photo,
+    		@PathVariable("team") String team,@PathVariable("gallery") String gallery){
+        if (!photo.isEmpty()) {
+            try {
+            	File f = new File("/tmp/iw/"+team+"/"+gallery);
+            	System.out.println("/tmp/iw/"+team+"/"+gallery);
+            	if(!f.exists() || (f.exists() && !f.isDirectory())) {
+            		new File("/tmp/iw/"+team+"/"+gallery).mkdirs();
+            	}
+            	
+            	int files = new File("/tmp/iw/"+team+"/"+gallery).listFiles().length;
+                byte[] bytes = photo.getBytes();
+                BufferedOutputStream stream =
+                        new BufferedOutputStream(
+                        		new FileOutputStream(localData.getFile(team+"/"+gallery, Integer.toString(files+1))));
+                stream.write(bytes);
+                stream.close();
+
+                return "ok";
+            } catch (Exception e) {
+                return "You failed to upload " + team + " => " + e.getMessage();
+            }
+        } else {
+            return "You failed to upload a photo for " + team + " because the file was empty.";
+        }
+	}
+	
+	
+	@GetMapping("/gallery")
+	public String gallery(@RequestParam("team") String team, Model model) {
+		model.addAttribute("team",team);
+		ArrayList<Gallery> gallery = new ArrayList<>();		
+		for (File folder : localData.getFile(team, "").listFiles()) {
+			gallery.add(new Gallery(folder.getName(), localData.getFile(team + "/" + folder.getName(), "").listFiles().length));
+		}
+	    model.addAttribute("gallery", gallery);
+		return "gallery";
+	}
+	
+	@RequestMapping(value="/fillGallery",method = RequestMethod.GET)
+	@ResponseBody
+	public String fillGallery(@RequestParam("team") String team, Model model) {
+	    List<String> data = new ArrayList<>();
+		for (File folder : localData.getFile(team, "").listFiles()) {
+			data.add("{" + "\"gallery\":{" + 
+					"\"name\":" + "\"" + folder.getName() + "\"" +
+					",\"files\":" + "\"" + localData.getFile(team + "/" + folder.getName(), "").listFiles().length + 
+			 "\"}" + "}");
+		}
+		return String.join("'", data);
+	}
+	
+	@RequestMapping(path = "/createGallery/{team}", method = RequestMethod.POST)
+	public String createGallery(@PathVariable("team") String team, HttpServletRequest request) {
+		try{
+			new File("/tmp/iw/"+team+"/"+request.getParameter("data")).mkdirs();
+		}catch(Exception e) {
+			
+		}
+		return "gallery";
+	}
+	
+	@RequestMapping(value = "/removeGallery/{team}", method = RequestMethod.POST)
+	public String removeGallery(@PathVariable("team") String team, HttpServletRequest request) {
+		try {
+			String data = request.getParameter("selectionbox");
+			System.out.println(request.getParameter("selectionbox").substring(1, data.length()-1));
+			FileUtils.deleteDirectory(localData.getFile(team +"/"+request.getParameter("selectionbox").substring(1, data.length()-1), ""));
+		}catch(Exception e) {
+			
+		}
+		return "gallery";
+	}
+	
+	@GetMapping("/diary")
+	public String diary(Model model, @SessionAttribute("user") User u) {
+		// aqui hay que cambiar la query por los datos de u pero me salen listas vacias, revisar despues de la entrega
+		List<Team> teamMatch = entityManager.createQuery("select tm from Team tm where tm.id = :id order by tm.name",Team.class).setParameter("id", u.getId()).getResultList();	
+		model.addAttribute("teams", teamMatch);
+	
+		
+		
+		//entityManager.createQuery("select rq from RequestTeam rq where user_id = :userId",RequestTeam.class).setParameter("userId", u.getId()).getSingleResult();
+		
+		
+		
+		
+		
+		return "diary";
+	}
 
 }

@@ -5,178 +5,135 @@
 	uri="http://www.springframework.org/security/tags"%>
 
 <%@ include file="../jspf/header.jspf"%>
-<link href="${s}/css/gallery.css" rel="stylesheet">
-<script type="text/javascript">
+<!--<script src = "${s}/js/gallery.js"></script>-->
+<link type="text/css" media="screen" rel="stylesheet" href="${s}/css/gallery.css" />
 
-jQuery(document).ready(function($) {
-	 
-    $('#myCarousel').carousel({
-            interval: 5000
-    });
-
-    //Handles the carousel thumbnails
-    $('[id^=carousel-selector-]').click(function () {
-    var id_selector = $(this).attr("id");
-    try {
-        var id = /-(\d+)$/.exec(id_selector)[1];
-        console.log(id_selector, id);
-        jQuery('#myCarousel').carousel(parseInt(id));
-    } catch (e) {
-        console.log('Regex failed!', e);
-    }
-});
-    // When the carousel slides, auto update the text
-    $('#myCarousel').on('slid.bs.carousel', function (e) {
-             var id = $('.item.active').data('slide-number');
-            $('#carousel-text').html($('#slide-content-'+id).html());
-    });
-});
-
-</script>
 <body>
-	<div class="container">
-    <div id="main_area">
-        <!-- Slider -->
-        <div class="row">
-            <div class="col-sm-6" id="slider-thumbs">
-                <!-- Bottom switcher of slider -->
-                <ul class="hide-bullets">
-                    <li class="col-sm-3">
-                        <a class="thumbnail" id="carousel-selector-0">
-                            <img src="http://placehold.it/150x150&text=zero">
-                        </a>
-                    </li>
 
-                    <li class="col-sm-3">
-                        <a class="thumbnail" id="carousel-selector-1"><img src="http://placehold.it/150x150&text=1"></a>
-                    </li>
+        
+        <div id ="container" class="container">         
+        <h2 style="text-align:center">Galleria de imagenes</h2>
+        
+<div>
+	<button id="team" type="button" class="btn btn-primary" data-toggle="modal" data-target="#create" name="${team}">
+	  Añadir galería
+	</button>
 
-                    <li class="col-sm-3">
-                        <a class="thumbnail" id="carousel-selector-2"><img src="http://placehold.it/150x150&text=2"></a>
-                    </li>
+	<div class="modal fade" id="create" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	  <div class="modal-dialog" role="document">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <h2 class="modal-title" id="exampleModalLabel">Escribe el nombre de la nueva galería</h2>
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+	          <span aria-hidden="true">&times;</span>
+	        </button>
+	      </div>
+	      <div class="modal-body">
+		  	<form action = "/createGallery/${team}" method="post"  class="btn-group teamButtonsStyle" id = "create_gallery">
+			  	<div class="form-group" style="float: left; width: 100%;">
+					<input type="text" class="form-control" id="usr" required="required" name="data">
+					
+			    </div>
+			    <div class="form-group" style="float: right; width: 100%;">
+				
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">Salir</button>
+		        	<button type="submit" class="btn btn-primary">Guardar cambios</button>
+			    </div>
+			</form>
+	      <div class="modal-footer">
+	      </div>
+	    </div>
+	  </div>
+	</div>
+	</div>
+	
+	
+	<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#remove">
+	  Eliminar gelaría
+	</button>
 
-                    <li class="col-sm-3">
-                        <a class="thumbnail" id="carousel-selector-3"><img src="http://placehold.it/150x150&text=3"></a>
-                    </li>
-
-                    <li class="col-sm-3">
-                        <a class="thumbnail" id="carousel-selector-4"><img src="http://placehold.it/150x150&text=4"></a>
-                    </li>
-
-                    <li class="col-sm-3">
-                        <a class="thumbnail" id="carousel-selector-5"><img src="http://placehold.it/150x150&text=5"></a>
-                    </li>
-                    <li class="col-sm-3">
-                        <a class="thumbnail" id="carousel-selector-6"><img src="http://placehold.it/150x150&text=6"></a>
-                    </li>
-
-                    <li class="col-sm-3">
-                        <a class="thumbnail" id="carousel-selector-7"><img src="http://placehold.it/150x150&text=7"></a>
-                    </li>
-
-                    <li class="col-sm-3">
-                        <a class="thumbnail" id="carousel-selector-8"><img src="http://placehold.it/150x150&text=8"></a>
-                    </li>
-
-                    <li class="col-sm-3">
-                        <a class="thumbnail" id="carousel-selector-9"><img src="http://placehold.it/150x150&text=9"></a>
-                    </li>
-                    <li class="col-sm-3">
-                        <a class="thumbnail" id="carousel-selector-10"><img src="http://placehold.it/150x150&text=10"></a>
-                    </li>
-
-                    <li class="col-sm-3">
-                        <a class="thumbnail" id="carousel-selector-11"><img src="http://placehold.it/150x150&text=11"></a>
-                    </li>
-
-                    <li class="col-sm-3">
-                        <a class="thumbnail" id="carousel-selector-12"><img src="http://placehold.it/150x150&text=12"></a>
-                    </li>
-
-                    <li class="col-sm-3">
-                        <a class="thumbnail" id="carousel-selector-13"><img src="http://placehold.it/150x150&text=13"></a>
-                    </li>
-                    <li class="col-sm-3">
-                        <a class="thumbnail" id="carousel-selector-14"><img src="http://placehold.it/150x150&text=14"></a>
-                    </li>
-
-                    <li class="col-sm-3">
-                        <a class="thumbnail" id="carousel-selector-15"><img src="http://placehold.it/150x150&text=15"></a>
-                    </li>
-                </ul>
-            </div>
-            <div class="col-sm-6">
-                <div class="col-xs-12" id="slider">
-                    <!-- Top part of the slider -->
-                    <div class="row">
-                        <div class="col-sm-12" id="carousel-bounding-box">
-                            <div class="carousel slide" id="myCarousel">
-                                <!-- Carousel items -->
-                                <div class="carousel-inner">
-                                    <div class="active item" data-slide-number="0">
-                                        <img src="http://placehold.it/470x480&text=zero"></div>
-
-                                    <div class="item" data-slide-number="1">
-                                        <img src="http://placehold.it/470x480&text=1"></div>
-
-                                    <div class="item" data-slide-number="2">
-                                        <img src="http://placehold.it/470x480&text=2"></div>
-
-                                    <div class="item" data-slide-number="3">
-                                        <img src="http://placehold.it/470x480&text=3"></div>
-
-                                    <div class="item" data-slide-number="4">
-                                        <img src="http://placehold.it/470x480&text=4"></div>
-
-                                    <div class="item" data-slide-number="5">
-                                        <img src="http://placehold.it/470x480&text=5"></div>
-                                    
-                                    <div class="item" data-slide-number="6">
-                                        <img src="http://placehold.it/470x480&text=6"></div>
-                                    
-                                    <div class="item" data-slide-number="7">
-                                        <img src="http://placehold.it/470x480&text=7"></div>
-                                    
-                                    <div class="item" data-slide-number="8">
-                                        <img src="http://placehold.it/470x480&text=8"></div>
-                                    
-                                    <div class="item" data-slide-number="9">
-                                        <img src="http://placehold.it/470x480&text=9"></div>
-                                    
-                                    <div class="item" data-slide-number="10">
-                                        <img src="http://placehold.it/470x480&text=10"></div>
-                                    
-                                    <div class="item" data-slide-number="11">
-                                        <img src="http://placehold.it/470x480&text=11"></div>
-                                    
-                                    <div class="item" data-slide-number="12">
-                                        <img src="http://placehold.it/470x480&text=12"></div>
-
-                                    <div class="item" data-slide-number="13">
-                                        <img src="http://placehold.it/470x480&text=13"></div>
-
-                                    <div class="item" data-slide-number="14">
-                                        <img src="http://placehold.it/470x480&text=14"></div>
-
-                                    <div class="item" data-slide-number="15">
-                                        <img src="http://placehold.it/470x480&text=15"></div>
-                                </div>
-                                <!-- Carousel nav -->
-                                <a class="left carousel-control" href="#myCarousel" role="button" data-slide="prev">
-                                    <span class="glyphicon glyphicon-chevron-left"></span>
-                                </a>
-                                <a class="right carousel-control" href="#myCarousel" role="button" data-slide="next">
-                                    <span class="glyphicon glyphicon-chevron-right"></span>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!--/Slider-->
-        </div>
-    </div>
+	<div class="modal fade" id="remove" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	  <div class="modal-dialog" role="document">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <h2 class="modal-title" id="exampleModalLabel">Selecciona la galería a eliminar</h2>
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+	          <span aria-hidden="true">&times;</span>
+	        </button>
+	      </div>
+	      <div class="modal-body">
+		  	<form action = "/removeGallery/${team}" method="post"  class="btn-group teamButtonsStyle" id = "remove_gallery">
+		  	
+		  	<div class="form-group" style="float: center; width: 100%;">
+				<select class="form-control" id="sel1" required="required" name="selectionbox">
+				<c:forEach items="${gallery}" var="i">
+					<option>"${i.name}"</option>
+				</c:forEach>
+				</select>
+			</div>
+			    <div class="form-group" style="float: right; width: 100%;">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">Salir</button>
+		        	<button type="submit" class="btn btn-primary" >Guardar cambios</button>
+			    </div>
+			</form>
+	      <div class="modal-footer">
+	      </div>
+	    </div>
+	  </div>
+	</div>
+	</div>
 </div>
-</body>
 
+
+<!-- <c:forEach items="${galleries}" var="i">
+		<tr>
+			<th style="text-align: left">"${i[name]}"</th>
+			<th style="text-align: left">"${i[files]}"</th>
+			<th style="text-align: right">
+			<form action = "/gallery_good" method="get"  class="btn-group teamButtonsStyle" id = "gallery">
+				<button type="submit" class="btn btn-primary">Ver galería</button>
+				<input type="hidden" name = "team" value="${team}">
+				<input type="hidden" name = "gallery" value="${i}">
+			</form>
+			</th>
+		 </tr>  
+		</c:forEach>
+		 -->
+                                                      
+<div id="test" class="table-responsive">
+	<table id="gallery_table" class="table table-striped table-hover">
+	<thead>
+		 <tr>
+			<th style="text-align: left">Nombre de la galería</th>
+			<th style="text-align: left">Imágenes</th>
+			<th style="text-align: right"></th>
+		 </tr>
+	</thead>
+	<tbody id='gallery_body'>
+		<c:forEach items="${gallery}" var="i">
+		<tr>
+			<td style="text-align: left">"${i.name}"</td>
+			<th style="text-align: left">"${i.item}"</th>
+			<th style="text-align: right">
+			<form action = "/gallery_images" method="get"  class="btn-group teamButtonsStyle" id = "gallery">
+				<button type="submit" class="btn btn-primary">Ver galería</button>
+				<input type="hidden" name = "team" value="${team}">
+				<input type="hidden" name = "gallery" value="${i.name}">
+				
+			</form>
+			</th>
+		 </tr>  
+		</c:forEach>
+	</tbody>
+		
+	</table>
+</div>
+</div>	
+    </body>
+    
+    <script type="text/javascript">
+    
+    
+    
+</script>
 <%@ include file="../jspf/footer.jspf"%>

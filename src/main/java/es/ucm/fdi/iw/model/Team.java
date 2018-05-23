@@ -19,9 +19,9 @@ public class Team {
 	private String name;
 	private String school;
 	private String sport;
-	private String training_schedule;
-	private String next_match_schedule;
-	private String next_match_facilities;
+	private String trainingSchedule;
+	private String nextMatchSchedule;
+	private String nextMatchFacilities;
 	private String category;
 	private User deputy;
 	private League league;
@@ -79,26 +79,10 @@ public class Team {
 	}
 
 	@Column
-	public String getNext_match_facilities() {
-		return next_match_facilities;
-	}
-
-	@Column
-	public String getNext_match_schedule() {
-		return next_match_schedule;
-	}
-
-	@Column
-	public String getTraining_schedule() {
-		return training_schedule;
+	public String getNextMatchSchedule() {
+		return nextMatchSchedule;
 	}
 	
-	/*
-	@Column
-	public List<Long> getPlayerActive() {
-		return playerActive;
-	}
-	*/
 	@ManyToMany(targetEntity = User.class)
 	public List<User> getActivePlayers() {
 		return activePlayers;
@@ -139,6 +123,16 @@ public class Team {
 		return homeMatches;
 	}
 	
+	@Column
+	public String getNextMatchFacilities() {
+		return nextMatchFacilities;
+	}
+	
+	@Column
+	public String getTrainingSchedule() {
+		return trainingSchedule;
+	}
+	
 	public void setAwayMatches(List<Match> awayMatches) {
 		this.awayMatches = awayMatches;
 	}
@@ -167,16 +161,16 @@ public class Team {
 		this.deputy = deputy;
 	}
 
-	public void setNext_match_facilities(String next_match_facilities) {
-		this.next_match_facilities = next_match_facilities;
+	public void setNextMatchFacilities(String nextMatchFacilities) {
+		this.nextMatchFacilities = nextMatchFacilities;
 	}
-
-	public void setNext_match_schedule(String next_match_schedule) {
-		this.next_match_schedule = next_match_schedule;
+	
+	public void setNextMatchSchedule(String nextMatchSchedule) {
+		this.nextMatchSchedule = nextMatchSchedule;
 	}
-
-	public void setTraining_schedule(String training_schedule) {
-		this.training_schedule = training_schedule;
+	
+	public void setTrainingSchedule(String trainingSchedule) {
+		this.trainingSchedule = trainingSchedule;
 	}
 
 	public void setLeague(League league) {

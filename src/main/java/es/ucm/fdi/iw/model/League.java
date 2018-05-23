@@ -16,17 +16,17 @@ public class League {
 	private long id;
 	private String name;
 	private String sport;
-	private String gender;
+	private String category;
 	private List<Team> teams;
 	
 	public League() {
 		// TODO Auto-generated constructor stub
 	}
 	
-	public League(String name, String sport, String gender) {
+	public League(String name, String sport, String category) {
 		this.name = name;
 		this.sport = sport;
-		this.gender = gender;
+		this.category = category;
 		this.teams = new ArrayList<Team>();
 	}
 
@@ -46,18 +46,18 @@ public class League {
 		return teams;
 	}
 	
-	@Column(unique = true)
+	@Column
 	public String getSport() {
 		return sport;
 	}
 	
 	@Column
-	public String getGender() {
-		return gender;
+	public String getCategory() {
+		return category;
 	}
 	
-	public void setGender(String gender) {
-		this.gender = gender;
+	public void setCategory(String category) {
+		this.category = category;
 	}
 	
 	public void setSport(String sport) {
@@ -86,7 +86,7 @@ public class League {
 		boolean result = false;
 		while(it.hasNext() && !found) {
 			Team aux = it.next();
-			if(aux.getId() == teamId) {
+			if(aux.getId() == teamId || aux.getName().equals(t.getName())) {
 				found = true;
 			}
 		}

@@ -19,6 +19,7 @@ function update(){
     	$('#playerTab').show();
     	$('#playersRequests').show();
     	$('#notificationsDiv').show();
+    	$('#deputyPower').show();
     } 
 	else{ // usuario normal logueado
 		$('#contact').show();
@@ -107,14 +108,12 @@ function acceptNewPlayer(id){
 	$.ajax({
 	    method: "post",  
 	    url: "/acceptNewPlayer",
-	    contentType:'application/json',
 	    data:
 	    {
 	    	id:id
 	    },
 	    success: (data)=>{
 	    	$('#'+id).remove();
-	    	console.log($('#modalRequest'));
 	    	if($('#modalRequest').children().length === 0)
 	    		$('#modalRequest').text("No hay mas solicitudes");
 	    },
@@ -139,6 +138,34 @@ function deleteRequestPlayer(id) {
 	    		$('#modalRequest').text("No hay mas solicitudes");
 	    },
 	    error: (XMLHttpRequest, textStatus, errorThrown)=> { 
+	        alert("Ha ocurrido un error inesperado"); 
+	    }       
+	});
+}
+
+function changeTeamInfo(id){
+	let nms = $('#nextMatchSchedule').prop("value");
+	let nmf = $('#nextMatchFacilities').prop("value");
+	let ts = $('#trainingSchedule').prop("value");
+	console.log(nms + nmf + ts);
+	$.ajax({
+	    method: "post",  
+	    url: "/changeTeamInfo",
+	    data:
+	    {
+	    	teamId: id,
+	    	nextMatchSchedule: nms,
+	    	nextMatchFacilities : nmf,
+	    	trainingSchedule: ts
+	    },
+	    success: (data)=>{
+	    	$('#closeChangeInfo').click();
+	    	location.reload();
+	    },
+	    error: (XMLHttpRequest, textStatus, errorThrown)=> {
+	    	console.log(XMLHttpRequest);
+	    	console.log(textStatus);
+	    	console.log(errorThrown);
 	        alert("Ha ocurrido un error inesperado"); 
 	    }       
 	});
