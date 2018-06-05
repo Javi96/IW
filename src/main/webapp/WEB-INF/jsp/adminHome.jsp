@@ -18,6 +18,7 @@
 	   <div class="collapse navbar-collapse navbar-ex1-collapse">
 	      <ul class="nav nav-justified" id="contenidomenu">
 	         <!-- Opciones -->
+	         <li><a title="teamList" href="/adminHome">Inicio</a></li> 
 	         <li><a title="addTeam" href="/addTeamView">Añadir equipo</a></li>
 			 <li><a title="addLeague" href="/addLeagueView">Añadir liga</a></li>
 	      </ul>
@@ -27,6 +28,10 @@
 	<c:if test="${empty option}">
 		<p id = "msg" class="text-center">Bienvenido al sistema de administración de deportes de la Universidad Complutense de Madrid.<br>
 		En esta parte podrás administrar los equipos y las ligas de la universidad.</p>
+		
+		<div class="marginTop5">
+			<%@ include file="../jsp/adminTeamList.jsp"%>
+		</div>
 	</c:if>
 	
 	<c:if test='${option == "adminAddTeam"}'>
@@ -46,4 +51,5 @@
 	</c:if>
 	
 </div>
+
 <%@ include file="../jspf/footer.jspf"%>

@@ -10,6 +10,13 @@ INSERT INTO user(id,enabled,login,password,roles,name,id_card,email) VALUES (6, 
 INSERT INTO user(id,enabled,login,password,roles,name,id_card,email) VALUES (7, 1, 'a7', '$2a$04$N78IYN6VzrWZzpsy6Xvz2uCdUm7Su9FDpAqhXjAcSzCgreVM2sUnC', 'USER','Pepe7','423456799','example@correo7.es');
 INSERT INTO user(id,enabled,login,password,roles,name,id_card,email) VALUES (9, 1, 'a9', '$2a$04$N78IYN6VzrWZzpsy6Xvz2uCdUm7Su9FDpAqhXjAcSzCgreVM2sUnC', 'USER','Pepe9','423499799','example@correo9.es');
 
+INSERT INTO user(id,enabled,login,password,roles,name,id_card,email) VALUES (10, 1, 'a10', '$2a$04$N78IYN6VzrWZzpsy6Xvz2uCdUm7Su9FDpAqhXjAcSzCgreVM2sUnC', 'USER','Pepe9','423499797','example@correo10.es');
+INSERT INTO user(id,enabled,login,password,roles,name,id_card,email) VALUES (11, 1, 'a11', '$2a$04$N78IYN6VzrWZzpsy6Xvz2uCdUm7Su9FDpAqhXjAcSzCgreVM2sUnC', 'USER','Pepe9','423499791','example@correo11.es');
+INSERT INTO user(id,enabled,login,password,roles,name,id_card,email) VALUES (12, 1, 'a12', '$2a$04$N78IYN6VzrWZzpsy6Xvz2uCdUm7Su9FDpAqhXjAcSzCgreVM2sUnC', 'USER','Pepe9','423499792','example@correo12.es');
+INSERT INTO user(id,enabled,login,password,roles,name,id_card,email) VALUES (13, 1, 'a13', '$2a$04$N78IYN6VzrWZzpsy6Xvz2uCdUm7Su9FDpAqhXjAcSzCgreVM2sUnC', 'USER','Pepe9','423499793','example@correo13.es');
+INSERT INTO user(id,enabled,login,password,roles,name,id_card,email) VALUES (14, 1, 'a14', '$2a$04$N78IYN6VzrWZzpsy6Xvz2uCdUm7Su9FDpAqhXjAcSzCgreVM2sUnC', 'USER','Pepe9','423499794','example@correo14.es');
+
+
 
 INSERT INTO league (id,name,sport,category) values (1,'Torneo Rector','Rugby','Masculino');
 
@@ -19,6 +26,12 @@ INSERT INTO team (id,name,school,sport,deputy_id,category,training_schedule,next
 INSERT INTO team (id,name,school,sport,deputy_id,category,training_schedule,next_match_schedule,next_match_facilities) values  (4,'Balonmano Matematicas', 'Facultad de Matematicas', 'Balonmano', 4, 'Masculino', 'Lunes y Martes 16:00h','Jueves 18:30h', 'Polideportivo UCM');
 INSERT INTO team (id,name,school,sport,deputy_id,category,training_schedule,next_match_schedule,next_match_facilities) values  (5,'Futbol Sala Mates', 'Facultad de Matematicas', 'Futbol Sala', 5, 'Femenino', 'Martes y Jueves 18:00h','Viernes 18:30h', 'Polideportivo UCM');
 INSERT INTO team (id,name,school,sport,deputy_id,category,training_schedule,next_match_schedule,next_match_facilities) values  (6,'Futbol Sala Historia', 'Facultad de Historia', 'Futbol Sala', 6, 'Masculino', 'Lunes y Jueves 17:00h','Viernes 16:30h', 'Polideportivo UCM');
+
+INSERT INTO team (id,name,school,sport,deputy_id,category,training_schedule,next_match_schedule,next_match_facilities) values  (7,'Rugby Historia', 'Facultad de Historia', 'Rugby', 10, 'Masculino', 'Lunes y Jueves 17:00h','Viernes 16:30h', 'Polideportivo UCM');
+INSERT INTO team (id,name,school,sport,deputy_id,category,training_schedule,next_match_schedule,next_match_facilities) values  (8,'Rugby Geologia', 'Facultad de Geologia', 'Rugby', 11, 'Masculino', 'Lunes y Jueves 17:00h','Viernes 16:30h', 'Polideportivo UCM');
+INSERT INTO team (id,name,school,sport,deputy_id,category,training_schedule,next_match_schedule,next_match_facilities) values  (9,'Rugby Biologia', 'Facultad de Biologia', 'Rugby', 12, 'Masculino', 'Lunes y Jueves 17:00h','Viernes 16:30h', 'Polideportivo UCM');
+INSERT INTO team (id,name,school,sport,deputy_id,category,training_schedule,next_match_schedule,next_match_facilities) values  (10,'Rugby Farmacia', 'Facultad de Farmacia', 'Rugby', 13, 'Masculino', 'Lunes y Jueves 17:00h','Viernes 16:30h', 'Polideportivo UCM');
+INSERT INTO team (id,name,school,sport,deputy_id,category,training_schedule,next_match_schedule,next_match_facilities) values  (11,'Rugby Derecho', 'Facultad de Derecho', 'Rugby', 14, 'Masculino', 'Lunes y Jueves 17:00h','Viernes 16:30h', 'Polideportivo UCM');
 
 INSERT INTO match(home_team_id,away_team_id,home_team_points,away_team_points,match_date,record_checked) values (1,2,50,70,'2018-05-23',0);
 

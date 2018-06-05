@@ -60,3 +60,7 @@
   text-shadow: 0 -1px 0 rgba(31, 31, 31, 0.29);
   -webkit-font-smoothing: antialiased;
 }
+
+.marginTop5{
+	margin-top: 45px;
+}

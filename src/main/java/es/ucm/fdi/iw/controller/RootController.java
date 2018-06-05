@@ -47,7 +47,6 @@ import es.ucm.fdi.iw.model.RequestTeam;
 import es.ucm.fdi.iw.model.Team;
 import es.ucm.fdi.iw.model.User;
 
-
 @Controller
 public class RootController {
 
@@ -114,6 +113,20 @@ public class RootController {
 	@RequestMapping(value = "/addTeamView",method = RequestMethod.GET)
 	public String adminAddTeam(Model model) {
 		model.addAttribute("option", "adminAddTeam");
+		return "adminHome";
+	}
+	
+	@RequestMapping(value = "/teamListView",method = RequestMethod.GET)
+	public String teamListView(Model model) {
+		model.addAttribute("option", "adminTeamList");
+		return "adminHome";
+	}
+	
+	@RequestMapping(value = "/teamListBySportAndCategory",method = RequestMethod.GET)
+	public String teamListViewBySport(@RequestParam String sport, @RequestParam String category, Model model) {
+		List<Team> teamList = entityManager.createQuery("select t from Team t where sport =:sport and category =:category", Team.class)
+				.setParameter("sport", sport).setParameter("category", category).getResultList();
+		model.addAttribute("teamList", teamList);
 		return "adminHome";
 	}
 

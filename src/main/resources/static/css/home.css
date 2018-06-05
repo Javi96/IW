@@ -19,3 +19,23 @@
 	color: #A00E19;
 	font-size: 30px;
 }
+
+.inputSportAdmin{
+	border:none;
+	width: 80%;
+	margin: 3px;
+	background-color: transparent;
+}
+
+.btnTransp{
+	background-color: transparent;
+}
+
+.inputClass{
+	width: 100%;
+}
+
+#teamListForAdmin{
+	margin-top: 25px;
+}
+
