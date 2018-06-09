@@ -182,10 +182,10 @@
 	        </button>
 	      </div>
 	      <div class="modal-body" id = "modalNotifications">
-	      	<c:if test="${empty user.notifications}">
+	      	<c:if test="${empty notificationsList}">
 	      		No hay mensajes nuevos
 	      	</c:if>
-            <c:forEach items="${user.notifications}" var="notification">
+            <c:forEach items="${notificationsList}" var="notification">
             	<div id = "${notification.id }">
 	                <div class="row">
 	                    <div class="col-md-2 col-md-offset-1 text-left">

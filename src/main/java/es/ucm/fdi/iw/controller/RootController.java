@@ -81,9 +81,17 @@ public class RootController {
 				List<Team> myTeams = u.getActiveTeams();
 				myTeams.addAll(u.getNonActiveTeams());
  				session.setAttribute("myTeams", u.getActiveTeams());
-				
+
 				session.setAttribute("l", myTeams.size());
 				System.out.println(myTeams.size());
+
+				//ver los equipos de los que es delegado el usuario
+				List<Team> teamList = entityManager.createQuery("select t from Team t where deputy_id =:id_user", Team.class)
+						.setParameter("id_user", u.getId()).getResultList();
+
+				session.setAttribute("teamsDebuty", teamList);
+				session.setAttribute("equipos", teamList.size());
+
 			}
 			else {
 				page = "adminHome";
@@ -91,7 +99,7 @@ public class RootController {
 		}
 		return page;
 	}
-	
+
 	@GetMapping("/adminHome")
 	public String adminHome(Model model,HttpSession session ) {
 		User user = (User) session.getAttribute("user");
@@ -110,19 +118,19 @@ public class RootController {
 		m.addAttribute("isLogin", true);
 		return "login";
 	}
-	
+
 	@RequestMapping(value = "/addTeamView",method = RequestMethod.GET)
 	public String adminAddTeam(Model model) {
 		model.addAttribute("option", "adminAddTeam");
 		return "adminHome";
 	}
-	
+
 	@RequestMapping(value = "/teamListView",method = RequestMethod.GET)
 	public String teamListView(Model model) {
 		model.addAttribute("option", "adminTeamList");
 		return "adminHome";
 	}
-	
+
 	@RequestMapping(value = "/teamListBySportAndCategory",method = RequestMethod.GET)
 	public String teamListViewBySport(@RequestParam String sport, @RequestParam String category, Model model) {
 		List<Team> teamList = entityManager.createQuery("select t from Team t where sport =:sport and category =:category", Team.class)
@@ -285,7 +293,7 @@ public class RootController {
 
 	@RequestMapping("/team")
 	public String team(@RequestParam long id, Model model, HttpSession session, HttpServletResponse response) {
-		
+
 		boolean logged = false;
 		User currentUser = (User) session.getAttribute("user");
 		if(currentUser != null) {
@@ -294,7 +302,18 @@ public class RootController {
 		Team t = entityManager.find(Team.class, id);
 		model.addAttribute("team", t);
 		model.addAttribute("logged", logged);
-		
+		//System.out.println(t.getName());
+
+		//notificaciones que tiene el usuario en ese equipo
+		List<Notification> notiList = entityManager.
+				createQuery("select t from Notification t where deputy_id =:id_user and team_id =:id_team", Notification.class)
+				.setParameter("id_user", currentUser.getId()).setParameter("id_team",id).getResultList();
+
+		model.addAttribute("notificationsList", notiList);
+
+
+		if(t == null)
+			return "error404";
 		return "team";
 	}
 
@@ -314,7 +333,7 @@ public class RootController {
 		}
 		return deleted;
 	}
-	
+
 	@RequestMapping(value = "/acceptNewPlayer", method = RequestMethod.POST)
 	@Transactional
 	@ResponseBody
@@ -336,7 +355,7 @@ public class RootController {
 		}
 		return accepted;
 	}
-	
+
 	@RequestMapping(value = "/deleteRequest", method = RequestMethod.POST)
 	@Transactional
 	@ResponseBody
@@ -448,13 +467,13 @@ public class RootController {
 	@RequestMapping(value ="/playerTab",method = RequestMethod.GET)
 	public String playerTab(Model model,@RequestParam("id")long id) {
 		Team t = entityManager.find(Team.class, id);
-		
+
 		model.addAttribute("team", t);
 		model.addAttribute("activo", t.getActivePlayers().size());
 		model.addAttribute("noActivo", t.getNonActivePlayers().size());
 		return "playerTab";
 	}
-	
+
 	@RequestMapping(value ="/getTeam",method = RequestMethod.GET)
 	@ResponseBody
 	public String getTeam(Model model,@RequestParam long id) {
@@ -470,30 +489,30 @@ public class RootController {
 				+ "}";
 		return team;
 	}
-	
+
 	@RequestMapping(value = "/updateTeam", method = RequestMethod.POST, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
 	@Transactional
 	public String updateTeam(Team team, @RequestParam String email, Model model,RedirectAttributes redir) {
 		boolean ok = true;
 		Team t = entityManager.find(Team.class, team.getId());
 		String name,tSchedule,nMs,nMf;
-		
+
 		try {
 			User deputy =  entityManager.createQuery("select u from User u where email =:email",User.class)
 					.setParameter("email", email).getSingleResult();
 			List<Team> te = entityManager.createQuery("select t from Team t where deputy_id =:deputyId",Team.class)
 					.setParameter("deputyId", deputy.getId()).getResultList();
-			
+
 			if(te.size() == 1 && email.equals(t.getDeputy().getEmail())) {
 				t.setDeputy(deputy);
 				name = team.getName();
 				tSchedule = team.getTrainingSchedule();
 				nMf = team.getNextMatchFacilities();
 				nMs = team.getNextMatchSchedule();
-				
+
 				List<Team> teamN =  entityManager.createQuery("select t from Team t where name =:name",Team.class)
 						.setParameter("name", name).getResultList();
-				
+
 				if(name.equals("") || tSchedule.equals("") || nMf.equals("") || nMs.equals("") || teamN.size() > 1 || (teamN.size() == 1 && !teamN.get(0).equals(name)) ) {
 					ok = false;
 				}
@@ -521,7 +540,7 @@ public class RootController {
 		redir.addFlashAttribute("teamId", t.getId());
 		return "redirect:/teamListBySportAndCategory?sport=" + t.getSport() + "&category=" + t.getCategory();
 	}
-	
+
 	@RequestMapping(value = "/savePlayerActive",method = RequestMethod.GET)
 	@ResponseBody
 	public String savePlayerActive(@RequestParam("idTeam") long id) {
@@ -538,7 +557,7 @@ public class RootController {
 
 		return String.join("'", data);
 	}
-	
+
 	@RequestMapping(value = "/savePlayerNoActive",method = RequestMethod.GET)
 	@ResponseBody
 	public String savePlayerNoActive(@RequestParam("idTeam") long id) {
@@ -553,37 +572,37 @@ public class RootController {
 
 		return String.join("'", data);
 	}
-	
+
 	@RequestMapping(value = "/savePlayerTab",method = RequestMethod.POST)
 	@Transactional
 	public String savePlayerTab(HttpServletRequest request){
-		
+
 		//obtenemos datos
 		long idTeam = Long.parseLong(request.getParameter("idTeam"));
 		Team t = entityManager.find(Team.class, idTeam);
 		String cadenaActivos = request.getParameter("activePlayer");
 		String cadenaNoActivos = request.getParameter("noActivePlayer");
-					
+
 		System.out.println("ACTIVOS: "+cadenaActivos);
 		System.out.println("NO ACTIVOS: "+cadenaNoActivos);
-		
+
 		//quitamos los []
 		cadenaActivos = cadenaActivos.substring(1, cadenaActivos.length()-1);
 		cadenaNoActivos = cadenaNoActivos.substring(1, cadenaNoActivos.length()-1);
-		
+
 		/*
 		 * ACTUALIZAMOS LOS DATOS DEL EQUIPO Y DE USER LISTA ACTIVA
-		 */	
+		 */
 		String[] datos = cadenaActivos.split(",");
-		
+
 		for(int i = 0; i < datos.length; i++) {
-			
+
 			char[] idUsu = datos[i].toCharArray();
-			
+
 			long id = Character.getNumericValue(idUsu[1]);
-			
+
 			User u = entityManager.find(User.class, id);
-			
+
 			/*
 			 * TEAM
 			 */
@@ -594,34 +613,34 @@ public class RootController {
 				listaUserActive.add(u);
 				listaUserNoActive.remove(u);
 			}
-			
+
 			/*
 			 * USER
 			 */
 			List<Team> listaTeamActive = u.getActiveTeams();
 			List<Team> listaTeamNoActive = u.getNonActiveTeams();
-			
+
 			//si no tiene como team activo lo ponemos
 			if(!listaTeamActive.contains(t)){
 				listaTeamActive.add(t);
 				listaTeamNoActive.remove(t);
 			}
-			
+
 		}//for
-		
-		
+
+
 		/*
 		 * ACTUALIZAMOS LOS DATOS DE LA LISTA DE ACTIVOS
 		 */
 		datos = cadenaNoActivos.split(",");
-		
+
 		for(int i = 0; i < datos.length; i++) {
-			
+
 			char[] idUsu = datos[i].toCharArray();
-			
+
 			long id = Character.getNumericValue(idUsu[1]);
 			User u = entityManager.find(User.class, id);
-			
+
 			/*
 			 * TEAM
 			 */
@@ -632,20 +651,20 @@ public class RootController {
 				listaUserNoActive.add(u);
 				listaUserActive.remove(u);
 			}
-			
+
 			/*
 			 * USER
 			 */
 			List<Team> listaTeamActive = u.getActiveTeams();
 			List<Team> listaTeamNoActive = u.getNonActiveTeams();
-			
+
 			//si no tiene como team activo lo ponemos
 			if(listaTeamActive.contains(t)){
 				listaTeamNoActive.add(t);
 				listaTeamActive.remove(t);
 			}
 		}//for
-		
+
 		return "team";
 	}
 
@@ -692,7 +711,7 @@ public class RootController {
 						.setParameter("userId", u.getId()).getSingleResult();
 			}
 			catch(NoResultException ex) {
-	
+
 			}
 			if(rq == null) {
 				requestTeam.setUser(u);
@@ -707,10 +726,7 @@ public class RootController {
 		return "joinTeam";
 	}
 
-	@GetMapping("/logout")
-	public String logout() {
-		return "logout";
-	}
+
 
 	@GetMapping("/upload")
 	public String upload() {
@@ -726,7 +742,7 @@ public class RootController {
 	public String mainPage() {
 		return "mainPage";
 	}
-	
+
 	@GetMapping("/gallery_images")
 	public String gallery_images(@RequestParam("team") String team,@RequestParam("gallery") String gallery, Model model) {
 		model.addAttribute("team",team);
@@ -734,10 +750,10 @@ public class RootController {
 		System.out.println(team + " " + gallery + " " + localData.getFile(team+"/"+gallery, "").listFiles().length);
 		System.out.println(localData.getFile(team, "").listFiles().length);
 		System.out.println(localData.getFile(team, "").getAbsolutePath());
-		//model.addAttribute("files", localData.getFile("team", id).listFiles().length);		
+		//model.addAttribute("files", localData.getFile("team", id).listFiles().length);
 		ArrayList<String> images = new ArrayList<>();
 		//ArrayList<String> galleries = new ArrayList<>();
-		
+
 		for (File file : localData.getFile(team+"/"+gallery, "").listFiles()) {
 			//galleries.add(folder.getName());
 			//for (File file : folder.listFiles()) {
@@ -745,7 +761,7 @@ public class RootController {
 				images.add("photo/" + team + "/" + gallery + "/" + file.getName());
 			//}
 		}
-		
+
 		/*for (File f : localData.getFile(id, "").listFiles()) {
 			images.add("photo/team/" + id + "/" + f.getName());
 		}*/
@@ -776,7 +792,7 @@ public class RootController {
 	    }
 	}
 
-/*	
+/*
 	@RequestMapping(value="/teamPhoto", method=RequestMethod.POST)
 	@ResponseBody
     public String teamPhoto(@RequestParam MultipartFile photo, @RequestParam long id, Model model){
@@ -786,14 +802,14 @@ public class RootController {
 		team.setTeamPhoto(name);
 		if (!photo.isEmpty()) {
             try {
-            	
-            	
+
+
             	File f = new File("src/main/resources/static/img/shields"+photo.getOriginalFilename());
-            	
+
             	if(!f.exists() || (f.exists() && !f.isDirectory())) {
             		new File("src/main/resources/static/img/shields").mkdirs();
             	}
-            	
+
             	int files = new File("/tmp/iw/"+team).listFiles().length;
                 byte[] bytes = photo.getBytes();
                 BufferedOutputStream stream =
@@ -801,11 +817,11 @@ public class RootController {
                         		new FileOutputStream(localData.getFile(team.toString(), Integer.toString(files+1))));
                 stream.write(bytes);
                 stream.close();
-            
+
             } catch (Exception e) {
                 ok = "You failed to upload " + team + " => " + e.getMessage();
             }
-        } 
+        }
 		else {
             ok = "You failed to upload a photo for " + team + " because the file was empty.";
         }
@@ -813,7 +829,7 @@ public class RootController {
 		return ok;
 	}
 	*/
-	
+
 	@RequestMapping(value="/photo/{team}/{gallery}", method=RequestMethod.POST)
     public @ResponseBody String handleFileUpload(@RequestParam("photo") MultipartFile photo,
     		@PathVariable("team") String team,@PathVariable("gallery") String gallery){
@@ -824,7 +840,7 @@ public class RootController {
             	if(!f.exists() || (f.exists() && !f.isDirectory())) {
             		new File("/tmp/iw/"+team+"/"+gallery).mkdirs();
             	}
-            	
+
             	int files = new File("/tmp/iw/"+team+"/"+gallery).listFiles().length;
                 byte[] bytes = photo.getBytes();
                 BufferedOutputStream stream =
@@ -833,7 +849,7 @@ public class RootController {
                 stream.write(bytes);
                 stream.close();
 
-                return "ok";
+                return "redirect:/gallery?team=/"+team;
             } catch (Exception e) {
                 return "You failed to upload " + team + " => " + e.getMessage();
             }
@@ -841,58 +857,58 @@ public class RootController {
             return "You failed to upload a photo for " + team + " because the file was empty.";
         }
 	}
-	
-	
+
+
 	@GetMapping("/gallery")
 	public String gallery(@RequestParam("team") String team, Model model) {
 		model.addAttribute("team",team);
-		ArrayList<Gallery> gallery = new ArrayList<>();		
+		ArrayList<Gallery> gallery = new ArrayList<>();
 		for (File folder : localData.getFile(team, "").listFiles()) {
 			gallery.add(new Gallery(folder.getName(), localData.getFile(team + "/" + folder.getName(), "").listFiles().length));
 		}
 	    model.addAttribute("gallery", gallery);
 		return "gallery";
 	}
-	
+
 	@RequestMapping(value="/fillGallery",method = RequestMethod.GET)
 	@ResponseBody
 	public String fillGallery(@RequestParam("team") String team, Model model) {
 	    List<String> data = new ArrayList<>();
 		for (File folder : localData.getFile(team, "").listFiles()) {
-			data.add("{" + "\"gallery\":{" + 
+			data.add("{" + "\"gallery\":{" +
 					"\"name\":" + "\"" + folder.getName() + "\"" +
-					",\"files\":" + "\"" + localData.getFile(team + "/" + folder.getName(), "").listFiles().length + 
+					",\"files\":" + "\"" + localData.getFile(team + "/" + folder.getName(), "").listFiles().length +
 			 "\"}" + "}");
 		}
 		return String.join("'", data);
 	}
-	
+
 	@RequestMapping(path = "/createGallery/{team}", method = RequestMethod.POST)
 	public String createGallery(@PathVariable("team") String team, HttpServletRequest request, Model model) {
 		try{
 			new File("/tmp/iw/"+team+"/"+request.getParameter("data")).mkdirs();
-			
+
 		}catch(Exception e) {
-			
+
 		}
-		return "redirect:/gallery?team=/"+team;
+		return "redirect:/gallery?team="+team;
 	}
-	
+
 	@RequestMapping(value = "/removeGallery/{team}", method = RequestMethod.POST)
 	public String removeGallery(@PathVariable String team, HttpServletRequest request) {
 		try {
 			FileUtils.deleteDirectory(localData.getFile(team +"/"+request.getParameter("selectionbox"), ""));
 		}catch(Exception e) {
-			
+
 		}
 		return "redirect:/gallery?team=/"+team;
 
 	}
-	
+
 	@GetMapping("/diary")
 	public String diary(Model model, @SessionAttribute("user") User u) {
 
-		
+
 		List<Team> teamMatch = u.getActiveTeams();
 		teamMatch.addAll(u.getNonActiveTeams());
 		model.addAttribute("teams", teamMatch);

@@ -40,11 +40,6 @@
 	
 		<link type="text/css" media="screen" rel="stylesheet" href="${s}/css/cabecera.css" />
 		
-		<script type="text/javascript">
-			$(document).ready(function(){
-				console.log(${myTeams});
-			})
-		</script>
 	</head>
    <body style="">
       <header>
@@ -76,7 +71,8 @@
 									<li class="iniciasesion"><a href="/login" title="Navegar identificado">Navegar identificado</a></li>
                               	</c:when>
                               	<c:otherwise>
-									<li class="iniciasesion"><a href="" title="Navegar identificado">Bienvenidx: ${user.name}</a></li>
+									<li class="iniciasesion"><a href="" title="Navegar identificado">${user.name}</a></li>
+									<li class="cerrarsesion"><a href="/logout" title="SALIR">Salir</a></li>
                               	</c:otherwise>
                               </c:choose>
                            </ul>
@@ -93,7 +89,7 @@
          <div class="container" id="cabecera">
             <div class="row">
                <div class="col-lg-5 col-sm-5 col-xs-12" id="logo">
-                  <a href="https://www.ucm.es/" title="Universidad Complutense de Madrid">
+                  <a href="/mainPage" title="Universidad Complutense de Madrid">
                   <img src="${s}/img/logo.png" alt="ucm" title="Universidad Complutense de Madrid">
                   </a>
                </div>
@@ -117,6 +113,47 @@
 							<li><a title="agenda" href="/diary">Agenda deportiva</a></li>
 							<li><a href="/laucm" title="UCM" aria-label="UCM"><span class="fa fa-plus-circle" aria-hidden="true" title="UCM"></span></a></li>
 						</ul>
+						
+						
+					<!-- Mis Equipos --Delegado -->
+					 <c:if test="${equipos > 0}" > 
+					
+						<li>
+							<a title="UCM" href="/laucm" class="dropdown-toggle" data-toggle="dropdown">Delegado</a>
+							<ul class="dropdown-menu" role="menu">
+							
+							<c:set var="contador" value="${0}"/>
+							<c:set var="vacio" value="${0}"/>
+
+							<!-- recorremos equipos -->
+								<c:forEach items="${teamsDebuty}" var="teamD">
+								
+								<!-- recorremos notificaciones del usuario si hay -->
+									<c:forEach items="${user.notifications}" var="notification">
+									
+											<c:if test="${notification.team.id == teamD.id}">
+										          <li id="color">
+										          	<a style="color:#A00E19;" title="Notificaciones pendientes" href="/team?id=${teamD.id}">${teamD.name}</a>
+										          </li>
+										          <c:set var="contador" value="${1}" />
+											</c:if>
+									</c:forEach>
+									
+									<c:if test="${contador eq vacio}"> 
+									 	<li>
+							      			<a title="Sin notificaciones" href="/team?id=${teamD.id}">${teamD.name}</a>
+							      		</li>
+							      	</c:if>
+
+									 <c:set var="contador" value="${0}" />
+							      	
+							      	 
+				                </c:forEach>
+								<li><a></a></li>
+							</ul>
+						</li>
+					</c:if>
+					
 					<!-- Deportes -->
 						<li><a title="Sports" href="/home">Deportes</a></li>
 					<!-- Mis Deportes -->
