@@ -11,6 +11,7 @@ public class Notification {
 	
 	private long id;
 	private User deputy;
+	private Team team;
 	private String name;
 	private String message;
 	private String email;
@@ -19,11 +20,12 @@ public class Notification {
 		// TODO Auto-generated constructor stub
 	}
 	
-	public Notification(User deputy, String name, String message, String email) {
+	public Notification(User deputy, String name, String message, String email,Team team) {
 		this.deputy= deputy;
 		this.name = name;
 		this.message = message;
 		this.email = email;
+		this.team = team;
 	}
 	
 	@Id
@@ -46,7 +48,7 @@ public class Notification {
 		return name;
 	}
 	
-	@Column(unique = true)
+	@Column//(unique = true)
 	public String getEmail() {
 		return email;
 	}
@@ -69,5 +71,14 @@ public class Notification {
 	
 	public void setName(String name) {
 		this.name = name;
+	}
+	
+	@ManyToOne(targetEntity = Team.class)
+	public Team getTeam() {
+		return team;
+	}
+	
+	public void setTeam(Team team) {
+		this.team = team;
 	}
 }
