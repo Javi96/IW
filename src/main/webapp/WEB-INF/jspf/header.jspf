@@ -112,6 +112,47 @@
 							<li><a title="agenda" href="/diary">Agenda deportiva</a></li>
 							<li><a href="/laucm" title="UCM" aria-label="UCM"><span class="fa fa-plus-circle" aria-hidden="true" title="UCM"></span></a></li>
 						</ul>
+						
+						
+					<!-- Mis Equipos --Delegado -->
+					 <c:if test="${equipos > 0}" > 
+					
+						<li>
+							<a title="UCM" href="/laucm" class="dropdown-toggle" data-toggle="dropdown">Delegado</a>
+							<ul class="dropdown-menu" role="menu">
+							
+							<c:set var="contador" value="${0}"/>
+							<c:set var="vacio" value="${0}"/>
+
+							<!-- recorremos equipos -->
+								<c:forEach items="${teamsDebuty}" var="teamD">
+								
+								<!-- recorremos notificaciones del usuario si hay -->
+									<c:forEach items="${user.notifications}" var="notification">
+									
+											<c:if test="${notification.team.id == teamD.id}">
+										          <li id="color">
+										          	<a style="color:#A00E19;" title="Notificaciones pendientes" href="/team?id=${teamD.id}">${teamD.name}</a>
+										          </li>
+										          <c:set var="contador" value="${1}" />
+											</c:if>
+									</c:forEach>
+									
+									<c:if test="${contador eq vacio}"> 
+									 	<li>
+							      			<a title="Sin notificaciones" href="/team?id=${teamD.id}">${teamD.name}</a>
+							      		</li>
+							      	</c:if>
+
+									 <c:set var="contador" value="${0}" />
+							      	
+							      	 
+				                </c:forEach>
+								<li><a></a></li>
+							</ul>
+						</li>
+					</c:if>
+					
 					<!-- Deportes -->
 						<li><a title="Sports" href="/home">Deportes</a></li>
 					<!-- Mis Deportes -->

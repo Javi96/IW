@@ -83,6 +83,14 @@ public class RootController {
 				
 				session.setAttribute("l", myTeams.size());
 				System.out.println(myTeams.size());
+				
+				//ver los equipos de los que es delegado el usuario
+				List<Team> teamList = entityManager.createQuery("select t from Team t where deputy_id =:id_user", Team.class)
+						.setParameter("id_user", u.getId()).getResultList();
+				
+				session.setAttribute("teamsDebuty", teamList);
+				session.setAttribute("equipos", teamList.size());
+				
 			}
 			else {
 				page = "adminHome";
@@ -292,6 +300,15 @@ public class RootController {
 		model.addAttribute("team", t);
 		model.addAttribute("logged", logged);
 		//System.out.println(t.getName());
+		
+		//notificaciones que tiene el usuario en ese equipo
+		List<Notification> notiList = entityManager.
+				createQuery("select t from Notification t where deputy_id =:id_user and team_id =:id_team", Notification.class)
+				.setParameter("id_user", currentUser.getId()).setParameter("id_team",id).getResultList();
+		
+		model.addAttribute("notificationsList", notiList);
+				
+				
 		if(t == null)
 			return "error404";
 		return "team";
