@@ -291,6 +291,9 @@ public class RootController {
 		Team t = entityManager.find(Team.class, id);
 		model.addAttribute("team", t);
 		model.addAttribute("logged", logged);
+		//System.out.println(t.getName());
+		if(t == null)
+			return "error404";
 		return "team";
 	}
 
