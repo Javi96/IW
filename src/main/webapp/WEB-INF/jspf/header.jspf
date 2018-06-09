@@ -40,11 +40,6 @@
 	
 		<link type="text/css" media="screen" rel="stylesheet" href="${s}/css/cabecera.css" />
 		
-		<script type="text/javascript">
-			$(document).ready(function(){
-				console.log(${myTeams});
-			})
-		</script>
 	</head>
    <body style="">
       <header>
@@ -93,7 +88,7 @@
          <div class="container" id="cabecera">
             <div class="row">
                <div class="col-lg-5 col-sm-5 col-xs-12" id="logo">
-                  <a href="https://www.ucm.es/" title="Universidad Complutense de Madrid">
+                  <a href="/mainPage" title="Universidad Complutense de Madrid">
                   <img src="${s}/img/logo.png" alt="ucm" title="Universidad Complutense de Madrid">
                   </a>
                </div>
