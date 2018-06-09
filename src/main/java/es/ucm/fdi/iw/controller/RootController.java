@@ -660,10 +660,7 @@ public class RootController {
 		return "joinTeam";
 	}
 
-	@GetMapping("/logout")
-	public String logout() {
-		return "logout";
-	}
+	
 
 	@GetMapping("/upload")
 	public String upload() {
@@ -747,8 +744,8 @@ public class RootController {
                         		new FileOutputStream(localData.getFile(team+"/"+gallery, Integer.toString(files+1))));
                 stream.write(bytes);
                 stream.close();
-
-                return "ok";
+                
+                return "redirect:/gallery?team=/"+team;
             } catch (Exception e) {
                 return "You failed to upload " + team + " => " + e.getMessage();
             }
@@ -790,7 +787,7 @@ public class RootController {
 		}catch(Exception e) {
 			
 		}
-		return "redirect:/gallery?team=/"+team;
+		return "redirect:/gallery?team="+team;
 	}
 	
 	@RequestMapping(value = "/removeGallery/{team}", method = RequestMethod.POST)

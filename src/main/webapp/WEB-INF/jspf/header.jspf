@@ -71,7 +71,8 @@
 									<li class="iniciasesion"><a href="/login" title="Navegar identificado">Navegar identificado</a></li>
                               	</c:when>
                               	<c:otherwise>
-									<li class="iniciasesion"><a href="" title="Navegar identificado">Bienvenidx: ${user.name}</a></li>
+									<li class="iniciasesion"><a href="" title="Navegar identificado">${user.name}</a></li>
+									<li class="cerrarsesion"><a href="/logout" title="SALIR">Salir</a></li>
                               	</c:otherwise>
                               </c:choose>
                            </ul>
