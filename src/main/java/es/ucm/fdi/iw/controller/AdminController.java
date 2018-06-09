@@ -59,7 +59,6 @@ public class AdminController {
 		entityManager.flush();
 		m.addAttribute("users", entityManager
 				.createQuery("select u from User u").getResultList());
-		
 		return "admin";
 	}
 	
