@@ -10,13 +10,12 @@ INSERT INTO user(id,enabled,login,password,roles,name,id_card,email) VALUES (6, 
 INSERT INTO user(id,enabled,login,password,roles,name,id_card,email) VALUES (7, 1, 'a7', '$2a$04$N78IYN6VzrWZzpsy6Xvz2uCdUm7Su9FDpAqhXjAcSzCgreVM2sUnC', 'USER','Pepe7','423456799','example@correo7.es');
 INSERT INTO user(id,enabled,login,password,roles,name,id_card,email) VALUES (9, 1, 'a9', '$2a$04$N78IYN6VzrWZzpsy6Xvz2uCdUm7Su9FDpAqhXjAcSzCgreVM2sUnC', 'USER','Pepe9','423499799','example@correo9.es');
 
-INSERT INTO user(id,enabled,login,password,roles,name,id_card,email) VALUES (10, 1, 'a10', '$2a$04$N78IYN6VzrWZzpsy6Xvz2uCdUm7Su9FDpAqhXjAcSzCgreVM2sUnC', 'USER','Pepe9','423499797','example@correo10.es');
-INSERT INTO user(id,enabled,login,password,roles,name,id_card,email) VALUES (11, 1, 'a11', '$2a$04$N78IYN6VzrWZzpsy6Xvz2uCdUm7Su9FDpAqhXjAcSzCgreVM2sUnC', 'USER','Pepe9','423499791','example@correo11.es');
-INSERT INTO user(id,enabled,login,password,roles,name,id_card,email) VALUES (12, 1, 'a12', '$2a$04$N78IYN6VzrWZzpsy6Xvz2uCdUm7Su9FDpAqhXjAcSzCgreVM2sUnC', 'USER','Pepe9','423499792','example@correo12.es');
-INSERT INTO user(id,enabled,login,password,roles,name,id_card,email) VALUES (13, 1, 'a13', '$2a$04$N78IYN6VzrWZzpsy6Xvz2uCdUm7Su9FDpAqhXjAcSzCgreVM2sUnC', 'USER','Pepe9','423499793','example@correo13.es');
-INSERT INTO user(id,enabled,login,password,roles,name,id_card,email) VALUES (14, 1, 'a14', '$2a$04$N78IYN6VzrWZzpsy6Xvz2uCdUm7Su9FDpAqhXjAcSzCgreVM2sUnC', 'USER','Pepe9','423499794','example@correo14.es');
-
-
+INSERT INTO user(id,enabled,login,password,roles,name,id_card,email) VALUES (10, 1, 'a10', '$2a$04$N78IYN6VzrWZzpsy6Xvz2uCdUm7Su9FDpAqhXjAcSzCgreVM2sUnC', 'USER','Pepe10','423499797','example@correo10.es');
+INSERT INTO user(id,enabled,login,password,roles,name,id_card,email) VALUES (11, 1, 'a11', '$2a$04$N78IYN6VzrWZzpsy6Xvz2uCdUm7Su9FDpAqhXjAcSzCgreVM2sUnC', 'USER','Pepe11','423499791','example@correo11.es');
+INSERT INTO user(id,enabled,login,password,roles,name,id_card,email) VALUES (12, 1, 'a12', '$2a$04$N78IYN6VzrWZzpsy6Xvz2uCdUm7Su9FDpAqhXjAcSzCgreVM2sUnC', 'USER','Pepe12','423499792','example@correo12.es');
+INSERT INTO user(id,enabled,login,password,roles,name,id_card,email) VALUES (13, 1, 'a13', '$2a$04$N78IYN6VzrWZzpsy6Xvz2uCdUm7Su9FDpAqhXjAcSzCgreVM2sUnC', 'USER','Pepe13','423499793','example@correo13.es');
+INSERT INTO user(id,enabled,login,password,roles,name,id_card,email) VALUES (14, 1, 'a14', '$2a$04$N78IYN6VzrWZzpsy6Xvz2uCdUm7Su9FDpAqhXjAcSzCgreVM2sUnC', 'USER','Pepe14','423499794','example@correo14.es');
+INSERT INTO user(id,enabled,login,password,roles,name,id_card,email) VALUES (15, 1, 'a15', '$2a$04$N78IYN6VzrWZzpsy6Xvz2uCdUm7Su9FDpAqhXjAcSzCgreVM2sUnC', 'USER','Pepe15','423499794','example@correo15.es');
 
 INSERT INTO league (id,name,sport,category) values (1,'Torneo Rector','Rugby','Masculino');
 

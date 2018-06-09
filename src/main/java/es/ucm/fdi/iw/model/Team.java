@@ -24,6 +24,7 @@ public class Team {
 	private String nextMatchFacilities;
 	private String category;
 	private User deputy;
+	private String teamPhoto;
 	private League league;
 	
 	private List<RequestTeam> requests;
@@ -133,6 +134,15 @@ public class Team {
 	@Column
 	public String getTrainingSchedule() {
 		return trainingSchedule;
+	}
+	
+	@Column
+	public String getTeamPhoto() {
+		return teamPhoto;
+	}
+	
+	public void setTeamPhoto(String teamPhoto) {
+		this.teamPhoto = teamPhoto;
 	}
 	
 	public void setAwayMatches(List<Match> awayMatches) {

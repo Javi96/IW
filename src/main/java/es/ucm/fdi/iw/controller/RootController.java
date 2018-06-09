@@ -35,6 +35,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import es.ucm.fdi.iw.LocalData;
 import es.ucm.fdi.iw.model.Gallery;
@@ -127,6 +128,7 @@ public class RootController {
 		List<Team> teamList = entityManager.createQuery("select t from Team t where sport =:sport and category =:category", Team.class)
 				.setParameter("sport", sport).setParameter("category", category).getResultList();
 		model.addAttribute("teamList", teamList);
+
 		return "adminHome";
 	}
 
@@ -282,7 +284,8 @@ public class RootController {
 	}
 
 	@RequestMapping("/team")
-	public String team(@RequestParam long id, Model model, HttpSession session) {
+	public String team(@RequestParam long id, Model model, HttpSession session, HttpServletResponse response) {
+		
 		boolean logged = false;
 		User currentUser = (User) session.getAttribute("user");
 		if(currentUser != null) {
@@ -291,6 +294,7 @@ public class RootController {
 		Team t = entityManager.find(Team.class, id);
 		model.addAttribute("team", t);
 		model.addAttribute("logged", logged);
+		
 		return "team";
 	}
 
@@ -394,52 +398,48 @@ public class RootController {
 	@ResponseBody
 	public String getLastMatch(@RequestParam("teamId") long teamId) {
 		String data;
+		String dataLastAwayMatch = "";
+		String dataLastHomeMatch = "";
 		Match lastAwayMatch = null;
 		Match lastHomeMatch = null;
 		Team t = entityManager.find(Team.class, teamId);
 		List<Match> awayMatches = t.getAwayMatches();
 		List<Match> homeMatches = t.getHomeMatches();
 
-		if(awayMatches.size() > 0)
+		if(awayMatches.size() > 0) {
 			lastAwayMatch = awayMatches.get(awayMatches.size()-1);
-		if(homeMatches.size() > 0)
-			lastHomeMatch = homeMatches.get(homeMatches.size()-1);
-
-		if(lastAwayMatch == null && lastHomeMatch == null) {
-			data = "";
-		}
-		else if(lastAwayMatch == null && lastHomeMatch != null ) {
-			data = "{" + "\"homeTeamName\":" + "\"" + lastHomeMatch.getHomeTeam().getName()  + "\"" + "," +
-					"\"homeTeamPoints\":" + "\"" + lastHomeMatch.getHomeTeamPoints()  + "\""+ "," +
-					"\"awayTeamName\":" + "\"" + lastHomeMatch.getAwayTeam().getName()  + "\"" + "," +
-					"\"awayTeamPoints\":" + "\"" + lastHomeMatch.getAwayTeamPoints()  + "\"" + "," +
-					"\"date\":" + "\"" + lastHomeMatch.getMatchDate()  + "\"" + "," +
-					"\"matchId\":" + "\"" + lastHomeMatch.getId()  + "\"" +"}";
-		}
-		else if (lastAwayMatch != null && lastHomeMatch == null ) {
-			data = "{" + "\"homeTeamName\":" + "\"" + lastAwayMatch.getHomeTeam().getName()  + "\"" + "," +
+			dataLastAwayMatch = "{" + "\"homeTeamName\":" + "\"" + lastAwayMatch.getHomeTeam().getName()  + "\"" + "," +
 					"\"homeTeamPoints\":" + "\"" + lastAwayMatch.getHomeTeamPoints()  + "\""+  "," +
 					"\"awayTeamName\":" + "\"" + lastAwayMatch.getAwayTeam().getName()  + "\"" + "," +
 					"\"awayTeamPoints\":" + "\"" + lastAwayMatch.getAwayTeamPoints()  + "\"" + "," +
 					"\"date\":" + "\"" + lastAwayMatch.getMatchDate()  + "\"" + "," +
 					"\"matchId\":" + "\"" + lastAwayMatch.getId()  + "\"" +"}";
 		}
+		if(homeMatches.size() > 0) {
+			lastHomeMatch = homeMatches.get(homeMatches.size()-1);
+			dataLastHomeMatch = "{" + "\"homeTeamName\":" + "\"" + lastHomeMatch.getHomeTeam().getName()  + "\"" + "," +
+					"\"homeTeamPoints\":" + "\"" + lastHomeMatch.getHomeTeamPoints()  + "\""+ "," +
+					"\"awayTeamName\":" + "\"" + lastHomeMatch.getAwayTeam().getName()  + "\"" + "," +
+					"\"awayTeamPoints\":" + "\"" + lastHomeMatch.getAwayTeamPoints()  + "\"" + "," +
+					"\"date\":" + "\"" + lastHomeMatch.getMatchDate()  + "\"" + "," +
+					"\"matchId\":" + "\"" + lastHomeMatch.getId()  + "\"" +"}";
+		}
+
+		if(lastAwayMatch == null && lastHomeMatch == null) {
+			data = "";
+		}
+		else if(lastAwayMatch == null && lastHomeMatch != null ) {
+			data = dataLastHomeMatch;
+		}
+		else if (lastAwayMatch != null && lastHomeMatch == null ) {
+			data = dataLastAwayMatch;
+		}
 		else {
 			if(lastAwayMatch.getMatchDate().compareTo(lastHomeMatch.getMatchDate()) > 0) {
-				data = "{" + "\"homeTeamName\":" + "\"" + lastHomeMatch.getHomeTeam().getName()  + "\"" + "," +
-						"\"homeTeamPoints\":" + "\"" + lastHomeMatch.getHomeTeamPoints()  + "\""+ "," +
-						"\"awayTeamName\":" + "\"" + lastHomeMatch.getAwayTeam().getName()  + "\"" + "," +
-						"\"awayTeamPoints\":" + "\"" + lastHomeMatch.getAwayTeamPoints()  + "\"" + ","+
-						"\"date\":" + "\"" + lastHomeMatch.getMatchDate()  + "\"" + "," +
-						"\"matchId\":" + "\"" + lastHomeMatch.getId()  + "\"" + "}";
+				data = dataLastHomeMatch;
 			}
 			else {
-				data = "{" + "\"homeTeamName\":" + "\"" + lastAwayMatch.getHomeTeam().getName()  + "\"" + "," +
-						"\"homeTeamPoints\":" + "\"" + lastAwayMatch.getHomeTeamPoints()  + "\""+ "," +
-						"\"awayTeamName\":" + "\"" + lastAwayMatch.getAwayTeam().getName()  + "\"" + "," +
-						"\"awayTeamPoints\":" + "\"" + lastAwayMatch.getAwayTeamPoints()  + "\"" + "," +
-						"\"date\":" + "\"" + lastAwayMatch.getMatchDate()  + "\"" + "," +
-						"\"matchId\":" + "\"" + lastAwayMatch.getId()  + "\"" +"}";
+				data = dataLastAwayMatch;
 			}
 		}
 		return data;
@@ -453,6 +453,73 @@ public class RootController {
 		model.addAttribute("activo", t.getActivePlayers().size());
 		model.addAttribute("noActivo", t.getNonActivePlayers().size());
 		return "playerTab";
+	}
+	
+	@RequestMapping(value ="/getTeam",method = RequestMethod.GET)
+	@ResponseBody
+	public String getTeam(Model model,@RequestParam long id) {
+		Team t = entityManager.find(Team.class, id);
+		String team = "{" + "\"name\":" + "\"" + t.getName()  + "\"" + "," +
+				"\"sport\":" + "\"" + t.getSport()  + "\"" + "," +
+				"\"school\":" + "\"" + t.getSchool()  + "\"" + "," +
+				"\"deputyEmail\":" + "\"" + t.getDeputy().getEmail()  + "\"" + "," +
+				"\"nextMatchSchedule\":" + "\"" + t.getNextMatchSchedule() + "\"" + "," +
+				"\"nextMatchFacilities\":" + "\"" + t.getNextMatchFacilities() + "\"" + "," +
+				"\"trainingSchedule\":" + "\"" + t.getTrainingSchedule() + "\"" + "," +
+				"\"category\":" + "\"" + t.getCategory() + "\""
+				+ "}";
+		return team;
+	}
+	
+	@RequestMapping(value = "/updateTeam", method = RequestMethod.POST, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+	@Transactional
+	public String updateTeam(Team team, @RequestParam String email, Model model,RedirectAttributes redir) {
+		boolean ok = true;
+		Team t = entityManager.find(Team.class, team.getId());
+		String name,tSchedule,nMs,nMf;
+		
+		try {
+			User deputy =  entityManager.createQuery("select u from User u where email =:email",User.class)
+					.setParameter("email", email).getSingleResult();
+			List<Team> te = entityManager.createQuery("select t from Team t where deputy_id =:deputyId",Team.class)
+					.setParameter("deputyId", deputy.getId()).getResultList();
+			
+			if(te.size() == 1 && email.equals(t.getDeputy().getEmail())) {
+				t.setDeputy(deputy);
+				name = team.getName();
+				tSchedule = team.getTrainingSchedule();
+				nMf = team.getNextMatchFacilities();
+				nMs = team.getNextMatchSchedule();
+				
+				List<Team> teamN =  entityManager.createQuery("select t from Team t where name =:name",Team.class)
+						.setParameter("name", name).getResultList();
+				
+				if(name.equals("") || tSchedule.equals("") || nMf.equals("") || nMs.equals("") || teamN.size() > 1 || (teamN.size() == 1 && !teamN.get(0).equals(name)) ) {
+					ok = false;
+				}
+				else {
+					t.setName(name);
+					t.setTrainingSchedule(tSchedule);
+					t.setNextMatchFacilities(nMf);
+					t.setNextMatchSchedule(nMs);
+				}
+				entityManager.persist(t);
+			}
+			else
+				ok = false;
+		}
+		catch(NoResultException exc) {
+			ok = false;
+		}
+		catch(Exception e) {
+			ok = false;
+		}
+		if(ok)
+			redir.addFlashAttribute("correct", ok);
+		else
+			redir.addFlashAttribute("incorrect", ok);
+		redir.addFlashAttribute("teamId", t.getId());
+		return "redirect:/teamListBySportAndCategory?sport=" + t.getSport() + "&category=" + t.getCategory();
 	}
 	
 	@RequestMapping(value = "/savePlayerActive",method = RequestMethod.GET)
@@ -709,6 +776,44 @@ public class RootController {
 	    }
 	}
 
+/*	
+	@RequestMapping(value="/teamPhoto", method=RequestMethod.POST)
+	@ResponseBody
+    public String teamPhoto(@RequestParam MultipartFile photo, @RequestParam long id, Model model){
+		String ok = "";
+		Team team = entityManager.find(Team.class, id);
+		String name = photo.getName();
+		team.setTeamPhoto(name);
+		if (!photo.isEmpty()) {
+            try {
+            	
+            	
+            	File f = new File("src/main/resources/static/img/shields"+photo.getOriginalFilename());
+            	
+            	if(!f.exists() || (f.exists() && !f.isDirectory())) {
+            		new File("src/main/resources/static/img/shields").mkdirs();
+            	}
+            	
+            	int files = new File("/tmp/iw/"+team).listFiles().length;
+                byte[] bytes = photo.getBytes();
+                BufferedOutputStream stream =
+                        new BufferedOutputStream(
+                        		new FileOutputStream(localData.getFile(team.toString(), Integer.toString(files+1))));
+                stream.write(bytes);
+                stream.close();
+            
+            } catch (Exception e) {
+                ok = "You failed to upload " + team + " => " + e.getMessage();
+            }
+        } 
+		else {
+            ok = "You failed to upload a photo for " + team + " because the file was empty.";
+        }
+		model.addAttribute("team", team);
+		return ok;
+	}
+	*/
+	
 	@RequestMapping(value="/photo/{team}/{gallery}", method=RequestMethod.POST)
     public @ResponseBody String handleFileUpload(@RequestParam("photo") MultipartFile photo,
     		@PathVariable("team") String team,@PathVariable("gallery") String gallery){

@@ -1,17 +1,35 @@
 "use strict"
 
 $(function(){
-	loadData();
+	$(".checkMale").click(function() {
+		$(".checkFemale").prop('checked', false);
+	});
+	$(".checkFemale").click(function() {
+		$(".checkMale").prop('checked', false);
+	});
 });
 
-function loadData(){
+
+function loadData(id){
 	$.ajax({
 	    method: "GET",  
 	    url: "/getTeam",
-	    data: {teamId: teamId},
+	    data: {id: id},
 	    success: (data)=>{
 	    	data = JSON.parse(data);
-	    	let date = data.date.split('-');
+	    	$("#teamName").val(data.name);
+	    	$("#sport").val(data.sport);
+	    	$("#school").val(data.school);
+	    	$("#deputyEmail").val(data.deputyEmail);
+	    	$("#nextMatchSchedule").val(data.nextMatchSchedule);
+	    	$("#nextMatchFacilities").val(data.nextMatchFacilities);
+	    	$("#trainingSchedule").val(data.trainingSchedule);
+	    	$("#teamId").val(id);
+	    	$("#searchSport").val(data.sport);
+	    	if(data.category === "Masculino")
+	    		$(".checkMale").prop('checked', true);
+	    	else
+	    		$(".checkFemale").prop('checked', true);
 	    	
 	    },
 	    error: (XMLHttpRequest, textStatus, errorThrown)=> { 

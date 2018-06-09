@@ -52,4 +52,15 @@
 	
 </div>
 
+<c:if test="${not empty correct}">
+	<script>
+		$("#${teamId}").css("background-color","#32CD32");
+	</script>
+</c:if>
+<c:if test="${not empty incorrect}">
+	<script>
+	$("#${teamId}").css("background-color","#E31C20");
+	</script>
+</c:if>
+
 <%@ include file="../jspf/footer.jspf"%>
