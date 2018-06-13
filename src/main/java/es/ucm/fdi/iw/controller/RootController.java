@@ -524,19 +524,21 @@ public class RootController {
 		cadenaActivos = cadenaActivos.substring(1, cadenaActivos.length()-1);
 		cadenaNoActivos = cadenaNoActivos.substring(1, cadenaNoActivos.length()-1);
 		
+		User u = null; 
+		
 		/*
 		 * ACTUALIZAMOS LOS DATOS DEL EQUIPO Y DE USER LISTA ACTIVA
 		 */	
-		String[] datos = cadenaActivos.split(",");
+		String[] datos = new String[0];
+		if(cadenaActivos.length() != 0)
+			datos = cadenaActivos.split(",");
 		
 		for(int i = 0; i < datos.length; i++) {
 			
 			char[] idUsu = datos[i].toCharArray();
 			
 			long id = Character.getNumericValue(idUsu[1]);
-			
-			User u = entityManager.find(User.class, id);
-			
+			u = entityManager.find(User.class, id);
 			/*
 			 * TEAM
 			 */
@@ -566,15 +568,17 @@ public class RootController {
 		/*
 		 * ACTUALIZAMOS LOS DATOS DE LA LISTA DE ACTIVOS
 		 */
-		datos = cadenaNoActivos.split(",");
+		
+		datos = new String[0];
+		if(cadenaNoActivos.length() != 0)
+			datos = cadenaNoActivos.split(",");
 		
 		for(int i = 0; i < datos.length; i++) {
 			
 			char[] idUsu = datos[i].toCharArray();
 			
 			long id = Character.getNumericValue(idUsu[1]);
-			User u = entityManager.find(User.class, id);
-			
+			u = entityManager.find(User.class, id);
 			/*
 			 * TEAM
 			 */
@@ -598,6 +602,9 @@ public class RootController {
 				listaTeamActive.remove(t);
 			}
 		}//for
+		
+		entityManager.persist(u);
+		entityManager.persist(t);
 		
 		return "team";
 	}
