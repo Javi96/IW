@@ -35,6 +35,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.util.HtmlUtils;
 
 import es.ucm.fdi.iw.LocalData;
 import es.ucm.fdi.iw.model.Gallery;
@@ -306,7 +307,25 @@ public class RootController {
 				createQuery("select t from Notification t where deputy_id =:id_user and team_id =:id_team", Notification.class)
 				.setParameter("id_user", currentUser.getId()).setParameter("id_team",id).getResultList();
 		
-		model.addAttribute("notificationsList", notiList);
+		
+		//transformamos caracteres especiales para seguridad
+		//y guardamos los nuevos datos en una lista
+		List<Notification> listaMod = new ArrayList<>();
+		
+		for (Notification n : notiList) {
+			
+			String nom = HtmlUtils.htmlEscape (n.getName());
+			String em = HtmlUtils.htmlEscape (n.getEmail());
+			String ms = HtmlUtils.htmlEscape (n.getMessage());
+			
+			n.setName(nom);
+			n.setEmail(em);
+			n.setMessage(ms);
+			
+			listaMod.add(n);
+		}
+		
+		model.addAttribute("notificationsList", listaMod);
 				
 				
 		if(t == null)
@@ -617,14 +636,27 @@ public class RootController {
 
 	@RequestMapping(value = "/contactDeputy",method = RequestMethod.POST)
 	@Transactional
-	public String contactDeputy(@ModelAttribute Notification notification, @RequestParam long deputyId, Model model) {
+	public String contactDeputy(@ModelAttribute Notification notification, @RequestParam long teamId, @RequestParam long deputyId, Model model) {
+		
+		
+		//convertimos caracteres especiales para la seguridad
+		String nom = HtmlUtils.htmlEscape (notification.getName());
+		String em = HtmlUtils.htmlEscape (notification.getEmail());
+		String ms = HtmlUtils.htmlEscape (notification.getMessage());
+		
+		notification.setName(nom);
+		notification.setEmail(em);
+		notification.setMessage(ms);
+		
 		// se envia bien siempre
 		notification.setDeputy(entityManager.find(User.class, deputyId));
 		entityManager.persist(notification);
+		
 		model.addAttribute("correct", true);
-		Team t = entityManager.createQuery("select t from Team t where deputy_id =:deputyId", Team.class).setParameter("deputyId", deputyId).getSingleResult();
+		Team t = entityManager.createQuery("select t from Team t where id =:teamId", Team.class).setParameter("teamId", teamId).getSingleResult();
 		model.addAttribute("team",t);
 		entityManager.flush();
+		
 		return "contact";
 	}
 

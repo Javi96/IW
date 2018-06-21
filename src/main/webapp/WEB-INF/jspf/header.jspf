@@ -125,17 +125,21 @@
 							<c:set var="contador" value="${0}"/>
 							<c:set var="vacio" value="${0}"/>
 
-							<!-- recorremos equipos -->
+							<!-- recorremos equipos que tiene como delegado al usuario-->
 								<c:forEach items="${teamsDebuty}" var="teamD">
 								
 								<!-- recorremos notificaciones del usuario si hay -->
 									<c:forEach items="${user.notifications}" var="notification">
 									
 											<c:if test="${notification.team.id == teamD.id}">
-										          <li id="color">
-										          	<a style="color:#A00E19;" title="Notificaciones pendientes" href="/team?id=${teamD.id}">${teamD.name}</a>
-										          </li>
-										          <c:set var="contador" value="${1}" />
+												
+												<c:if test="${contador eq 0}">
+												
+											          <li id="color">
+											          	<a style="color:#A00E19;" title="Notificaciones pendientes" href="/team?id=${teamD.id}">${teamD.name}</a>
+											          </li>
+											          <c:set var="contador" value="${1}"/>
+										         </c:if>
 											</c:if>
 									</c:forEach>
 									
