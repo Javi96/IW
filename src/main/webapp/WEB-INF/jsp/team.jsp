@@ -217,7 +217,7 @@
 	                <div class="row">
 	                    <div class="col-sm-12 text-center">
 	                        <button type="button" class="btn btn-success" onclick='responseNotification(${notification.id})'>Contestar</button>
-	                        <button type="button" class="btn btn-danger" onclick='deleteNotification( ${notification.id} )'>Borrar</button>
+	                        <button type="button" class="btn btn-danger" onclick='deleteNotification(${notification.id})'>Borrar</button>
 	                    </div>
 	                </div>
 	                <hr></hr>

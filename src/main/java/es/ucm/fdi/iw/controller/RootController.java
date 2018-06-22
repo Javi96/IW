@@ -336,10 +336,12 @@ public class RootController {
 	@RequestMapping(value = "/deleteNotification", method = RequestMethod.POST)
 	@Transactional
 	@ResponseBody
-	public boolean deleteNotification(Notification notification) {
+	public boolean deleteNotification(@RequestBody String body) {
 		boolean deleted = false;
 		try {
-			Notification n = entityManager.find(Notification.class, notification.getId());
+			Notification n = entityManager.find(Notification.class, Long.parseLong(body.replace("id=", "")));
+			User u = entityManager.find(User.class, n.getDeputy().getId());
+			u.getNotifications().remove(n);
 			entityManager.remove(n);
 			entityManager.flush();
 			deleted = true;
@@ -379,10 +381,8 @@ public class RootController {
 		boolean deleted = false;
 
 		try {
-			entityManager.getTransaction().begin();
 			RequestTeam rq = entityManager.find(RequestTeam.class, Long.parseLong(body.replace("id=", "")));
 			entityManager.remove(rq); // borramos la peticion
-			entityManager.getTransaction().commit();
 			deleted = true;
 		}
 		catch(Exception e) {
