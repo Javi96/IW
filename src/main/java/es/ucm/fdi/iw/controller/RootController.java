@@ -153,6 +153,21 @@ public class RootController {
 		model.addAttribute("option", "adminAddLeague");
 		return "adminHome";
 	}
+	
+	@RequestMapping(value = "/addMatchView",method = RequestMethod.GET)
+	public String adminAddMatch(Model model) {
+		model.addAttribute("option", "adminAddMatch");
+		
+		List<Team> tl = entityManager.createQuery("select r from Team r",Team.class).getResultList();
+		List<String> sports = new ArrayList<String>();
+		for(Team t : tl) {
+			if(!sports.contains(t.getSport())) {
+				sports.add(t.getSport());
+			}
+		}
+		model.addAttribute("sports", sports);
+		return "adminHome";
+	}
 
 	@RequestMapping(path = "/addTeam",method = RequestMethod.POST)
 	@Transactional
@@ -413,54 +428,89 @@ public class RootController {
 		return result;
 	}
 
-	@RequestMapping("/getLastMatch")
+	@RequestMapping("/getMatchRecord")
 	@ResponseBody
-	public String getLastMatch(@RequestParam("teamId") long teamId) {
-		String data;
-		String dataLastAwayMatch = "";
-		String dataLastHomeMatch = "";
-		Match lastAwayMatch = null;
-		Match lastHomeMatch = null;
+	public List<String> getMatchRecord(@RequestParam long matchId) {
+		List<String> info = new ArrayList<String>();
+		try {
+			
+			String data ="";
+			List<MatchRecord> mrl = entityManager.createQuery("select r from MatchRecord r where matchId =:matchId", MatchRecord.class)
+					.setParameter("matchId", matchId).getResultList();
+			MatchRecord mr = entityManager.find(MatchRecord.class,1);
+			mr.getAwayTeamPoints();
+			if(mrl.size() > 0) {
+				data = "{" + "\"teamId\":" + "\"" + mrl.get(0).getTeamId()  + "\"" + "," +
+						"\"homeTeamPoints\":" + "\"" + mrl.get(0).getHomeTeamPoints()  + "\""+  "," +
+						"\"awayTeamPoints\":" + "\"" + mrl.get(0).getAwayTeamPoints()  + "\"" + "," +
+						"\"matchId\":" + "\"" + mrl.get(0).getId()  + "\"" +
+						"}";
+				info.add(data);
+			}
+			if(mrl.size() > 1) {
+				data = "{" + "\"teamId\":" + "\"" + mrl.get(1).getTeamId()  + "\"" + "," +
+						"\"homeTeamPoints\":" + "\"" + mrl.get(1).getHomeTeamPoints()  + "\""+  "," +
+						"\"awayTeamPoints\":" + "\"" + mrl.get(1).getAwayTeamPoints()  + "\"" + "," +
+						"\"matchId\":" + "\"" + mrl.get(1).getId()  + "\"" +
+						"}";
+				info.add(data);
+			}
+		}
+		catch(NoResultException e) {
+			
+		}
+		return info;
+	}
+	
+	@RequestMapping("/getMatch")
+	@ResponseBody
+	public String getMatch(@RequestParam long teamId, @RequestParam long matchId) {
+		String data="";
+		Match awayMatch = null;
+		Match homeMatch = null;
+		
 		Team t = entityManager.find(Team.class, teamId);
 		List<Match> awayMatches = t.getAwayMatches();
 		List<Match> homeMatches = t.getHomeMatches();
-
-		if(awayMatches.size() > 0) {
-			lastAwayMatch = awayMatches.get(awayMatches.size()-1);
-			dataLastAwayMatch = "{" + "\"homeTeamName\":" + "\"" + lastAwayMatch.getHomeTeam().getName()  + "\"" + "," +
-					"\"homeTeamPoints\":" + "\"" + lastAwayMatch.getHomeTeamPoints()  + "\""+  "," +
-					"\"awayTeamName\":" + "\"" + lastAwayMatch.getAwayTeam().getName()  + "\"" + "," +
-					"\"awayTeamPoints\":" + "\"" + lastAwayMatch.getAwayTeamPoints()  + "\"" + "," +
-					"\"date\":" + "\"" + lastAwayMatch.getMatchDate()  + "\"" + "," +
-					"\"matchId\":" + "\"" + lastAwayMatch.getId()  + "\"" +"}";
+		
+		int i = 0;
+		int j = 0;
+		boolean found = false;
+		while(i < awayMatches.size() && !found) {
+			if(awayMatches.get(i).getId() == matchId) {
+				found = true;
+			}	
+			i++;
 		}
-		if(homeMatches.size() > 0) {
-			lastHomeMatch = homeMatches.get(homeMatches.size()-1);
-			dataLastHomeMatch = "{" + "\"homeTeamName\":" + "\"" + lastHomeMatch.getHomeTeam().getName()  + "\"" + "," +
-					"\"homeTeamPoints\":" + "\"" + lastHomeMatch.getHomeTeamPoints()  + "\""+ "," +
-					"\"awayTeamName\":" + "\"" + lastHomeMatch.getAwayTeam().getName()  + "\"" + "," +
-					"\"awayTeamPoints\":" + "\"" + lastHomeMatch.getAwayTeamPoints()  + "\"" + "," +
-					"\"date\":" + "\"" + lastHomeMatch.getMatchDate()  + "\"" + "," +
-					"\"matchId\":" + "\"" + lastHomeMatch.getId()  + "\"" +"}";
-		}
-
-		if(lastAwayMatch == null && lastHomeMatch == null) {
-			data = "";
-		}
-		else if(lastAwayMatch == null && lastHomeMatch != null ) {
-			data = dataLastHomeMatch;
-		}
-		else if (lastAwayMatch != null && lastHomeMatch == null ) {
-			data = dataLastAwayMatch;
+		if(!found) {
+			while(j < homeMatches.size() && !found) {
+				if(homeMatches.get(j).getId() == matchId) {
+					found = true;
+				}	
+				j++;
+			}
+			if(found) {
+				homeMatch = homeMatches.get(j-1);
+				data = "{" + "\"homeTeamName\":" + "\"" + homeMatch.getHomeTeam().getName()  + "\"" + "," +
+						"\"homeTeamPoints\":" + "\"" + homeMatch.getHomeTeamPoints()  + "\""+ "," +
+						"\"awayTeamName\":" + "\"" + homeMatch.getAwayTeam().getName()  + "\"" + "," +
+						"\"awayTeamPoints\":" + "\"" + homeMatch.getAwayTeamPoints()  + "\"" + "," +
+						"\"date\":" + "\"" + homeMatch.getMatchDate()  + "\"" + "," +
+						"\"matchId\":" + "\"" + homeMatch.getId()  + "\"" + "," +
+						"\"recordChecked\":" + "\"" + homeMatch.isRecordChecked() + "\""  +"}";
+			}
 		}
 		else {
-			if(lastAwayMatch.getMatchDate().compareTo(lastHomeMatch.getMatchDate()) > 0) {
-				data = dataLastHomeMatch;
-			}
-			else {
-				data = dataLastAwayMatch;
-			}
+			awayMatch = awayMatches.get(i-1);
+			data = "{" + "\"homeTeamName\":" + "\"" + awayMatch.getHomeTeam().getName()  + "\"" + "," +
+					"\"homeTeamPoints\":" + "\"" + awayMatch.getHomeTeamPoints()  + "\""+  "," +
+					"\"awayTeamName\":" + "\"" + awayMatch.getAwayTeam().getName()  + "\"" + "," +
+					"\"awayTeamPoints\":" + "\"" + awayMatch.getAwayTeamPoints()  + "\"" + "," +
+					"\"date\":" + "\"" + awayMatch.getMatchDate()  + "\"" + "," +
+					"\"matchId\":" + "\"" + awayMatch.getId()  + "\"" + "," +
+					"\"recordChecked\":" + "\"" + awayMatch.isRecordChecked() + "\"" +"}";
 		}
+		
 		return data;
 	}
 

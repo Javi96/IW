@@ -78,3 +78,18 @@
 .playersRequestsBox{
 	border: solid;
 }
+
+.listStyle{
+	color: black;
+}
+
+.inputSportAdmin{
+	border:none;
+	width: 80%;
+	margin: 3px;
+	background-color: transparent;
+}
+
+.marginTop{
+	margin-top: 25px;
+}

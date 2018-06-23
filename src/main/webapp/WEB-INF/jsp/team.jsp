@@ -64,7 +64,7 @@
 						<input type="hidden" name = "sport" value="${team.sport}">
 					</form>
 					<div class="btn-group teamButtonsStyle" id = "matchRecord">
-						<button type="button" onClick = "getLastMatchRecord()" data-toggle="modal" data-target="#matchRecordModal"
+						<button type="button"  data-toggle="modal" data-target="#matchList"
 						class="btn btn-primary">Firmar actas</button>
 					</div>
 
@@ -89,7 +89,67 @@
 	</div>
 
 	<!-- Modal matchRecord-->
-	<div class="modal fade" id="matchRecordModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+	<div class="modal fade" id="matchList"  role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+	    <div class="modal-dialog modal-dialog-centered" role="document">
+	        <div class="modal-content">
+	            <div class="modal-header">
+	                <h5 class="modal-title">Gestionar actas de ${team.name}</h5>
+	            </div>
+	            <div class="modal-body">
+	                <div class = "modal-title text-center">
+	                	<h5>Partidos disputados</h5>
+	                <hr></hr>
+	                <div class="list-group">
+	              
+	                   <c:forEach items="${team.awayMatches}" var="match">
+		                   <li class="list-group-item"  id = "${match.id}">
+								<input class="inputSportAdmin all pull-center listStyle" type="submit" 
+								value ="${match.homeTeam.name} vs ${match.awayTeam.name}" readonly/>
+								<button id = "a${match.id}" onclick = "getMatch(${team.id}, ${match.id})" type="button" class="btn-danger" data-toggle="modal"
+								 	data-target="#matchRecordModal">Firmar 
+								</button>
+						   </li>
+						   <c:if test="${match.recordChecked}">
+						   		<script>
+						   			var mId = ${match.id};
+						   			$("#"+mId).css("background-color","#0CAA41");
+						   			$("#a"+mId).text('Resultado').button("refresh");
+						   		</script>
+						   </c:if>
+	                   </c:forEach>
+	                   
+	                   <c:forEach items="${team.homeMatches}" var="match">
+		               		<li class="list-group-item"  id = "${match.id}">
+								<input class="inputSportAdmin all pull-center listStyle" type="submit" 
+								value ="${match.homeTeam.name} vs ${match.awayTeam.name}" readonly/>
+								<button id = "a${match.id}" onclick = "getMatch(${team.id}, ${match.id})" type="button" class="btn-danger" data-toggle="modal"
+								 	data-target="#matchRecordModal">Firmar
+								</button>
+							</li>
+							<c:if test="${match.recordChecked}">
+						   		<script>
+						   			var mId = ${match.id};	
+						   			$("#"+mId).css("background-color","#0CAA41");
+						   			$("#a"+mId).text('Resultado').button("refresh");
+						   		</script>
+						   </c:if>
+	                   </c:forEach>
+	                   
+	                </div>
+	            </div>
+				<div class="modal-footer">
+				    <div class="form-group">
+				        <div>
+				            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+				        </div>
+				    </div>
+				</div>
+	        </div>
+	    </div>
+	</div>
+	
+	<!-- Modal Match Record -->
+	<div class="modal fade" id="matchRecordModal" role="dialog">
 	    <div class="modal-dialog modal-dialog-centered" role="document">
 	        <div class="modal-content">
 	            <div class="modal-header">
@@ -101,6 +161,11 @@
 	                    <div class="col-md-1">vs</div>
 	                    <div class="col-md-4" id="awayTeamName"></div>
 	                </div>
+	                
+	                <div id ="info" >
+	                	
+	                 </div>
+	                
 	                <hr></hr>
 	                <div class="centerDivs">
 	                    <div id="homeTeamDiv">
@@ -114,16 +179,17 @@
 	            </div>
 				<div class="modal-footer">
 				    <div class="form-group">
-				        <div class="col-sm-12 text-center">
+				        <div class="col-sm-12 text-center ">
 				            <button type="button" onClick="addMatchRecord()" id="sendMatchRecord" class="btn btn-success preview-add-button"><span class="glyphicon glyphicon-send"></span>
 				            Enviar Acta</button>
-				            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+				            <button type="button" class="btn btn-danger" id="closeRequestMatchModal">Close</button>
 				        </div>
 				    </div>
 				</div>
 	        </div>
 	    </div>
 	</div>
+	
 
 		<!-- Modal players requests-->
 	<div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
@@ -277,5 +343,14 @@
 	</div>
 
 </div>
+
+<script type="text/javascript">
+
+$('#closeRequestMatchModal').click(function(e) {
+	$('.modal .fade.in').click();
+});
+
+</script>
+
 
 <%@ include file="../jspf/footer.jspf"%>
