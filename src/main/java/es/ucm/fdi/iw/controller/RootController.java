@@ -36,6 +36,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.util.HtmlUtils;
 
 import es.ucm.fdi.iw.LocalData;
 import es.ucm.fdi.iw.model.Gallery;
@@ -153,11 +154,11 @@ public class RootController {
 		model.addAttribute("option", "adminAddLeague");
 		return "adminHome";
 	}
-	
+
 	@RequestMapping(value = "/addMatchView",method = RequestMethod.GET)
 	public String adminAddMatch(Model model) {
 		model.addAttribute("option", "adminAddMatch");
-		
+
 		List<Team> tl = entityManager.createQuery("select r from Team r",Team.class).getResultList();
 		List<String> sports = new ArrayList<String>();
 		for(Team t : tl) {
@@ -324,7 +325,25 @@ public class RootController {
 				createQuery("select t from Notification t where deputy_id =:id_user and team_id =:id_team", Notification.class)
 				.setParameter("id_user", currentUser.getId()).setParameter("id_team",id).getResultList();
 
-		model.addAttribute("notificationsList", notiList);
+
+		//transformamos caracteres especiales para seguridad
+		//y guardamos los nuevos datos en una lista
+		List<Notification> listaMod = new ArrayList<>();
+
+		for (Notification n : notiList) {
+
+			String nom = HtmlUtils.htmlEscape (n.getName());
+			String em = HtmlUtils.htmlEscape (n.getEmail());
+			String ms = HtmlUtils.htmlEscape (n.getMessage());
+
+			n.setName(nom);
+			n.setEmail(em);
+			n.setMessage(ms);
+
+			listaMod.add(n);
+		}
+
+		model.addAttribute("notificationsList", listaMod);
 
 
 		if(t == null)
@@ -335,10 +354,12 @@ public class RootController {
 	@RequestMapping(value = "/deleteNotification", method = RequestMethod.POST)
 	@Transactional
 	@ResponseBody
-	public boolean deleteNotification(Notification notification) {
+	public boolean deleteNotification(@RequestBody String body) {
 		boolean deleted = false;
 		try {
-			Notification n = entityManager.find(Notification.class, notification.getId());
+			Notification n = entityManager.find(Notification.class, Long.parseLong(body.replace("id=", "")));
+			User u = entityManager.find(User.class, n.getDeputy().getId());
+			u.getNotifications().remove(n);
 			entityManager.remove(n);
 			entityManager.flush();
 			deleted = true;
@@ -378,10 +399,8 @@ public class RootController {
 		boolean deleted = false;
 
 		try {
-			entityManager.getTransaction().begin();
 			RequestTeam rq = entityManager.find(RequestTeam.class, Long.parseLong(body.replace("id=", "")));
 			entityManager.remove(rq); // borramos la peticion
-			entityManager.getTransaction().commit();
 			deleted = true;
 		}
 		catch(Exception e) {
@@ -433,7 +452,7 @@ public class RootController {
 	public List<String> getMatchRecord(@RequestParam long matchId) {
 		List<String> info = new ArrayList<String>();
 		try {
-			
+
 			String data ="";
 			List<MatchRecord> mrl = entityManager.createQuery("select r from MatchRecord r where matchId =:matchId", MatchRecord.class)
 					.setParameter("matchId", matchId).getResultList();
@@ -457,36 +476,36 @@ public class RootController {
 			}
 		}
 		catch(NoResultException e) {
-			
+
 		}
 		return info;
 	}
-	
+
 	@RequestMapping("/getMatch")
 	@ResponseBody
 	public String getMatch(@RequestParam long teamId, @RequestParam long matchId) {
 		String data="";
 		Match awayMatch = null;
 		Match homeMatch = null;
-		
+
 		Team t = entityManager.find(Team.class, teamId);
 		List<Match> awayMatches = t.getAwayMatches();
 		List<Match> homeMatches = t.getHomeMatches();
-		
+
 		int i = 0;
 		int j = 0;
 		boolean found = false;
 		while(i < awayMatches.size() && !found) {
 			if(awayMatches.get(i).getId() == matchId) {
 				found = true;
-			}	
+			}
 			i++;
 		}
 		if(!found) {
 			while(j < homeMatches.size() && !found) {
 				if(homeMatches.get(j).getId() == matchId) {
 					found = true;
-				}	
+				}
 				j++;
 			}
 			if(found) {
@@ -510,7 +529,7 @@ public class RootController {
 					"\"matchId\":" + "\"" + awayMatch.getId()  + "\"" + "," +
 					"\"recordChecked\":" + "\"" + awayMatch.isRecordChecked() + "\"" +"}";
 		}
-		
+
 		return data;
 	}
 
@@ -640,19 +659,21 @@ public class RootController {
 		cadenaActivos = cadenaActivos.substring(1, cadenaActivos.length()-1);
 		cadenaNoActivos = cadenaNoActivos.substring(1, cadenaNoActivos.length()-1);
 
+		User u = null;
+
 		/*
 		 * ACTUALIZAMOS LOS DATOS DEL EQUIPO Y DE USER LISTA ACTIVA
 		 */
-		String[] datos = cadenaActivos.split(",");
+		String[] datos = new String[0];
+		if(cadenaActivos.length() != 0)
+			datos = cadenaActivos.split(",");
 
 		for(int i = 0; i < datos.length; i++) {
 
 			char[] idUsu = datos[i].toCharArray();
 
 			long id = Character.getNumericValue(idUsu[1]);
-
-			User u = entityManager.find(User.class, id);
-
+			u = entityManager.find(User.class, id);
 			/*
 			 * TEAM
 			 */
@@ -682,15 +703,17 @@ public class RootController {
 		/*
 		 * ACTUALIZAMOS LOS DATOS DE LA LISTA DE ACTIVOS
 		 */
-		datos = cadenaNoActivos.split(",");
+
+		datos = new String[0];
+		if(cadenaNoActivos.length() != 0)
+			datos = cadenaNoActivos.split(",");
 
 		for(int i = 0; i < datos.length; i++) {
 
 			char[] idUsu = datos[i].toCharArray();
 
 			long id = Character.getNumericValue(idUsu[1]);
-			User u = entityManager.find(User.class, id);
-
+			u = entityManager.find(User.class, id);
 			/*
 			 * TEAM
 			 */
@@ -715,6 +738,9 @@ public class RootController {
 			}
 		}//for
 
+		entityManager.persist(u);
+		entityManager.persist(t);
+
 		return "team";
 	}
 
@@ -726,14 +752,27 @@ public class RootController {
 
 	@RequestMapping(value = "/contactDeputy",method = RequestMethod.POST)
 	@Transactional
-	public String contactDeputy(@ModelAttribute Notification notification, @RequestParam long deputyId, Model model) {
+	public String contactDeputy(@ModelAttribute Notification notification, @RequestParam long teamId, @RequestParam long deputyId, Model model) {
+
+
+		//convertimos caracteres especiales para la seguridad
+		String nom = HtmlUtils.htmlEscape (notification.getName());
+		String em = HtmlUtils.htmlEscape (notification.getEmail());
+		String ms = HtmlUtils.htmlEscape (notification.getMessage());
+
+		notification.setName(nom);
+		notification.setEmail(em);
+		notification.setMessage(ms);
+
 		// se envia bien siempre
 		notification.setDeputy(entityManager.find(User.class, deputyId));
 		entityManager.persist(notification);
+
 		model.addAttribute("correct", true);
-		Team t = entityManager.createQuery("select t from Team t where deputy_id =:deputyId", Team.class).setParameter("deputyId", deputyId).getSingleResult();
+		Team t = entityManager.createQuery("select t from Team t where id =:teamId", Team.class).setParameter("teamId", teamId).getSingleResult();
 		model.addAttribute("team",t);
 		entityManager.flush();
+
 		return "contact";
 	}
 
