@@ -68,23 +68,26 @@ function getMatch(teamId, id){
 	    		    method: "get",  
 	    		    url: "/getMatchRecord",
 	    		    data:
-	    		    {
-	    		    	matchId:data.matchId
+	    		    {	teamId : teamId,
+	    		    	matchId:matchId
 	    		    },
 	    		    success: (data)=>{
-	    		    	if(data.lenght > 0){
+	    		    	let lengthh = data.length;
+	    		    	if(lengthh> 0){
 		    		    	let aux = JSON.parse(data[0]);
 		    		    	div2.append($('<label>').attr("id","deputy1"));
 		    		    	div.append(div2);
 		    		    	$('#info').append(div);
-		    		    	$('#deputy1').text("Resultado según " + aux.awayTeamName + ": " +  aux.awayTeamPoints + " - " + aux.homeTeamPoints);
-		    	    		
-		    		    	if(data.lenght > 1){
+		    		    	
+		    		    	$('#deputy1').text("Resultado según " + aux.teamName + ": " +  aux.homeTeamPoints + " - " + aux.awayTeamPoints);
+
+		    		    	if(lengthh > 1 && !aux.checked){
 		    		    		aux = JSON.parse(data[1]);
 		    		    		div2.append($('<label>').attr("id","deputy2"));
 			    		    	div.append(div2);
 			    		    	$('#info').append(div);
-		    	    			$('#deputy2').text("Resultado según " + aux.homeTeamName + ": " +  aux.awayTeamPoints + " - " + aux.homeTeamPoints);
+		    	    			$('#deputy2').text("Resultado según " + aux.teamName + ": " +  aux.awayTeamPoints + " - " + aux.homeTeamPoints);
+		    	    			$('#sendMatchRecord').prop('disabled', true);
 		    		    	}
 	    		    	}
 	    		    	else{
@@ -120,12 +123,50 @@ function addMatchRecord(){
 	    	awayTeamPoints : awayTeamPoints
 	    },
 	    success: (data)=>{
+	    	
 	    	if(data != "Correct"){
-	    		alert(data);
+	    		let div2 = $('<div>').addClass('col-md-6 col-md-offset-3 marginTop recorded');
+		    	let div = $('<div>').addClass('row');
+		    	
+	    		$.ajax({
+	    		    method: "get",  
+	    		    url: "/getMatchRecord",
+	    		    data:
+	    		    {	teamId : teamId,
+	    		    	matchId:matchId
+	    		    },
+	    		    success: (data)=>{
+	    		    	let lengthh = data.length;
+	    		    	if(lengthh > 0){
+		    		    	let aux = JSON.parse(data[0]);
+		    		    	div2.append($('<label>').attr("id","deputy1"));
+		    		    	div.append(div2);
+		    		    	$('#info').append(div);
+		    		    	
+		    		    	$('#deputy1').text("Resultado según " + aux.teamName + ": " +  aux.homeTeamPoints + " - " + aux.awayTeamPoints);
+
+		    		    	if(lengthh > 1 && !data.checked){
+		    		    		aux = JSON.parse(data[1]);
+		    		    		div2.append($('<label>').attr("id","deputy2"));
+			    		    	div.append(div2);
+			    		    	$('#info').append(div);
+		    	    			$('#deputy2').text("Resultado según " + aux.teamName + ": " +  aux.awayTeamPoints + " - " + aux.homeTeamPoints);
+		    	    			$('#sendMatchRecord').prop('disabled', true);
+		    		    	}
+	    		    	}
+	    		    	else{
+	    		    		$('#info').append(div);
+		    		    	$('#deputy1').text("Ningun equipo ha firmado el acta");
+	    		    	}
+	    		    },
+	    		    error: (XMLHttpRequest, textStatus, errorThrown)=> { 
+
+	    		    }       
+	    		});
 	    	}
 	    	else{
-	    		$('.modal-body').text("Acta enviada correctamente");
-	    		$('#sendMatchRecord').prop('disabled', true);
+	    		//$('.modal-body').text("Acta enviada correctamente");
+	    		
 	    	}
 	    },
 	    error: (XMLHttpRequest, textStatus, errorThrown)=> { 
@@ -223,4 +264,5 @@ function changeTeamInfo(id){
 	    }       
 	});
 }
+
 

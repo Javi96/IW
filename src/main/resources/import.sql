@@ -35,12 +35,12 @@ INSERT INTO team (id,name,school,sport,deputy_id,category,training_schedule,next
 INSERT INTO team (id,name,school,sport,deputy_id,category,training_schedule,next_match_schedule,next_match_facilities) values  (10,'Rugby Farmacia', 'Facultad de Farmacia', 'Rugby', 13, 'Masculino', 'Lunes y Jueves 17:00h','Viernes 16:30h', 'Polideportivo UCM');
 INSERT INTO team (id,name,school,sport,deputy_id,category,training_schedule,next_match_schedule,next_match_facilities) values  (11,'Rugby Derecho', 'Facultad de Derecho', 'Rugby', 14, 'Masculino', 'Lunes y Jueves 17:00h','Viernes 16:30h', 'Polideportivo UCM');
 
-INSERT INTO match(home_team_id,away_team_id,home_team_points,away_team_points,match_date,record_checked) values (1,2,50,70,'2018-05-23',1);
+--INSERT INTO match(home_team_id,away_team_id,home_team_points,away_team_points,match_date,record_checked) values (1,2,50,70,'2018-05-23',1);
 INSERT INTO match(home_team_id,away_team_id,home_team_points,away_team_points,match_date,record_checked) values (1,7,70,70,'2018-05-23',1);
 INSERT INTO match(home_team_id,away_team_id,home_team_points,away_team_points,match_date,record_checked) values (8,1,-1,-1,'2018-05-23',0);
 INSERT INTO match(home_team_id,away_team_id,home_team_points,away_team_points,match_date,record_checked) values (9,1,30,10,'2018-05-23',1);
 
-INSERT INTO match_record values (1,3,8,20,30);
+INSERT INTO match_record (team_id,match_id,home_team_points,away_team_points ) values (8,2,30,20);
 
 INSERT INTO team_active_players(active_teams_id,active_players_id) values (1,5);
 INSERT INTO team_active_players(active_teams_id,active_players_id) values (1,6);

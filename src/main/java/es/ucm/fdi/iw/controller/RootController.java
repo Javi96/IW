@@ -170,6 +170,26 @@ public class RootController {
 		return "adminHome";
 	}
 
+	@RequestMapping(value = "/getTeamsBySport",method = RequestMethod.GET)
+	public String adminGetTeamsBySport(Model model, @RequestParam String sport) {
+		model.addAttribute("option", "adminAddMatch");
+
+		List<Team> tl = entityManager.createQuery("select r from Team r",Team.class).getResultList();
+		List<String> sports = new ArrayList<String>();
+		for(Team t : tl) {
+			if(!sports.contains(t.getSport())) {
+				sports.add(t.getSport());
+			}
+		}
+		tl = entityManager.createQuery("select r from Team r where sport =:sport",Team.class)
+				.setParameter("sport", sport).getResultList();
+		
+		model.addAttribute("teamsBySport", tl);
+		model.addAttribute("matchOf", sport);
+		model.addAttribute("sports", sports);
+		return "adminHome";
+	}
+	
 	@RequestMapping(path = "/addTeam",method = RequestMethod.POST)
 	@Transactional
 	public String adminCreateTeam(@ModelAttribute Team team, @RequestParam String email, Model model) {
@@ -207,6 +227,19 @@ public class RootController {
 			}
 		}
 		model.addAttribute("option","adminAddTeam");
+		return "adminHome";
+	}
+	
+	@RequestMapping(path = "/addMatch",method = RequestMethod.POST)
+	@Transactional
+	public String adminAddMatch(@ModelAttribute Match match, @RequestParam long homeTeamId, @RequestParam long awayTeamId, Model model) {
+	
+		Team home = entityManager.find(Team.class, homeTeamId);
+		Team away = entityManager.find(Team.class, awayTeamId);
+		match.setAwayTeam(away);
+		match.setHomeTeam(home);
+		entityManager.persist(match);
+		
 		return "adminHome";
 	}
 
@@ -429,11 +462,15 @@ public class RootController {
 					MatchRecord two = bodyMatch;
 					if(one.getAwayTeamPoints() == two.getAwayTeamPoints() && one.getHomeTeamPoints() == two.getHomeTeamPoints()) {
 						Match match = entityManager.find(Match.class,bodyMatch.getMatchId());
+						match.setAwayTeamPoints(one.getAwayTeamPoints());
+						match.setHomeTeamPoints(one.getHomeTeamPoints());
 						match.setRecordChecked(true);
 						entityManager.flush();
 					}
 					else {
-						result = "El resultado de las actas no coincide, reintroduce el resultado del partido";
+						entityManager.persist(two);
+						entityManager.flush();
+						result = "Acta enviada correctamente, actualiza la pagina para ver el resultado final.";
 						list.clear();
 					}
 				}
@@ -449,28 +486,54 @@ public class RootController {
 
 	@RequestMapping("/getMatchRecord")
 	@ResponseBody
-	public List<String> getMatchRecord(@RequestParam long matchId) {
+	public List<String> getMatchRecord(@RequestParam long matchId, @RequestParam long teamId) {
 		List<String> info = new ArrayList<String>();
 		try {
-
+			List<MatchRecord> aux = new ArrayList<MatchRecord>();
 			String data ="";
-			List<MatchRecord> mrl = entityManager.createQuery("select r from MatchRecord r where matchId =:matchId", MatchRecord.class)
-					.setParameter("matchId", matchId).getResultList();
-			MatchRecord mr = entityManager.find(MatchRecord.class,1);
-			mr.getAwayTeamPoints();
-			if(mrl.size() > 0) {
-				data = "{" + "\"teamId\":" + "\"" + mrl.get(0).getTeamId()  + "\"" + "," +
-						"\"homeTeamPoints\":" + "\"" + mrl.get(0).getHomeTeamPoints()  + "\""+  "," +
-						"\"awayTeamPoints\":" + "\"" + mrl.get(0).getAwayTeamPoints()  + "\"" + "," +
-						"\"matchId\":" + "\"" + mrl.get(0).getId()  + "\"" +
+			List<MatchRecord> mrl = entityManager.createQuery("select r from MatchRecord r ", MatchRecord.class)
+					.getResultList();
+			for(MatchRecord mr : mrl) {
+				if(mr.getMatchId() == matchId)
+					aux.add(mr);
+			}
+			
+			Match m = entityManager.find(Match.class,matchId);
+			
+			
+			if(aux.size() > 0) {
+				Team t = null;
+				if(m.getHomeTeam().getId() == mrl.get(0).getTeamId())
+					t = m.getHomeTeam();
+				else
+					t = m.getAwayTeam();
+				data = "{" + "\"teamId\":" + "\"" + aux.get(0).getTeamId()  + "\"" + "," +
+						"\"homeTeamPoints\":" + "\"" + aux.get(0).getHomeTeamPoints()  + "\""+  "," +
+						"\"teamName\":" + "\"" + t.getName()  + "\""+  "," +
+						"\"awayTeamPoints\":" + "\"" + aux.get(0).getAwayTeamPoints()  + "\"" + "," +
+						"\"matchId\":" + "\"" + aux.get(0).getId()  + "\"" +
 						"}";
 				info.add(data);
 			}
-			if(mrl.size() > 1) {
-				data = "{" + "\"teamId\":" + "\"" + mrl.get(1).getTeamId()  + "\"" + "," +
-						"\"homeTeamPoints\":" + "\"" + mrl.get(1).getHomeTeamPoints()  + "\""+  "," +
-						"\"awayTeamPoints\":" + "\"" + mrl.get(1).getAwayTeamPoints()  + "\"" + "," +
-						"\"matchId\":" + "\"" + mrl.get(1).getId()  + "\"" +
+			if(aux.size() > 1) {
+				MatchRecord mr1 = aux.get(0);
+				MatchRecord mr2 = aux.get(1);
+				boolean checked = false;
+				
+				if(mr1.getAwayTeamPoints() == mr2.getAwayTeamPoints() && mr1.getHomeTeamPoints() == mr2.getAwayTeamPoints() )
+					checked = true;
+				
+				Team t = null;
+				if(m.getHomeTeam().getId() == mrl.get(1).getTeamId())
+					t = m.getHomeTeam();
+				else
+					t = m.getAwayTeam();
+				data = "{" + "\"teamId\":" + "\"" + aux.get(1).getTeamId()  + "\"" + "," +
+						"\"homeTeamPoints\":" + "\"" + aux.get(1).getHomeTeamPoints()  + "\""+  "," +
+						"\"teamName\":" + "\"" + t.getName()  + "\""+  "," +
+						"\"checked\":" + "\"" + checked  + "\""+  "," +
+						"\"awayTeamPoints\":" + "\"" + aux.get(1).getAwayTeamPoints()  + "\"" + "," +
+						"\"matchId\":" + "\"" + aux.get(1).getId()  + "\"" +
 						"}";
 				info.add(data);
 			}
