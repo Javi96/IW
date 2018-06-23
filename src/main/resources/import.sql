@@ -15,7 +15,7 @@ INSERT INTO user(id,enabled,login,password,roles,name,id_card,email) VALUES (11,
 INSERT INTO user(id,enabled,login,password,roles,name,id_card,email) VALUES (12, 1, 'a12', '$2a$04$N78IYN6VzrWZzpsy6Xvz2uCdUm7Su9FDpAqhXjAcSzCgreVM2sUnC', 'USER','Pepe12','423499792','example@correo12.es');
 INSERT INTO user(id,enabled,login,password,roles,name,id_card,email) VALUES (13, 1, 'a13', '$2a$04$N78IYN6VzrWZzpsy6Xvz2uCdUm7Su9FDpAqhXjAcSzCgreVM2sUnC', 'USER','Pepe13','423499793','example@correo13.es');
 INSERT INTO user(id,enabled,login,password,roles,name,id_card,email) VALUES (14, 1, 'a14', '$2a$04$N78IYN6VzrWZzpsy6Xvz2uCdUm7Su9FDpAqhXjAcSzCgreVM2sUnC', 'USER','Pepe14','423499794','example@correo14.es');
-INSERT INTO user(id,enabled,login,password,roles,name,id_card,email) VALUES (15, 1, 'a15', '$2a$04$N78IYN6VzrWZzpsy6Xvz2uCdUm7Su9FDpAqhXjAcSzCgreVM2sUnC', 'USER','Pepe15','423499794','example@correo15.es');
+INSERT INTO user(id,enabled,login,password,roles,name,id_card,email) VALUES (15, 1, 'a15', '$2a$04$N78IYN6VzrWZzpsy6Xvz2uCdUm7Su9FDpAqhXjAcSzCgreVM2sUnC', 'USER','Pepe15','423399794','example@correo15.es');
 
 INSERT INTO league (id,name,sport,category) values (1,'Torneo Rector','Rugby','Masculino');
 
@@ -24,8 +24,9 @@ INSERT INTO team (id,name,school,sport,deputy_id,category,training_schedule,next
 INSERT INTO team (id,name,school,sport,deputy_id,category,training_schedule,next_match_schedule,next_match_facilities) values  (3,'Futbol Matematicas', 'Facultad de Matematicas', 'Futbol', 3, 'Masculino', 'Lunes y Miercoles 18:00h','Viernes 20:30h', 'Paraninfo');
 
 INSERT INTO team (id,name,school,sport,deputy_id,category,training_schedule,next_match_schedule,next_match_facilities) values  (4,'Balonmano Matematicas', 'Facultad de Matematicas', 'Balonmano', 4, 'Masculino', 'Lunes y Martes 16:00h','Jueves 18:30h', 'Polideportivo UCM');
-INSERT INTO team (id,name,school,sport,deputy_id,category,training_schedule,next_match_schedule,next_match_facilities) values  (12,'Balonmano Historia', 'Facultad de Matematicas', 'Balonmano', 4, 'Masculino', 'Lunes y Martes 16:00h','Jueves 18:30h', 'Polideportivo UCM');
-INSERT INTO team (id,name,school,sport,deputy_id,category,training_schedule,next_match_schedule,next_match_facilities) values  (13,'Balonmano Farmacia', 'Facultad de Matematicas', 'Balonmano', 4, 'Masculino', 'Lunes y Martes 16:00h','Jueves 18:30h', 'Polideportivo UCM');
+INSERT INTO team (id,name,school,sport,deputy_id,category,training_schedule,next_match_schedule,next_match_facilities) values  (12,'Balonmano Historia', 'Facultad de Matematicas', 'Balonmano', 5, 'Masculino', 'Lunes y Martes 16:00h','Jueves 18:30h', 'Polideportivo UCM');
+INSERT INTO team (id,name,school,sport,deputy_id,category,training_schedule,next_match_schedule,next_match_facilities) values  (13,'Balonmano Farmacia', 'Facultad de Matematicas', 'Balonmano', 6, 'Masculino', 'Lunes y Martes 16:00h','Jueves 18:30h', 'Polideportivo UCM');
+INSERT INTO team (id,name,school,sport,deputy_id,category,training_schedule,next_match_schedule,next_match_facilities) values  (6,'Futbol Sala Historia', 'Facultad de Historia', 'Futbol Sala', 7, 'Femenino', 'Martes y Jueves 18:00h','Viernes 18:30h', 'Polideportivo UCM');
 
 INSERT INTO team (id,name,school,sport,deputy_id,category,training_schedule,next_match_schedule,next_match_facilities) values  (5,'Futbol Sala Mates', 'Facultad de Matematicas', 'Futbol Sala', 5, 'Femenino', 'Martes y Jueves 18:00h','Viernes 18:30h', 'Polideportivo UCM');
 INSERT INTO team (id,name,school,sport,deputy_id,category,training_schedule,next_match_schedule,next_match_facilities) values  (7,'Rugby Historia', 'Facultad de Historia', 'Rugby', 10, 'Masculino', 'Lunes y Jueves 17:00h','Viernes 16:30h', 'Polideportivo UCM');
@@ -58,5 +59,5 @@ INSERT INTO request_team(team_id,user_id) values (1,7);
 
 INSERT INTO notification (email,message,name,deputy_id ,team_id) values ('ejemplo@gmail.es','Hola me gustaria unirme a vuestro equipo.','Juan Pablo', 1,1); 
 INSERT INTO notification (email,message,name,deputy_id ,team_id) values ('ejemplos@gmail.es','Hola me gustaria unirme a vuestro equipo.','Juan Pablo', 4,4);  
-INSERT INTO notification (email,message,name,deputy_id ,team_id) values ('ejemplos@gmail.es','Hola me gustaria unirme a vuestro equipo.','Juan Pablo', 4,12);  
+INSERT INTO notification (email,message,name,deputy_id ,team_id) values ('ejemplos@gmail.es','Hola me gustaria unirme a vuestro equipo.','Juan Pablo', 4,11);  
 
