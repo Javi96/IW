@@ -39,6 +39,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.util.HtmlUtils;
 
 import es.ucm.fdi.iw.LocalData;
+import es.ucm.fdi.iw.model.Alert;
 import es.ucm.fdi.iw.model.Gallery;
 import es.ucm.fdi.iw.model.League;
 import es.ucm.fdi.iw.model.Match;
@@ -84,12 +85,17 @@ public class RootController {
  				session.setAttribute("myTeams", u.getActiveTeams());
 
 				session.setAttribute("l", myTeams.size());
-				System.out.println(myTeams.size());
+				//System.out.println(myTeams.size());
 
 				//ver los equipos de los que es delegado el usuario
 				List<Team> teamList = entityManager.createQuery("select t from Team t where deputy_id =:id_user", Team.class)
 						.setParameter("id_user", u.getId()).getResultList();
-
+				if(teamList.size() > 0) {
+					session.setAttribute("isDeputy", true);
+				}
+				else
+					session.setAttribute("isDeputy", false);
+							
 				session.setAttribute("teamsDebuty", teamList);
 				session.setAttribute("equipos", teamList.size());
 
@@ -125,6 +131,16 @@ public class RootController {
 		model.addAttribute("option", "adminAddTeam");
 		return "adminHome";
 	}
+	
+	@RequestMapping(value = "/alertsView",method = RequestMethod.GET)
+	public String adminAlertsView(Model model) {
+		model.addAttribute("option", "adminAlert");
+		List<Alert> al = entityManager.createQuery("select a from Alert a", Alert.class)
+				.getResultList();
+		
+		model.addAttribute("alerts", al);
+		return "adminHome";
+	}
 
 	@RequestMapping(value = "/teamListView",method = RequestMethod.GET)
 	public String teamListView(Model model) {
@@ -148,6 +164,17 @@ public class RootController {
 		m.addAttribute("team",t);
 		return "adminDelegateSets";
 	}
+	
+/*	@GetMapping("/getAlerts")
+	public String getAlerts(Model model, @SessionAttribute("user") User u) {
+		List<Alert> al = entityManager.createQuery("select a from Alert a where user_id =:user", Alert.class)
+				.setParameter("user", u.getId()).getResultList();
+		
+		model.addAttribute("alerts", al);
+		
+		return "alerts";
+	}
+	*/
 
 	@RequestMapping(value = "/addLeagueView",method = RequestMethod.GET)
 	public String adminAddLeague(Model model) {
@@ -348,7 +375,9 @@ public class RootController {
 		if(currentUser != null) {
 			logged = true;
 		}
+		
 		Team t = entityManager.find(Team.class, id);
+		
 		model.addAttribute("team", t);
 		model.addAttribute("logged", logged);
 		//System.out.println(t.getName());
@@ -442,6 +471,72 @@ public class RootController {
 		return deleted;
 	}
 
+	
+	@RequestMapping(value = "/invalidateRecord", method = RequestMethod.POST)
+	@Transactional
+	public String invalidateMatchRecord(Model model, @RequestParam long matchId, @RequestParam long alertId) {
+		
+		try {
+			List<MatchRecord> list = entityManager.createQuery("select m from MatchRecord m where matchId = :matchId",MatchRecord.class)
+					.setParameter("matchId", matchId).getResultList();
+	
+			for(MatchRecord mr : list) {
+				entityManager.remove(mr);
+			}
+			entityManager.flush();
+			Alert a = entityManager.find(Alert.class, alertId);
+			entityManager.remove(a);
+			entityManager.flush();
+		}
+		catch (Exception e) {
+			
+		}
+		List<Alert> al = entityManager.createQuery("select a from Alert a", Alert.class)
+				.getResultList();
+		
+		model.addAttribute("alerts", al);
+		model.addAttribute("option", "adminAlert");
+		return "adminHome";
+	}
+	
+	@RequestMapping(value = "/invalidatePetition", method = RequestMethod.POST)
+	@Transactional
+	@ResponseBody
+	public boolean invalidatePetition(@RequestParam long matchId) {
+		boolean ok = false;
+
+		try {
+			long team1Id = -1;
+			List<MatchRecord> list = entityManager.createQuery("select m from MatchRecord m where matchId = :matchId",MatchRecord.class)
+					.setParameter("matchId", matchId).getResultList();
+			team1Id = list.get(0).getTeamId();
+			
+			MatchRecord m1 = list.get(0);
+			MatchRecord m2 = list.get(1);
+
+			Team t1 = entityManager.find(Team.class, team1Id);
+
+			Match m =entityManager.find(Match.class, matchId);
+			if(m1.getTeamId() != t1.getId()) {
+				MatchRecord aux = m1;
+				m1 = m2;
+				m2 = aux;
+			}
+			//No hace falta comprobar si ya estan porque al solicitar 2 veces la invalidacion no encontrara los MatchRecord y saldran del try
+			Alert a = new Alert(m ,"El resultado es "+ m1.getHomeTeamPoints() + " - " + m1.getAwayTeamPoints(),
+								"El resultado es " + m2.getAwayTeamPoints() + " - " + m2.getAwayTeamPoints());
+			
+			entityManager.persist(a);
+			entityManager.flush();
+			
+			ok = true;
+		}
+		catch(Exception e) {
+
+		}
+		return ok;
+	}
+	
 	@RequestMapping(value = "/matchRecord", method = RequestMethod.POST,consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
 	@Transactional
 	@ResponseBody
@@ -475,7 +570,7 @@ public class RootController {
 					}
 				}
 				else
-					result = "Ya has enviado el acta para el pardio";
+					result = "Ya has enviado el acta para el partido";
 			}
 		}
 		catch(NoResultException e) {
@@ -891,7 +986,19 @@ public class RootController {
 	}
 
 	@GetMapping("/mainPage")
-	public String mainPage() {
+	public String mainPage(Model model, HttpSession session) {
+		User u = (User) session.getAttribute("user");
+		
+		boolean notDeputy = entityManager.createQuery("select t from Team t where deputy_id =:id").setParameter("id", u.getId()).getResultList().isEmpty();
+		
+		if(!notDeputy) {//SI ES DELEGADO
+			List<Alert> al = entityManager.createQuery("select a from Alert a where user_id =:user", Alert.class)
+					.setParameter("user", u.getId()).getResultList();
+			if(!al.isEmpty())
+				model.addAttribute("inf", true);
+			else
+				model.addAttribute("inf", false);
+		}
 		return "mainPage";
 	}
 

@@ -1,6 +1,7 @@
 "use strict"
 
 let matchId;
+let sended = false;
 
 $(function () {
 	$('#contact').hide();
@@ -10,6 +11,8 @@ $(function () {
 	$('#playersRequests').hide();
 	$('#notificationsDiv').hide();
 	$('#deputyPower').hide();
+	$('#invalidatePetition').hide();
+	$('#deputyContact').hide();
 	update();
 });
 
@@ -61,44 +64,8 @@ function getMatch(teamId, id){
 	    		$("#awayTeamPoints").val("");
 	    		$('#homeTeamPoints').prop('readonly', false);
 	    		$('#awayTeamPoints').prop('readonly', false);
-	    		let div2 = $('<div>').addClass('col-md-6 col-md-offset-3 marginTop recorded');
-		    	let div = $('<div>').addClass('row');
-		    	
-	    		$.ajax({
-	    		    method: "get",  
-	    		    url: "/getMatchRecord",
-	    		    data:
-	    		    {	teamId : teamId,
-	    		    	matchId:matchId
-	    		    },
-	    		    success: (data)=>{
-	    		    	let lengthh = data.length;
-	    		    	if(lengthh> 0){
-		    		    	let aux = JSON.parse(data[0]);
-		    		    	div2.append($('<label>').attr("id","deputy1"));
-		    		    	div.append(div2);
-		    		    	$('#info').append(div);
-		    		    	
-		    		    	$('#deputy1').text("Resultado según " + aux.teamName + ": " +  aux.homeTeamPoints + " - " + aux.awayTeamPoints);
 
-		    		    	if(lengthh > 1 && !aux.checked){
-		    		    		aux = JSON.parse(data[1]);
-		    		    		div2.append($('<label>').attr("id","deputy2"));
-			    		    	div.append(div2);
-			    		    	$('#info').append(div);
-		    	    			$('#deputy2').text("Resultado según " + aux.teamName + ": " +  aux.awayTeamPoints + " - " + aux.homeTeamPoints);
-		    	    			$('#sendMatchRecord').prop('disabled', true);
-		    		    	}
-	    		    	}
-	    		    	else{
-	    		    		$('#info').append(div);
-		    		    	$('#deputy1').text("Ningun equipo ha firmado el acta");
-	    		    	}
-	    		    },
-	    		    error: (XMLHttpRequest, textStatus, errorThrown)=> { 
-
-	    		    }       
-	    		});
+		    	getMatchRecord(teamId,matchId);
 	    	}
 	    },
 	    error: (XMLHttpRequest, textStatus, errorThrown)=> { 
@@ -123,51 +90,9 @@ function addMatchRecord(){
 	    	awayTeamPoints : awayTeamPoints
 	    },
 	    success: (data)=>{
+	    	if(data != "Ya has enviado el acta para el partido")
+	    		getMatchRecord(teamId,matchId);
 	    	
-	    	if(data != "Correct"){
-	    		let div2 = $('<div>').addClass('col-md-6 col-md-offset-3 marginTop recorded');
-		    	let div = $('<div>').addClass('row');
-		    	
-	    		$.ajax({
-	    		    method: "get",  
-	    		    url: "/getMatchRecord",
-	    		    data:
-	    		    {	teamId : teamId,
-	    		    	matchId:matchId
-	    		    },
-	    		    success: (data)=>{
-	    		    	let lengthh = data.length;
-	    		    	if(lengthh > 0){
-		    		    	let aux = JSON.parse(data[0]);
-		    		    	div2.append($('<label>').attr("id","deputy1"));
-		    		    	div.append(div2);
-		    		    	$('#info').append(div);
-		    		    	
-		    		    	$('#deputy1').text("Resultado según " + aux.teamName + ": " +  aux.homeTeamPoints + " - " + aux.awayTeamPoints);
-
-		    		    	if(lengthh > 1 && !data.checked){
-		    		    		aux = JSON.parse(data[1]);
-		    		    		div2.append($('<label>').attr("id","deputy2"));
-			    		    	div.append(div2);
-			    		    	$('#info').append(div);
-		    	    			$('#deputy2').text("Resultado según " + aux.teamName + ": " +  aux.awayTeamPoints + " - " + aux.homeTeamPoints);
-		    	    			$('#sendMatchRecord').prop('disabled', true);
-		    		    	}
-	    		    	}
-	    		    	else{
-	    		    		$('#info').append(div);
-		    		    	$('#deputy1').text("Ningun equipo ha firmado el acta");
-	    		    	}
-	    		    },
-	    		    error: (XMLHttpRequest, textStatus, errorThrown)=> { 
-
-	    		    }       
-	    		});
-	    	}
-	    	else{
-	    		//$('.modal-body').text("Acta enviada correctamente");
-	    		
-	    	}
 	    },
 	    error: (XMLHttpRequest, textStatus, errorThrown)=> { 
 	        alert("Tienes que rellenar la puntuacion de cada equipo"); 
@@ -241,7 +166,7 @@ function changeTeamInfo(id){
 	let nms = $('#nextMatchSchedule').prop("value");
 	let nmf = $('#nextMatchFacilities').prop("value");
 	let ts = $('#trainingSchedule').prop("value");
-	console.log(nms + nmf + ts);
+	
 	$.ajax({
 	    method: "post",  
 	    url: "/changeTeamInfo",
@@ -264,5 +189,84 @@ function changeTeamInfo(id){
 	    }       
 	});
 }
+
+function invalidatePetition(){
+	$.ajax({
+	    method: "post",  
+	    url: "/invalidatePetition",
+	    data:
+	    {
+	    	matchId: matchId
+	    },
+	    success: (data)=>{
+	    	$('#invalidatePetition').hide();
+	    	$('#invalidatePetition').attr("disabled","disabled");
+	    	/*$("#sendMatchRecord").removeAttr("disabled");
+    		$("#homeTeamPoints").val("");
+    		$("#awayTeamPoints").val("");
+    		$('#homeTeamPoints').prop('readonly', false);
+    		$('#awayTeamPoints').prop('readonly', false);
+    		$('.recorded').remove();
+    		$('#info').empty();*/
+	    },
+	    error: (XMLHttpRequest, textStatus, errorThrown)=> {
+	    	console.log(XMLHttpRequest);
+	    	console.log(textStatus);
+	    	console.log(errorThrown);
+	        alert("Ha ocurrido un error inesperado"); 
+	    }       
+	});
+}
+
+function deputyContact(){
+	
+}
+
+
+function getMatchRecord(teamId, matchId){
+	let div2 = $('<div>').addClass('col-md-6 col-md-offset-3 marginTop recorded');
+	let div = $('<div>').addClass('row');
+	
+	$.ajax({
+	    method: "get",  
+	    url: "/getMatchRecord",
+	    data:
+	    {	teamId : teamId,
+	    	matchId:matchId
+	    },
+	    success: (data)=>{
+	    	let lengthh = data.length;
+	    	if(lengthh> 0){
+		    	let aux = JSON.parse(data[0]);
+		    	div2.append($('<label>').attr("id","deputy1"));
+		    	div.append(div2);
+		    	$('#info').append(div);
+		    	
+		    	$('#deputy1').text("Resultado según " + aux.teamName + ": " +  aux.homeTeamPoints + " - " + aux.awayTeamPoints);
+
+		    	if(lengthh > 1 && !aux.checked){
+		    		aux = JSON.parse(data[1]);
+		    		div2.append($('<label>').attr("id","deputy2"));
+    		    	div.append(div2);
+    		    	$('#info').append(div);
+	    			$('#deputy2').text("Resultado según " + aux.teamName + ": " +  aux.awayTeamPoints + " - " + aux.homeTeamPoints);
+	    			$('#sendMatchRecord').prop('disabled', true);
+	
+	    			$('#invalidatePetition').show();
+	    			$('#deputyContact').show();
+		    	}
+	    	}
+	    	else{
+	    		$('#info').append(div);
+		    	$('#deputy1').text("Ningun equipo ha firmado el acta");
+	    	}
+	    },
+	    error: (XMLHttpRequest, textStatus, errorThrown)=> { 
+
+	    }       
+	});
+}
+
+
 
 

@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
@@ -21,6 +22,8 @@ public class Match {
 	private Date matchDate;
 
 	private boolean recordChecked; // true si se ha confirmado el acta del partido
+	
+	private Alert alert;
 	
 	public Match() {
 		// TODO Auto-generated constructor stub
@@ -70,6 +73,16 @@ public class Match {
 	public boolean isRecordChecked() {
 		return recordChecked;
 	}
+	
+	@OneToOne
+	public Alert getAlert() {
+		return alert;
+	}
+	
+	public void setAlert(Alert alert) {
+		this.alert = alert;
+	}
+	
 	public void setRecordChecked(boolean recordChecked) {
 		this.recordChecked = recordChecked;
 	}

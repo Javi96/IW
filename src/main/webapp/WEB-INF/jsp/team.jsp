@@ -163,8 +163,15 @@
 	                </div>
 	                
 	                <div id ="info" >
-	                	
-	                 </div>
+	                
+	                	<div class="form-group">
+				        <div class="col-sm-12 text-center ">
+					            <button type="button" onClick="invalidatePetition()" id="invalidatePetition" class="btn btn-success preview-add-button"><span class="glyphicon glyphicon-send"></span>
+					            Solicitar Invalidar</button>
+					            <button type="button" onClick="deputyContact()" class="btn btn-success" id="deputyContact">Contactar delegado</button>
+					        </div>
+				    	</div>		
+	                </div>
 	                
 	                <hr></hr>
 	                <div class="centerDivs">

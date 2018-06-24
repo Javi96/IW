@@ -160,6 +160,7 @@
 					
 					<!-- Deportes -->
 						<li><a title="Sports" href="/home">Deportes</a></li>
+						
 					<!-- Mis Deportes -->
 						<li><a title="mySport_1" href="/team?id=${myTeams[0].id}">${myTeams[0].name}</a></li>
 						<li><a title="mySport_2" href="/team?id=${myTeams[1].id}">${myTeams[1].name}</a></li>
@@ -180,7 +181,6 @@
                               	</c:otherwise>
                         </c:choose>
 						 
-						
     		</ul>
     	</div>	
 	</nav>

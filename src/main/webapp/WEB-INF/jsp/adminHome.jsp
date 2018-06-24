@@ -22,6 +22,7 @@
 	         <li><a title="addTeam" href="/addTeamView">Añadir equipo</a></li>
 			 <li><a title="addLeague" href="/addLeagueView">Añadir liga</a></li>
 			 <li><a title="addMatch" href="/addMatchView">Añadir partido</a></li>
+			  <li><a title="Alerts" href="/alertsView">Alertas</a></li>
 	      </ul>
 	   </div>
 	</nav>
@@ -45,6 +46,10 @@
 	
 	<c:if test='${option == "adminAddMatch"}'>
 		<%@ include file="../jsp/adminAddMatch.jsp"%>
+	</c:if>
+	
+	<c:if test='${option == "adminAlert"}'>
+		<%@ include file="../jsp/adminAlert.jsp"%>
 	</c:if>
 	
 	<c:if test="${not empty correct}">
