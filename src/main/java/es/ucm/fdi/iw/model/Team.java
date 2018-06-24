@@ -39,7 +39,7 @@ public class Team {
 	
 	private List<Match> homeMatches;
 	
-//	private byte enabled; // esto que es?
+//	private byte enabled; 
 
 	public Team() {
 		// TODO Auto-generated constructor stub

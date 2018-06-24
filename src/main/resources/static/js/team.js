@@ -14,6 +14,9 @@ $(function () {
 	$('#invalidatePetition').hide();
 	$('#deputyContact').hide();
 	update();
+	$('#closeRequestMatchModal').click(function(e) {
+		$('#matchRecordModal').click();
+	});
 });
 
 function update(){
@@ -220,6 +223,23 @@ function invalidatePetition(){
 
 function deputyContact(){
 	
+	$.ajax({
+	    method: "post",  
+	    url: "/contactDeputy",
+	    data:
+	    {
+	    	matchId: matchId
+	    },
+	    success: (data)=>{
+	    	
+	    },
+	    error: (XMLHttpRequest, textStatus, errorThrown)=> {
+	    	console.log(XMLHttpRequest);
+	    	console.log(textStatus);
+	    	console.log(errorThrown);
+	        alert("Ha ocurrido un error inesperado"); 
+	    }       
+	});
 }
 
 

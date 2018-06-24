@@ -22,6 +22,9 @@
 		};
 		</c:forEach>
    	}
+   	
+
+
 
 </script>
 <script src="${s}/js/team.js"></script>
@@ -147,7 +150,7 @@
 	        </div>
 	    </div>
 	</div>
-	
+	</div>
 	<!-- Modal Match Record -->
 	<div class="modal fade" id="matchRecordModal" role="dialog">
 	    <div class="modal-dialog modal-dialog-centered" role="document">
@@ -195,6 +198,7 @@
 				</div>
 	        </div>
 	    </div>
+
 	</div>
 	
 
@@ -348,16 +352,10 @@
 	    </div>
 	  </div>
 	</div>
-
+</div>
 </div>
 
-<script type="text/javascript">
 
-$('#closeRequestMatchModal').click(function(e) {
-	$('.modal .fade.in').click();
-});
-
-</script>
 
 
 <%@ include file="../jspf/footer.jspf"%>

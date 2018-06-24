@@ -390,7 +390,7 @@ public class RootController {
 
 		//transformamos caracteres especiales para seguridad
 		//y guardamos los nuevos datos en una lista
-		List<Notification> listaMod = new ArrayList<>();
+		List<Notification> listaMod = new ArrayList<Notification>();
 
 		for (Notification n : notiList) {
 
@@ -406,7 +406,7 @@ public class RootController {
 		}
 
 		model.addAttribute("notificationsList", listaMod);
-
+		
 
 		if(t == null)
 			return "error404";
@@ -910,7 +910,7 @@ public class RootController {
 
 	@RequestMapping(value = "/contactDeputy",method = RequestMethod.POST)
 	@Transactional
-	public String contactDeputy(@ModelAttribute Notification notification, @RequestParam long teamId, @RequestParam long deputyId, Model model) {
+	public String contactDeputy(@ModelAttribute Notification notification, @RequestParam long teamId, Model model) {
 
 
 		//convertimos caracteres especiales para la seguridad
@@ -923,11 +923,12 @@ public class RootController {
 		notification.setMessage(ms);
 
 		// se envia bien siempre
-		notification.setDeputy(entityManager.find(User.class, deputyId));
+		Team t = entityManager.find(Team.class, teamId);
+		notification.setDeputy(t.getDeputy());
 		entityManager.persist(notification);
 
 		model.addAttribute("correct", true);
-		Team t = entityManager.createQuery("select t from Team t where id =:teamId", Team.class).setParameter("teamId", teamId).getSingleResult();
+		
 		model.addAttribute("team",t);
 		entityManager.flush();
 

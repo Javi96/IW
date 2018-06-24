@@ -40,7 +40,7 @@
 						<div class="form-group">
 							<div class="col-md-12 text-center">
 								<button type="submit" class="btn btn-primary btn-lg">Enviar</button>
-								<input type="hidden" name="deputyId" value="${team.deputy.id}">
+								<!--  <input type="hidden" name="deputyId" value="${team.deputy.id}"> -->
 								<input type="hidden" name="teamId"  value="${team.id}" >								
 							</div>
 						</div>
