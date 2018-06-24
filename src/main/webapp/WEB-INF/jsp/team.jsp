@@ -171,7 +171,11 @@
 				        <div class="col-sm-12 text-center ">
 					            <button type="button" onClick="invalidatePetition()" id="invalidatePetition" class="btn btn-success preview-add-button"><span class="glyphicon glyphicon-send"></span>
 					            Solicitar Invalidar</button>
-					            <button type="button" onClick="deputyContact()" class="btn btn-success" id="deputyContact">Contactar delegado</button>
+					            <form action = "/contact" method="get" class="btn-group teamButtonsStyle" id = "deputyContact">
+									<button type="submit" class="btn btn-primary" onclick="setIdContact()">Contactar delegado</button>
+									<input type="hidden" name = "id" id="teamIdForDep">
+								</form>
+					            
 					        </div>
 				    	</div>		
 	                </div>

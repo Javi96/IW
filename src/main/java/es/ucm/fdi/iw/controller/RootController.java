@@ -605,6 +605,8 @@ public class RootController {
 				data = "{" + "\"teamId\":" + "\"" + aux.get(0).getTeamId()  + "\"" + "," +
 						"\"homeTeamPoints\":" + "\"" + aux.get(0).getHomeTeamPoints()  + "\""+  "," +
 						"\"teamName\":" + "\"" + t.getName()  + "\""+  "," +
+						"\"teamIdForHome\":" + "\"" +  m.getHomeTeam().getId()  + "\""+  "," +
+						"\"teamIdForAway\":" + "\"" +  m.getAwayTeam().getId()  + "\""+  "," +
 						"\"awayTeamPoints\":" + "\"" + aux.get(0).getAwayTeamPoints()  + "\"" + "," +
 						"\"matchId\":" + "\"" + aux.get(0).getId()  + "\"" +
 						"}";
@@ -627,6 +629,8 @@ public class RootController {
 						"\"homeTeamPoints\":" + "\"" + aux.get(1).getHomeTeamPoints()  + "\""+  "," +
 						"\"teamName\":" + "\"" + t.getName()  + "\""+  "," +
 						"\"checked\":" + "\"" + checked  + "\""+  "," +
+						"\"teamIdForHome\":" + "\"" +  m.getHomeTeam().getId()  + "\""+  "," +
+						"\"teamIdForAway\":" + "\"" +  m.getAwayTeam().getId()  + "\""+  "," +
 						"\"awayTeamPoints\":" + "\"" + aux.get(1).getAwayTeamPoints()  + "\"" + "," +
 						"\"matchId\":" + "\"" + aux.get(1).getId()  + "\"" +
 						"}";
@@ -925,6 +929,7 @@ public class RootController {
 		// se envia bien siempre
 		Team t = entityManager.find(Team.class, teamId);
 		notification.setDeputy(t.getDeputy());
+		notification.setTeam(t);
 		entityManager.persist(notification);
 
 		model.addAttribute("correct", true);

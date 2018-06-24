@@ -1,6 +1,7 @@
 "use strict"
 
 let matchId;
+let idS;
 let sended = false;
 
 $(function () {
@@ -101,6 +102,10 @@ function addMatchRecord(){
 	        alert("Tienes que rellenar la puntuacion de cada equipo"); 
 	    }       
 	});
+}
+
+function setIdContact(){
+	$('#teamIdForDep').val(idS);
 }
 
 function deleteNotification(id){
@@ -221,27 +226,6 @@ function invalidatePetition(){
 	});
 }
 
-function deputyContact(){
-	
-	$.ajax({
-	    method: "post",  
-	    url: "/contactDeputy",
-	    data:
-	    {
-	    	matchId: matchId
-	    },
-	    success: (data)=>{
-	    	
-	    },
-	    error: (XMLHttpRequest, textStatus, errorThrown)=> {
-	    	console.log(XMLHttpRequest);
-	    	console.log(textStatus);
-	    	console.log(errorThrown);
-	        alert("Ha ocurrido un error inesperado"); 
-	    }       
-	});
-}
-
 
 function getMatchRecord(teamId, matchId){
 	let div2 = $('<div>').addClass('col-md-6 col-md-offset-3 marginTop recorded');
@@ -271,7 +255,10 @@ function getMatchRecord(teamId, matchId){
     		    	$('#info').append(div);
 	    			$('#deputy2').text("Resultado según " + aux.teamName + ": " +  aux.awayTeamPoints + " - " + aux.homeTeamPoints);
 	    			$('#sendMatchRecord').prop('disabled', true);
-	
+	    			if(aux.teamIdForHome == teamId)
+	    				idS = aux.teamIdForAway;
+	    			else if (aux.teamIdForAway == teamId)
+	    				idS = aux.teamIdForHome;
 	    			$('#invalidatePetition').show();
 	    			$('#deputyContact').show();
 		    	}
