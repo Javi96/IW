@@ -101,6 +101,9 @@ public class RootController {
 
 			}
 			else {
+				List<String> sportList = entityManager.createQuery("select distinct sport from Team", String.class)
+						.getResultList();
+				model.addAttribute("sportList", sportList);
 				page = "adminHome";
 			}
 		}
@@ -115,6 +118,9 @@ public class RootController {
 			isAdmin = user.isAdmin();
 		if(isAdmin) {
 			model.addAttribute("isAdmin",isAdmin);
+			List<String> sportList = entityManager.createQuery("select distinct sport from Team", String.class)
+					.getResultList();
+			model.addAttribute("sportList", sportList);
 			return "adminHome";
 		}
 		return "login";
@@ -129,6 +135,9 @@ public class RootController {
 	@RequestMapping(value = "/addTeamView",method = RequestMethod.GET)
 	public String adminAddTeam(Model model) {
 		model.addAttribute("option", "adminAddTeam");
+		List<String> sportList = entityManager.createQuery("select distinct sport from Team", String.class)
+				.getResultList();
+		model.addAttribute("sportList", sportList);
 		return "adminHome";
 	}
 	
@@ -139,12 +148,18 @@ public class RootController {
 				.getResultList();
 		
 		model.addAttribute("alerts", al);
+		List<String> sportList = entityManager.createQuery("select distinct sport from Team", String.class)
+				.getResultList();
+		model.addAttribute("sportList", sportList);
 		return "adminHome";
 	}
 
 	@RequestMapping(value = "/teamListView",method = RequestMethod.GET)
 	public String teamListView(Model model) {
 		model.addAttribute("option", "adminTeamList");
+		List<String> sportList = entityManager.createQuery("select distinct sport from Team", String.class)
+				.getResultList();
+		model.addAttribute("sportList", sportList);
 		return "adminHome";
 	}
 
@@ -153,7 +168,9 @@ public class RootController {
 		List<Team> teamList = entityManager.createQuery("select t from Team t where sport =:sport and category =:category", Team.class)
 				.setParameter("sport", sport).setParameter("category", category).getResultList();
 		model.addAttribute("teamList", teamList);
-
+		List<String> sportList = entityManager.createQuery("select distinct sport from Team", String.class)
+				.getResultList();
+		model.addAttribute("sportList", sportList);
 		return "adminHome";
 	}
 
@@ -716,6 +733,7 @@ public class RootController {
 				"\"nextMatchSchedule\":" + "\"" + t.getNextMatchSchedule() + "\"" + "," +
 				"\"nextMatchFacilities\":" + "\"" + t.getNextMatchFacilities() + "\"" + "," +
 				"\"trainingSchedule\":" + "\"" + t.getTrainingSchedule() + "\"" + "," +
+				"\"description\":" + "\"" + t.getDescription() + "\"" + "," +
 				"\"category\":" + "\"" + t.getCategory() + "\""
 				+ "}";
 		return team;
@@ -726,8 +744,8 @@ public class RootController {
 	public String updateTeam(Team team, @RequestParam String email, Model model,RedirectAttributes redir) {
 		boolean ok = true;
 		Team t = entityManager.find(Team.class, team.getId());
-		String name,tSchedule,nMs,nMf;
-
+		String name,tSchedule,nMs,nMf,desc;
+		System.out.println(team.getDescription());
 		try {
 			User deputy =  entityManager.createQuery("select u from User u where email =:email",User.class)
 					.setParameter("email", email).getSingleResult();
@@ -740,28 +758,34 @@ public class RootController {
 				tSchedule = team.getTrainingSchedule();
 				nMf = team.getNextMatchFacilities();
 				nMs = team.getNextMatchSchedule();
-
+				desc = team.getDescription();
 				List<Team> teamN =  entityManager.createQuery("select t from Team t where name =:name",Team.class)
 						.setParameter("name", name).getResultList();
 
-				if(name.equals("") || tSchedule.equals("") || nMf.equals("") || nMs.equals("") || teamN.size() > 1 || (teamN.size() == 1 && !teamN.get(0).equals(name)) ) {
-					ok = false;
+				if(name.equals("") || tSchedule.equals("") || nMf.equals("") || nMs.equals("") || teamN.size() != 1 ) {
+					ok = false;					
 				}
 				else {
 					t.setName(name);
 					t.setTrainingSchedule(tSchedule);
 					t.setNextMatchFacilities(nMf);
 					t.setNextMatchSchedule(nMs);
+					t.setDescription(desc);
+					System.out.println("2");
 				}
 				entityManager.persist(t);
 			}
-			else
+			else {
 				ok = false;
+				System.out.println("3");
+			}
 		}
 		catch(NoResultException exc) {
 			ok = false;
+			System.out.println("4");
 		}
 		catch(Exception e) {
+			System.out.println("5");
 			ok = false;
 		}
 		if(ok)
