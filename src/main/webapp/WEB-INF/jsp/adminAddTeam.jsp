@@ -40,7 +40,14 @@
 				<input  name = "category" type="Radio" value="Masculino" class = "from-control">Masculino
 				<input  name = "category" type="Radio" value="Femenino" class = "from-control">Femenino
 			</div>
-		</div>
+			
+			</div>
+			<div class="form-group">
+			<label class="col-md-5 control-label" >Descripcion:</label>
+			<div class="col-md-3 col-md-offset-1">
+				<textarea id="description" rows="4" cols="40" name="description"></textarea>
+			</div>
+			</div>
 		      <div class="col-sm-12 text-center">
 		         <button type="submit" class="btn btn-success " id = "newTeamButton" style="margin: 8px;">Success</button>
 		      </div>

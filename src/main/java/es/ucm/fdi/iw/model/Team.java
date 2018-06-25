@@ -26,6 +26,7 @@ public class Team {
 	private User deputy;
 	private String teamPhoto;
 	private League league;
+	private String description;
 	
 	private List<RequestTeam> requests;
 	
@@ -45,12 +46,21 @@ public class Team {
 		// TODO Auto-generated constructor stub
 	}
 
+	public Team(String name, String sport, String school, User deputy, String category, String desc) {
+		this.name = name;
+		this.sport = sport;
+		this.school = school;
+		this.deputy = deputy;
+		this.category = category;
+		this.description = (desc == null) ? "" : desc;
+	}
 	public Team(String name, String sport, String school, User deputy, String category) {
 		this.name = name;
 		this.sport = sport;
 		this.school = school;
 		this.deputy = deputy;
 		this.category = category;
+		this.description =  "";
 	}
 
 	@Id
@@ -69,6 +79,11 @@ public class Team {
 		return school;
 	}
 
+	@Column
+	public String getDescription() {
+		return description;
+	}
+	
 	@Column
 	public String getSport() {
 		return sport;
@@ -157,6 +172,10 @@ public class Team {
 		this.name = name;
 	}
 
+	public void setDescription(String desc) {
+		this.description = desc;
+	}
+	
 	public void setId(long id) {
 		this.id = id;
 	}

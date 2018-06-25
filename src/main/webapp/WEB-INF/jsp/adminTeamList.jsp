@@ -12,7 +12,11 @@
 		<div class="col-md-4 col-md-offset-4">
 			<div class="col-md-12">
 				<div class="col-md-12 ">
-					<input id = "searchSport" class ="inputClass text-center" name="sport" value = "${teamList[0].sport}" type="text" placeholder="Nombre del deporte">
+					<select name = "sport">
+						<c:forEach items="${sportList}" var="s">
+							<option>${s}</option>
+						</c:forEach>
+					</select>
 				</div>
 			</div>
 			<div class="col-md-4 col-md-offset-2">
@@ -55,28 +59,28 @@
 	                    <div class="form-group">
 	                        <label class="col-md-5 control-label">Nombre</label>
 	                        <div class="col-md-3 col-md-offset-1">
-	                            <input id="teamName" name="name" type="text" class="from-control-text" required>
+	                            <input id="teamName" name="name" type="text" class="from-control-text" required>            
 	                        </div>
 	                    </div>
 	                    <div class="form-group">
 	                        <label class="col-md-5 control-label">Deporte</label>
 	                        <div class="col-md-3 col-md-offset-1">
-	                            <input id="sport" name="sport" type="text" class="from-control" required>
+	                            <input id="sport" name="sport" type="text" class="from-control" readonly required>
 	                        </div>
 	                    </div>
 	                    <div class="form-group">
 	                        <label class="col-md-5 control-label">Facultad</label>
 	                        <div class="col-md-3 col-md-offset-1">
-	                            <input id="school" name="school" type="text" class="from-control" required>
+	                            <input id="school" name="school" type="text" class="from-control" readonly required>
 	                        </div>
 	                    </div>
 	                    <div class="form-group">
 	                        <label class="col-md-5 control-label">Correo del delegado</label>
 	                        <div class="col-md-3 col-md-offset-1">
-	                            <input id = "deputyEmail" name="email" type="text" class="from-control">
+	                            <input id = "deputyEmail" name="email" type="text" class="from-control" readonly>
 	                        </div>
 	                    </div> 
-	                     <div class="form-group">
+	                    <div class="form-group">
 	                        <label class="col-md-5 control-label">Proximo partido</label>
 	                        <div class="col-md-3 col-md-offset-1">
 	                            <input id = "nextMatchSchedule" name="nextMatchSchedule" type="text" class="from-control" required>
@@ -106,6 +110,12 @@
 	                        <div class="col-md-4 col-md-offset-1">
 	                            <input class="checkMale" id = "radioMale" name="category" type="Radio" value="Masculino" class="from-control" required>Masculino
 	                            <input class="checkFemale" id = "radioFemale" name="category" type="Radio" value="Femenino" class="from-control" required>Femenino
+	                        </div>
+	                    </div>
+	                     <div class="form-group">
+	                        <label class="col-md-5 control-label">Descripcion:</label>
+	                        <div class="col-md-4 col-md-offset-1">
+	                            <textarea id="description" rows="4" cols="35" name="description"></textarea>
 	                        </div>
 	                    </div>
 	                    <div class="form-group text-center">

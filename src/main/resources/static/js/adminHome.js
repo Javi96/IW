@@ -26,6 +26,7 @@ function loadData(id){
 	    	$("#trainingSchedule").val(data.trainingSchedule);
 	    	$("#teamId").val(id);
 	    	$("#searchSport").val(data.sport);
+	    	$("#description").val(data.description);
 	    	if(data.category === "Masculino")
 	    		$(".checkMale").prop('checked', true);
 	    	else
