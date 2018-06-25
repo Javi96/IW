@@ -11,24 +11,24 @@
 	    <div class="col-md-6 col-md-offset-3">   	
 			<div class="well well-sm">
 			
-				<form class="form-horizontal" action="/contactDeputy" name = "notification" method="post">
+				<form class="form-horizontal" action="/contactUser" name = "notification" method="post">
 					
 					<fieldset>
 						<legend class="text-center">Contactar delegado de ${team.name}</legend>
 						<!-- Name input-->
-						<div class="form-group">
+						<!--<div class="form-group">
 							<label class="col-md-3 control-label" for="name">Nombre</label>
 								<div class="col-md-9">
 							<input id="name" name="name" type="text" placeholder="Tu nombre" class="form-control">
 							</div>
 						</div>
-						<!-- Email input-->
+						
 						<div class="form-group">
 							<label class="col-md-3 control-label" for="name">Email de la ucm</label>
 								<div class="col-md-9">
 							<input id="email" name="email" type="text" placeholder="Tu email" class="form-control">
 							</div>
-						</div>
+						</div> -->
 						<!-- Message body -->
 						<div class="form-group">
 							<label class="col-md-3 control-label" for="message">Mensaje</label>
@@ -41,7 +41,9 @@
 							<div class="col-md-12 text-center">
 								<button type="submit" class="btn btn-primary btn-lg">Enviar</button>
 								<!--  <input type="hidden" name="deputyId" value="${team.deputy.id}"> -->
-								<input type="hidden" name="teamId"  value="${team.id}" >								
+								<input type="hidden" name="transmitter_id"  value="${user.id}" >
+								<input type="hidden" name="receiver_id"  value="${team.deputy.id}" >
+								<input type="hidden" name="teamId"  value="${team.id}" >										
 							</div>
 						</div>
 					</fieldset>

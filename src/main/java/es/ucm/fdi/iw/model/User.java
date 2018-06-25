@@ -60,7 +60,7 @@ public class User {
 		return name;
 	}
 
-	@OneToMany(targetEntity = Notification.class , mappedBy = "deputy", fetch=FetchType.EAGER)
+	@OneToMany(targetEntity = Notification.class, fetch=FetchType.EAGER)
 	public List<Notification> getNotifications() {
 		return notifications;
 	}

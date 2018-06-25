@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.security.Principal;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -90,12 +91,14 @@ public class RootController {
 				//ver los equipos de los que es delegado el usuario
 				List<Team> teamList = entityManager.createQuery("select t from Team t where deputy_id =:id_user", Team.class)
 						.setParameter("id_user", u.getId()).getResultList();
-				if(teamList.size() > 0) {
-					session.setAttribute("isDeputy", true);
-				}
-				else
-					session.setAttribute("isDeputy", false);
-							
+				
+				List<Notification> li = entityManager.createQuery("select n from Notification n where receiver_id =:receiver_id",
+						Notification.class).setParameter("receiver_id",u.getId()).getResultList();
+				if(li.size() > 0) {
+					model.addAttribute("notificationCount", li.size());
+					model.addAttribute("notificationsList", li);
+				}	
+					
 				session.setAttribute("teamsDebuty", teamList);
 				session.setAttribute("equipos", teamList.size());
 
@@ -164,17 +167,6 @@ public class RootController {
 		m.addAttribute("team",t);
 		return "adminDelegateSets";
 	}
-	
-/*	@GetMapping("/getAlerts")
-	public String getAlerts(Model model, @SessionAttribute("user") User u) {
-		List<Alert> al = entityManager.createQuery("select a from Alert a where user_id =:user", Alert.class)
-				.setParameter("user", u.getId()).getResultList();
-		
-		model.addAttribute("alerts", al);
-		
-		return "alerts";
-	}
-	*/
 
 	@RequestMapping(value = "/addLeagueView",method = RequestMethod.GET)
 	public String adminAddLeague(Model model) {
@@ -317,7 +309,20 @@ public class RootController {
 	}
 
 	@GetMapping("/home")
-	public String home() {
+	public String home(Model model, HttpSession session) {
+		User u = (User) session.getAttribute("user");
+		List<Notification> notificationList = entityManager.createQuery("select n from Notification n where receiver_id =:receiver_id",
+				Notification.class).setParameter("receiver_id",u.getId()).getResultList();
+		
+		for (Notification n : notificationList) {
+				String ms = HtmlUtils.htmlEscape (n.getMessage());
+				n.setMessage(ms);;
+			}
+		
+		if(notificationList.size() > 0) {
+			model.addAttribute("notificationCount", notificationList.size());
+			model.addAttribute("notificationsList", notificationList);
+		}	
 		return "home";
 	}
 
@@ -380,34 +385,20 @@ public class RootController {
 		
 		model.addAttribute("team", t);
 		model.addAttribute("logged", logged);
-		//System.out.println(t.getName());
-
-		//notificaciones que tiene el usuario en ese equipo
-		List<Notification> notiList = entityManager.
-				createQuery("select t from Notification t where deputy_id =:id_user and team_id =:id_team", Notification.class)
-				.setParameter("id_user", currentUser.getId()).setParameter("id_team",id).getResultList();
-
-
-		//transformamos caracteres especiales para seguridad
-		//y guardamos los nuevos datos en una lista
-		List<Notification> listaMod = new ArrayList<Notification>();
-
-		for (Notification n : notiList) {
-
-			String nom = HtmlUtils.htmlEscape (n.getName());
-			String em = HtmlUtils.htmlEscape (n.getEmail());
-			String ms = HtmlUtils.htmlEscape (n.getMessage());
-
-			n.setName(nom);
-			n.setEmail(em);
-			n.setMessage(ms);
-
-			listaMod.add(n);
-		}
-
-		model.addAttribute("notificationsList", listaMod);
 		
-
+		List<Notification> notificationList = entityManager.createQuery("select n from Notification n where receiver_id =:receiver_id",
+				Notification.class).setParameter("receiver_id",currentUser.getId()).getResultList();
+		
+		for (Notification n : notificationList) {
+				String ms = HtmlUtils.htmlEscape (n.getMessage());
+				n.setMessage(ms);;
+			}
+		
+		if(notificationList.size() > 0) {
+			model.addAttribute("notificationCount", notificationList.size());
+			model.addAttribute("notificationsList", notificationList);
+		}	
+		
 		if(t == null)
 			return "error404";
 		return "team";
@@ -415,21 +406,26 @@ public class RootController {
 
 	@RequestMapping(value = "/deleteNotification", method = RequestMethod.POST)
 	@Transactional
-	@ResponseBody
-	public boolean deleteNotification(@RequestBody String body) {
-		boolean deleted = false;
+	public String deleteNotification(@RequestParam long id, Model model, HttpSession session) {
+	
 		try {
-			Notification n = entityManager.find(Notification.class, Long.parseLong(body.replace("id=", "")));
-			User u = entityManager.find(User.class, n.getDeputy().getId());
-			u.getNotifications().remove(n);
+			Notification n = entityManager.find(Notification.class, id);
+		
 			entityManager.remove(n);
 			entityManager.flush();
-			deleted = true;
+			User u = (User) session.getAttribute("user");
+			
+			List<Notification> li = entityManager.createQuery("select n from Notification n where receiver_id =:receiver_id",
+					Notification.class).setParameter("receiver_id",u.getId()).getResultList();
+			if(li.size() > 0) {
+				model.addAttribute("notificationCount", li.size());
+				model.addAttribute("notificationsList", li);
+			}	
 		}
 		catch(Exception e) {
 
 		}
-		return deleted;
+		return "notification";
 	}
 
 	@RequestMapping(value = "/acceptNewPlayer", method = RequestMethod.POST)
@@ -911,33 +907,97 @@ public class RootController {
 		m.addAttribute("team", entityManager.find(Team.class, id));
 		return "contact";
 	}
+	
+	@RequestMapping("/getNotifications")
+	public String getNotifications(Model m, HttpSession session, HttpServletRequest request) {
+		User u = (User) session.getAttribute("user");
+		
+		List<Notification> li = entityManager.createQuery("select n from Notification n where receiver_id =:receiver_id",
+				Notification.class).setParameter("receiver_id",u.getId()).getResultList();
+		
+		m.addAttribute("notificationsList", li );
+		m.addAttribute("notificationCount", li.size());
+		
+		return "notification";
+	}
 
-	@RequestMapping(value = "/contactDeputy",method = RequestMethod.POST)
+	/*
+	@RequestMapping(value = "/contactUser",method = RequestMethod.POST)
 	@Transactional
-	public String contactDeputy(@ModelAttribute Notification notification, @RequestParam long teamId, Model model) {
-
-
-		//convertimos caracteres especiales para la seguridad
-		String nom = HtmlUtils.htmlEscape (notification.getName());
-		String em = HtmlUtils.htmlEscape (notification.getEmail());
-		String ms = HtmlUtils.htmlEscape (notification.getMessage());
-
-		notification.setName(nom);
-		notification.setEmail(em);
-		notification.setMessage(ms);
-
-		// se envia bien siempre
-		Team t = entityManager.find(Team.class, teamId);
-		notification.setDeputy(t.getDeputy());
-		notification.setTeam(t);
-		entityManager.persist(notification);
-
+	public String contactDeputy(@ModelAttribute Notification notification, @RequestParam long transmitter_id, 
+			@RequestParam long receiver_id,Model model) {
+		User transm = entityManager.find(User.class, transmitter_id);
+		User receiver = entityManager.find(User.class, receiver_id);
+		
+		notification.setTransmitter(transm);
+		notification.setReceiver(receiver);
+		String msg = HtmlUtils.htmlEscape (notification.getMessage());
+		notification.setMessage(msg);
+		
 		model.addAttribute("correct", true);
 		
-		model.addAttribute("team",t);
+		Calendar c = Calendar.getInstance();
+		
+		String day = Integer.toString(c.get(Calendar.DATE));
+		String month = Integer.toString(c.get(Calendar.MONTH));
+		String year = Integer.toString(c.get(Calendar.YEAR));
+		
+		String hour = Integer.toString(c.get(Calendar.HOUR_OF_DAY));
+		String min = Integer.toString(c.get(Calendar.MINUTE));
+		String sec = Integer.toString(c.get(Calendar.SECOND));
+		
+		notification.setDate(day + "-" + month + "-" + year + " || " + hour + ":" + min + ":" + sec);
+		
+		entityManager.persist(notification);
+		
+		return "notification";
+	}
+	*/
+	
+	@RequestMapping(value = "/contactUser",method = RequestMethod.POST)
+	@Transactional
+	public String contactDeputy(@ModelAttribute Notification notification, @RequestParam long transmitter_id, 
+			@RequestParam long receiver_id, @RequestParam(required=false) Long teamId,Model model, HttpSession session) {
+
+		User transm = entityManager.find(User.class, transmitter_id);
+		User receiver = entityManager.find(User.class, receiver_id);
+		
+		notification.setTransmitter(transm);
+		notification.setReceiver(receiver);
+		String msg = HtmlUtils.htmlEscape (notification.getMessage());
+		notification.setMessage(msg);
+		
+		model.addAttribute("correct", true);
+		
+		Calendar c = Calendar.getInstance();
+		
+		String day = Integer.toString(c.get(Calendar.DATE));
+		String month = Integer.toString(c.get(Calendar.MONTH));
+		String year = Integer.toString(c.get(Calendar.YEAR));
+		
+		String hour = Integer.toString(c.get(Calendar.HOUR_OF_DAY));
+		String min = Integer.toString(c.get(Calendar.MINUTE));
+		String sec = Integer.toString(c.get(Calendar.SECOND));
+		
+		notification.setDate(day + "-" + month + "-" + year + " || " + hour + ":" + min + ":" + sec);
+		
+		entityManager.persist(notification);
+		if(teamId != null) {
+			model.addAttribute("team",entityManager.find(Team.class, teamId));
+			return "contact";
+		}
 		entityManager.flush();
 
-		return "contact";
+		User u = (User) session.getAttribute("user");
+		
+		List<Notification> li = entityManager.createQuery("select n from Notification n where receiver_id =:receiver_id",
+				Notification.class).setParameter("receiver_id",u.getId()).getResultList();
+		if(li.size() > 0) {
+			model.addAttribute("notificationCount", li.size());
+			model.addAttribute("notificationsList", li);
+		}	
+		
+		return "notification";
 	}
 
 	@RequestMapping("/joinTeam")
@@ -995,16 +1055,13 @@ public class RootController {
 	public String mainPage(Model model, HttpSession session) {
 		User u = (User) session.getAttribute("user");
 		
-		boolean notDeputy = entityManager.createQuery("select t from Team t where deputy_id =:id").setParameter("id", u.getId()).getResultList().isEmpty();
+		List<Notification> li = entityManager.createQuery("select n from Notification n where receiver_id =:receiver_id",
+				Notification.class).setParameter("receiver_id",u.getId()).getResultList();
+		if(li.size() > 0) {
+			model.addAttribute("notificationCount", li.size());
+			model.addAttribute("notificationsList", li);
+		}	
 		
-		if(!notDeputy) {//SI ES DELEGADO
-			List<Alert> al = entityManager.createQuery("select a from Alert a where user_id =:user", Alert.class)
-					.setParameter("user", u.getId()).getResultList();
-			if(!al.isEmpty())
-				model.addAttribute("inf", true);
-			else
-				model.addAttribute("inf", false);
-		}
 		return "mainPage";
 	}
 

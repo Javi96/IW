@@ -65,9 +65,9 @@ INSERT INTO team_non_active_players(non_active_teams_id,non_active_players_id) v
 INSERT INTO request_team(team_id,user_id) values (1,3);
 INSERT INTO request_team(team_id,user_id) values (1,7);
 
-INSERT INTO notification (email,message,name,deputy_id ,team_id) values ('ejemplos@gmail.es','Hola, quiero unirme al equipo.','Juan Pablo', 1,1); 
-INSERT INTO notification (email,message,name,deputy_id ,team_id) values ('ejempli@gmail.es','Hola','Juan', 1,1); 
-INSERT INTO notification (email,message,name,deputy_id ,team_id) values ('ejemploss@gmail.es','Hola me gustaria unirme a vuestro equipo.','Juan Pablo', 4,4);  
-INSERT INTO notification (email,message,name,deputy_id ,team_id) values ('ejemplos@gmail.es','Hola me gustaria unirme a vuestro equipo.','Juan Pablo', 4,12);  
+--INSERT INTO notification (message,transmitter_id,receiver_id,date) values ('Hola, quiero unirme al equipo.',1,11,'2018-05-23 14:51:21'); 
+INSERT INTO notification (message,transmitter_id,receiver_id,date) values ('Hola, quiero unirme a tu equipo.',11,1,'2018-05-23 14:51:21'); 
+INSERT INTO notification (message,transmitter_id,receiver_id) values ('Hola me gustaria unirme a vuestro equipo.',2,11);  
+INSERT INTO notification (message,transmitter_id,receiver_id) values ('Hola me gustaria unirme a vuestro equipo.',11,2);  
 
 

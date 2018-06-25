@@ -107,7 +107,7 @@ function addMatchRecord(){
 function setIdContact(){
 	$('#teamIdForDep').val(idS);
 }
-
+/*
 function deleteNotification(id){
 	$.ajax({
 	    method: "post",  
@@ -126,7 +126,7 @@ function deleteNotification(id){
 	    }       
 	});
 }
-
+*/
 function responseNotification(id){
 	window.open("https://www.google.com/intl/es/gmail/about/");
 }
@@ -274,6 +274,10 @@ function getMatchRecord(teamId, matchId){
 	});
 }
 
-
+function contactUser(transmiterId,receiverId){
+	
+	
+	
+}
 
 

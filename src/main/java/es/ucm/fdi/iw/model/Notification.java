@@ -2,6 +2,7 @@ package es.ucm.fdi.iw.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
@@ -10,22 +11,19 @@ import javax.persistence.ManyToOne;
 public class Notification {
 	
 	private long id;
-	private User deputy;
-	private Team team;
-	private String name;
+	private User transmitter;
+	private User receiver;
+	private String date;
 	private String message;
-	private String email;
 	
 	public Notification() {
 		// TODO Auto-generated constructor stub
 	}
 	
-	public Notification(User deputy, String name, String message, String email,Team team) {
-		this.deputy= deputy;
-		this.name = name;
+	public Notification(User transmitter, User receiver, String message) {
 		this.message = message;
-		this.email = email;
-		this.team = team;
+		this.transmitter = transmitter;
+		this.receiver = receiver;
 	}
 	
 	@Id
@@ -34,33 +32,37 @@ public class Notification {
 		return this.id;
 	}
 	
-	@ManyToOne(targetEntity = User.class)
-	public User getDeputy() {
-		return deputy;
+	@ManyToOne(targetEntity = User.class, fetch=FetchType.EAGER)
+	public User getTransmitter() {
+		return transmitter;
 	}
-
+	
+	@ManyToOne(targetEntity = User.class, fetch=FetchType.EAGER)
+	public User getReceiver() {
+		return receiver;
+	}
+	
 	@Column
 	public String getMessage() {
 		return message;
 	}
-	@Column
-	public String getName() {
-		return name;
+	
+	public String getDate() {
+		return date;
 	}
 	
-	@Column//(unique = true)
-	public String getEmail() {
-		return email;
+	public void setDate(String date) {
+		this.date = date;
 	}
 	
-	public void setEmail(String email) {
-		this.email = email;
+	public void setReceiver(User receiver) {
+		this.receiver = receiver;
 	}
 	
-	public void setDeputy(User deputy) {
-		this.deputy = deputy;
+	public void setTransmitter(User transmitter) {
+		this.transmitter = transmitter;
 	}
-	
+
 	public void setId(long id) {
 		this.id = id;
 	}
@@ -69,16 +71,4 @@ public class Notification {
 		this.message = message;
 	}
 	
-	public void setName(String name) {
-		this.name = name;
-	}
-	
-	@ManyToOne(targetEntity = Team.class)
-	public Team getTeam() {
-		return team;
-	}
-	
-	public void setTeam(Team team) {
-		this.team = team;
-	}
 }

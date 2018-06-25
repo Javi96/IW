@@ -113,53 +113,34 @@
 							<li><a title="agenda" href="/diary">Agenda deportiva</a></li>
 							<li><a href="/laucm" title="UCM" aria-label="UCM"><span class="fa fa-plus-circle" aria-hidden="true" title="UCM"></span></a></li>
 						</ul>
-						
-						
-					<!-- Mis Equipos --Delegado -->
+
 					 <c:if test="${equipos > 0}" > 
 					
 						<li>
 							<a title="UCM" href="/laucm" class="dropdown-toggle" data-toggle="dropdown">Delegado</a>
-							<ul class="dropdown-menu" role="menu">
-							
-							<c:set var="contador" value="${0}"/>
-							<c:set var="vacio" value="${0}"/>
-
-							<!-- recorremos equipos que tiene como delegado al usuario-->
-								<c:forEach items="${teamsDebuty}" var="teamD">
-								
-								<!-- recorremos notificaciones del usuario si hay -->
-									<c:forEach items="${user.notifications}" var="notification">
+							<ul class="dropdown-menu" role="menu">	
+								<c:forEach items="${teamsDebuty}" var="team">
 									
-											<c:if test="${notification.team.id == teamD.id}">
-												
-												<c:if test="${contador eq 0}">
-												
-											          <li id="color">
-											          	<a style="color:#A00E19;" title="Notificaciones pendientes" href="/team?id=${teamD.id}">${teamD.name}</a>
-											          </li>
-											          <c:set var="contador" value="${1}"/>
-										         </c:if>
-											</c:if>
-									</c:forEach>
+									<li id="color">
+										<a style="color:#A00E19;" title="Notificaciones pendientes" href="/team?id=${team.id}">${team.name}</a>
+									</li>
 									
-									<c:if test="${contador eq vacio}"> 
-									 	<li>
-							      			<a title="Sin notificaciones" href="/team?id=${teamD.id}">${teamD.name}</a>
-							      		</li>
-							      	</c:if>
-
-									 <c:set var="contador" value="${0}" />
-							      	
-							      	 
-				                </c:forEach>
+								</c:forEach>
 								<li><a></a></li>
 							</ul>
 						</li>
+						
 					</c:if>
 					
 					<!-- Deportes -->
 						<li><a title="Sports" href="/home">Deportes</a></li>
+						
+					<c:if test="${empty notificationsList}">
+						<li><a title="Notificaciones" href="/getNotifications">Notificaciones</a></li>
+					</c:if>
+					<c:if test="${not empty notificationsList}">
+						<li><a id = "notifications" title="Notificaciones" href="/getNotifications" ><span class="badge">${notificationCount}</span> Notificaciones</a></li>
+					</c:if>	
 						
 					<!-- Mis Deportes -->
 						<li><a title="mySport_1" href="/team?id=${myTeams[0].id}">${myTeams[0].name}</a></li>
@@ -181,8 +162,10 @@
                               	</c:otherwise>
                         </c:choose>
 						 
+						
     		</ul>
     	</div>	
+    
 	</nav>
           </div>
           </c:if>
