@@ -40,8 +40,8 @@ INSERT INTO match(home_team_id,away_team_id,home_team_points,away_team_points,ma
 INSERT INTO match(home_team_id,away_team_id,home_team_points,away_team_points,match_date,record_checked) values (8,1,-1,-1,'2018-05-23',0);
 INSERT INTO match(home_team_id,away_team_id,home_team_points,away_team_points,match_date,record_checked) values (9,1,30,10,'2018-05-23',1);
 
---INSERT INTO match_record (team_id,match_id,home_team_points,away_team_points ) values (8,2,30,20);
-INSERT INTO match_record (team_id,match_id,home_team_points,away_team_points) values (1,2,2,2);
+INSERT INTO match_record (team_id,match_id,home_team_points,away_team_points ) values (8,2,30,20);
+--INSERT INTO match_record (team_id,match_id,home_team_points,away_team_points) values (1,2,2,2);
 
 --INSERT INTO alert (match_id,msg_home, msg_away) values (2,'El resultado es 30-20','El resultado es 2 - 2');
 

@@ -96,6 +96,14 @@ function addMatchRecord(){
 	    success: (data)=>{
 	    	if(data != "Ya has enviado el acta para el partido")
 	    		getMatchRecord(teamId,matchId);
+	    	if (data === "Desactiva"){
+	    		$('#info').empty();
+	    		$("#deputy1").remove();
+	    		$("#deputy2").remove();
+	    		$("#sendMatchRecord").removeAttr("disabled");
+	    		$('#homeTeamPoints').prop('readonly', false);
+	    		$('#awayTeamPoints').prop('readonly', false);
+	    	}
 	    	
 	    },
 	    error: (XMLHttpRequest, textStatus, errorThrown)=> { 
@@ -107,26 +115,7 @@ function addMatchRecord(){
 function setIdContact(){
 	$('#teamIdForDep').val(idS);
 }
-/*
-function deleteNotification(id){
-	$.ajax({
-	    method: "post",  
-	    url: "/deleteNotification",
-	    data:
-	    {
-	    	id:id
-	    },
-	    success: (data)=>{
-	    	$('#'+id).remove();
-	    	if($('#modalNotifications').children().length === 0)
-	    		$('#modalNotifications').text("No hay mas notificaciones");
-	    },
-	    error: (XMLHttpRequest, textStatus, errorThrown)=> { 
-	        alert("Ha ocurrido un error inesperado"); 
-	    }       
-	});
-}
-*/
+
 function responseNotification(id){
 	window.open("https://www.google.com/intl/es/gmail/about/");
 }
@@ -151,16 +140,16 @@ function acceptNewPlayer(id){
 }
 
 function deleteRequestPlayer(id) {
+	
 	$.ajax({
 	    method: "post",  
 	    url: "/deleteRequest",
-	    contentType:'application/json',
 	    data:
 	    {
 	    	id:id
 	    },
 	    success: (data)=>{
-	    	$('#'+id).remove();
+	    	$('#modalRequest #a'+id).remove();
 	    	if($('#modalRequest').children().length === 0)
 	    		$('#modalRequest').text("No hay mas solicitudes");
 	    },
@@ -253,7 +242,7 @@ function getMatchRecord(teamId, matchId){
 		    		div2.append($('<label>').attr("id","deputy2"));
     		    	div.append(div2);
     		    	$('#info').append(div);
-	    			$('#deputy2').text("Resultado según " + aux.teamName + ": " +  aux.awayTeamPoints + " - " + aux.homeTeamPoints);
+	    			$('#deputy2').text("Resultado según " + aux.teamName + ": " +  aux.homeTeamPoints + " - " + aux.awayTeamPoints);
 	    			$('#sendMatchRecord').prop('disabled', true);
 	    			if(aux.teamIdForHome == teamId)
 	    				idS = aux.teamIdForAway;
@@ -274,10 +263,5 @@ function getMatchRecord(teamId, matchId){
 	});
 }
 
-function contactUser(transmiterId,receiverId){
-	
-	
-	
-}
 
 

@@ -23,9 +23,6 @@
 		</c:forEach>
    	}
    	
-
-
-
 </script>
 <script src="${s}/js/team.js"></script>
 
@@ -140,7 +137,8 @@
 				<div class="modal-footer">
 				    <div class="form-group">
 				        <div>
-				            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+				            <button onclick="reload()" type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+				            <script type="text/javascript"> function reload() {location.reload();}</script>
 				        </div>
 				    </div>
 				</div>
@@ -164,16 +162,18 @@
 	                
 	                <div id ="info" >
 	                
-	                	<div class="form-group">
-				        <div class="col-sm-12 text-center ">
+	                	<div class="row">
+				        	<div class="col-md-4 col-md-offset-2 text-center ">
 					            <button type="button" onClick="invalidatePetition()" id="invalidatePetition" class="btn btn-success preview-add-button"><span class="glyphicon glyphicon-send"></span>
 					            Solicitar Invalidar</button>
+					        </div>  
+					        <div class="col-md-4 text-center ">
 					            <form action = "/contact" method="get" id = "deputyContact">
 									<button type="submit" class="btn btn-primary" onclick="setIdContact()">Contactar delegado</button>
 									<input type="hidden" name = "id" id="teamIdForDep">
 								</form>
-					            
-					        </div>
+					         </div>   
+					        
 				    	</div>		
 	                </div>
 	                
@@ -215,7 +215,7 @@
 	            		<h4>No hay solicitudes</h4>
 	            	</c:if>
 	                <c:forEach items="${team.requests}" var="request">
-	                	<div id = "${request.id}">
+	                	<div id = "a${request.id}">
 		                    <div class="row">
 		                        <div class="col-md-4 col-md-offset-1 text-right">
 		                            <h4>Nombre:</h4>

@@ -29,7 +29,6 @@ import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -453,11 +452,11 @@ public class RootController {
 	@RequestMapping(value = "/deleteRequest", method = RequestMethod.POST)
 	@Transactional
 	@ResponseBody
-	public boolean deleteRequest(@RequestBody String body) {
+	public boolean deleteRequest(@RequestParam long id) {
 		boolean deleted = false;
 
 		try {
-			RequestTeam rq = entityManager.find(RequestTeam.class, Long.parseLong(body.replace("id=", "")));
+			RequestTeam rq = entityManager.find(RequestTeam.class, id);
 			entityManager.remove(rq); // borramos la peticion
 			deleted = true;
 		}
@@ -500,35 +499,46 @@ public class RootController {
 	@ResponseBody
 	public boolean invalidatePetition(@RequestParam long matchId) {
 		boolean ok = false;
-
+		boolean sended = false;
 		try {
-			long team1Id = -1;
-			List<MatchRecord> list = entityManager.createQuery("select m from MatchRecord m where matchId = :matchId",MatchRecord.class)
-					.setParameter("matchId", matchId).getResultList();
-			team1Id = list.get(0).getTeamId();
-			
-			MatchRecord m1 = list.get(0);
-			MatchRecord m2 = list.get(1);
-
-			Team t1 = entityManager.find(Team.class, team1Id);
-
-			Match m =entityManager.find(Match.class, matchId);
-			if(m1.getTeamId() != t1.getId()) {
-				MatchRecord aux = m1;
-				m1 = m2;
-				m2 = aux;
-			}
-			//No hace falta comprobar si ya estan porque al solicitar 2 veces la invalidacion no encontrara los MatchRecord y saldran del try
-			Alert a = new Alert(m ,"El resultado es "+ m1.getHomeTeamPoints() + " - " + m1.getAwayTeamPoints(),
-								"El resultado es " + m2.getAwayTeamPoints() + " - " + m2.getAwayTeamPoints());
-			
-			entityManager.persist(a);
-			entityManager.flush();
-			
-			ok = true;
+			Alert a = entityManager.createQuery("select a from Alert a where match_id =:matchId",Alert.class)
+					.setParameter("matchId",matchId).getSingleResult();
+			if(a != null)
+				sended = true;
 		}
-		catch(Exception e) {
-
+		catch(NoResultException ex) {
+			sended = false;
+		}
+		if(!sended) {
+			try {
+				long team1Id = -1;
+				List<MatchRecord> list = entityManager.createQuery("select m from MatchRecord m where matchId = :matchId",MatchRecord.class)
+						.setParameter("matchId", matchId).getResultList();
+				team1Id = list.get(0).getTeamId();
+				
+				MatchRecord m1 = list.get(0);
+				MatchRecord m2 = list.get(1);
+	
+				Team t1 = entityManager.find(Team.class, team1Id);
+	
+				Match m =entityManager.find(Match.class, matchId);
+				if(m1.getTeamId() != t1.getId()) {
+					MatchRecord aux = m1;
+					m1 = m2;
+					m2 = aux;
+				}
+				//No hace falta comprobar si ya estan porque al solicitar 2 veces la invalidacion no encontrara los MatchRecord y saldran del try
+				Alert a = new Alert(m ,"El resultado es "+ m1.getHomeTeamPoints() + " - " + m1.getAwayTeamPoints(),
+									"El resultado es " + m2.getAwayTeamPoints() + " - " + m2.getAwayTeamPoints());
+				
+				entityManager.persist(a);
+				entityManager.flush();
+				
+				ok = true;
+			}
+			catch(Exception e) {
+	
+			}
 		}
 		return ok;
 	}
@@ -536,7 +546,7 @@ public class RootController {
 	@RequestMapping(value = "/matchRecord", method = RequestMethod.POST,consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
 	@Transactional
 	@ResponseBody
-	public String matchRecord(MatchRecord bodyMatch) {
+	public String matchRecord(MatchRecord bodyMatch, Model model, HttpSession session) {
 		String result = "Correct";
 
 		try {
@@ -557,6 +567,7 @@ public class RootController {
 						match.setHomeTeamPoints(one.getHomeTeamPoints());
 						match.setRecordChecked(true);
 						entityManager.flush();
+						result = "Desactiva";
 					}
 					else {
 						entityManager.persist(two);
@@ -568,6 +579,7 @@ public class RootController {
 				else
 					result = "Ya has enviado el acta para el partido";
 			}
+			
 		}
 		catch(NoResultException e) {
 
@@ -920,51 +932,19 @@ public class RootController {
 		
 		return "notification";
 	}
-
-	/*
-	@RequestMapping(value = "/contactUser",method = RequestMethod.POST)
-	@Transactional
-	public String contactDeputy(@ModelAttribute Notification notification, @RequestParam long transmitter_id, 
-			@RequestParam long receiver_id,Model model) {
-		User transm = entityManager.find(User.class, transmitter_id);
-		User receiver = entityManager.find(User.class, receiver_id);
-		
-		notification.setTransmitter(transm);
-		notification.setReceiver(receiver);
-		String msg = HtmlUtils.htmlEscape (notification.getMessage());
-		notification.setMessage(msg);
-		
-		model.addAttribute("correct", true);
-		
-		Calendar c = Calendar.getInstance();
-		
-		String day = Integer.toString(c.get(Calendar.DATE));
-		String month = Integer.toString(c.get(Calendar.MONTH));
-		String year = Integer.toString(c.get(Calendar.YEAR));
-		
-		String hour = Integer.toString(c.get(Calendar.HOUR_OF_DAY));
-		String min = Integer.toString(c.get(Calendar.MINUTE));
-		String sec = Integer.toString(c.get(Calendar.SECOND));
-		
-		notification.setDate(day + "-" + month + "-" + year + " || " + hour + ":" + min + ":" + sec);
-		
-		entityManager.persist(notification);
-		
-		return "notification";
-	}
-	*/
 	
 	@RequestMapping(value = "/contactUser",method = RequestMethod.POST)
 	@Transactional
-	public String contactDeputy(@ModelAttribute Notification notification, @RequestParam long transmitter_id, 
+	public String contactDeputy(@RequestParam String message, @RequestParam long transmitter_id, 
 			@RequestParam long receiver_id, @RequestParam(required=false) Long teamId,Model model, HttpSession session) {
-
+		Notification notification = new Notification();
 		User transm = entityManager.find(User.class, transmitter_id);
 		User receiver = entityManager.find(User.class, receiver_id);
 		
 		notification.setTransmitter(transm);
 		notification.setReceiver(receiver);
-		String msg = HtmlUtils.htmlEscape (notification.getMessage());
+		
+		String msg = HtmlUtils.htmlEscape (message);
 		notification.setMessage(msg);
 		
 		model.addAttribute("correct", true);
@@ -990,13 +970,22 @@ public class RootController {
 
 		User u = (User) session.getAttribute("user");
 		
-		List<Notification> li = entityManager.createQuery("select n from Notification n where receiver_id =:receiver_id",
-				Notification.class).setParameter("receiver_id",u.getId()).getResultList();
-		if(li.size() > 0) {
-			model.addAttribute("notificationCount", li.size());
-			model.addAttribute("notificationsList", li);
-		}	
-		
+		if(!u.getRoles().contains("ADMIN")) {
+			List<Notification> li = entityManager.createQuery("select n from Notification n where receiver_id =:receiver_id",
+					Notification.class).setParameter("receiver_id",u.getId()).getResultList();
+			if(li.size() > 0) {
+				model.addAttribute("notificationCount", li.size());
+				model.addAttribute("notificationsList", li);
+			}	
+		}
+		else {
+			model.addAttribute("option", "adminAlert");
+			List<Alert> al = entityManager.createQuery("select a from Alert a", Alert.class)
+					.getResultList();
+			
+			model.addAttribute("alerts", al);
+			return "adminHome";
+		}
 		return "notification";
 	}
 

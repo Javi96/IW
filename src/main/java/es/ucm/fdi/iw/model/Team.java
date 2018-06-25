@@ -2,6 +2,7 @@ package es.ucm.fdi.iw.model;
 
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -97,7 +98,7 @@ public class Team {
 	}
 	
 	
-	@OneToMany(mappedBy = "team")
+	@OneToMany(mappedBy = "team",cascade = CascadeType.ALL)
 	public List<RequestTeam> getRequests() {
 		return requests;
 	}
