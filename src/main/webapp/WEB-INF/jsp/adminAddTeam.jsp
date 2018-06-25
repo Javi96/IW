@@ -7,7 +7,7 @@
 
 	<div class = "row">
 		<div class= "col-md-12">
-		   <form class = "form-horizontal" name = "team" method="POST" action = "/addTeam">
+		   <form class = "form-horizontal" name = "team"  enctype="multipart/form-data" method="POST" action = "/addTeam">
 		      <!-- Form Name -->
 		      <h1 class = "col-sm-12 text-center">Crear equipo</h1>
 		      <div class="form-group">
@@ -48,6 +48,15 @@
 				<textarea id="description" rows="4" cols="40" name="description"></textarea>
 			</div>
 			</div>
+			
+			<div class="form-group">
+                <label class="col-md-5 control-label">Foto equipo:</label>
+                <div class="col-md-3 col-md-offset-1">
+                     <input id="img" type="file" name="photo" size="40" required="required" style="padding-top:10px; background-color:white">
+					<input name="${_csrf.parameterName}" type="hidden" value="${_csrf.token}" />
+                </div>
+           	</div>
+           	
 		      <div class="col-sm-12 text-center">
 		         <button type="submit" class="btn btn-success " id = "newTeamButton" style="margin: 8px;">Success</button>
 		      </div>

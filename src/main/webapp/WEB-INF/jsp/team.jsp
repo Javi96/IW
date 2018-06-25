@@ -31,6 +31,9 @@
 	<div class="jumbotron">
     	<div class="row">
 	        <div class="col-md-4 col-xs-12 col-sm-6 col-lg-4 form-group">
+	        	<!-- 
+	             	<img id = "logoEquipo" src="${s}/img/${team.id}/${foto}" alt="stack photo" class="img">
+	             -->
 	             <img id = "logoEquipo" src="${s}/img/rugbyFisicas.jpeg" alt="stack photo" class="img">
 	        </div>
          	<div id = "teamInfo" class="col-md-8 col-xs-12 col-sm-6 col-lg-8">
@@ -289,6 +292,16 @@
                    <input type=text id="nextMatchFacilities">
                </div>
            </div>
+           
+           <div class="row">
+               <div class="col-md-4 col-md-offset-2 text-left">
+                   <h4>Descripcion:</h4>
+               </div>
+               <div class="col-md-5 col-md-offset-right-2">
+					<textarea id="description" rows="4" cols="20" name="description"></textarea>
+               </div>
+           </div>
+           
 	      <div class="modal-footer">
 	        <button type="button" class="btn btn-success" onclick='changeTeamInfo(${team.id})'>Guardar cambios</button>
 	        <button type="button" class="btn btn-danger" id = "closeChangeInfo" data-dismiss="modal">Cerrar</button>

@@ -227,7 +227,9 @@ public class RootController {
 	
 	@RequestMapping(path = "/addTeam",method = RequestMethod.POST)
 	@Transactional
-	public String adminCreateTeam(@ModelAttribute Team team, @RequestParam String email, Model model) {
+	public String adminCreateTeam(@ModelAttribute Team team, @RequestParam String email, Model model,
+			@RequestParam("photo") MultipartFile photo) {
+		
 		League league = null;
 		User deputy = null;
 		try {
@@ -248,6 +250,43 @@ public class RootController {
 				else {
 					model.addAttribute("info", "Error, el equipo " + team.getName() + " ya pertenece a esta liga");
 				}
+				
+				Team t = entityManager.find(Team.class, team.getId());
+				
+				String name = photo.getOriginalFilename();
+				t.setTeamPhoto(name);
+				
+				//foto
+				if (!photo.isEmpty()) {
+		           
+					
+					try {
+						String id = String.valueOf(team.getId());
+						
+						File f = new File("src/main/resources/static/img/"+id);
+		            	System.out.println("/src/main/resources/static/img/"+id);
+		            	
+		            	if(!f.exists() || (f.exists() && !f.isDirectory())) {
+		            		new File("src/main/resources/static/img/"+id).mkdirs();
+		            	}
+
+		                byte[] bytes = photo.getBytes();
+		                
+		                BufferedOutputStream stream =
+		                        new BufferedOutputStream(
+		                        		new FileOutputStream(localData.getFile(id,name)));
+		                
+		                
+		                stream.write(bytes);
+		                stream.close();
+		            
+		            } catch (Exception e) {
+		                return "You failed to upload " + team + " => " + e.getMessage();
+		            }
+		        } else {
+		            return "You failed to upload a photo for " + team + " because the file was empty.";
+		        }
+				
 			}
 		}
 		catch(Exception e ) {
@@ -308,7 +347,7 @@ public class RootController {
 	@ResponseBody
 	@Transactional
 	public String changeTeamInfo(@SessionAttribute("user") User u, @RequestParam long teamId, @RequestParam String trainingSchedule,
-			@RequestParam String nextMatchFacilities, @RequestParam String nextMatchSchedule) {
+			@RequestParam String nextMatchFacilities, @RequestParam String nextMatchSchedule, @RequestParam String description) {
 
 		Team t = entityManager.find(Team.class, teamId);
 
@@ -317,7 +356,7 @@ public class RootController {
 		if(nextMatchSchedule != null)
 			t.setNextMatchSchedule(nextMatchSchedule);
 		if(nextMatchFacilities != null)
-			t.setNextMatchFacilities(nextMatchFacilities);
+			t.setDescription(description);
 
 		entityManager.persist(t);
 
@@ -415,6 +454,17 @@ public class RootController {
 			model.addAttribute("notificationsList", notificationList);
 		}	
 		
+		/*
+		 //fotos
+		if(t != null) {
+			String idTeam = String.valueOf(t.getId());
+			File f = new File("src/main/resources/static/img/"+idTeam);
+			File[] ficheros = f.listFiles();
+			
+			if(ficheros.length > 1)
+				model.addAttribute("foto", ficheros[1].getName());
+		}
+		 */
 		if(t == null)
 			return "error404";
 		return "team";
