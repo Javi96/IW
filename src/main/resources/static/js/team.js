@@ -163,6 +163,7 @@ function changeTeamInfo(id){
 	let nms = $('#nextMatchSchedule').prop("value");
 	let nmf = $('#nextMatchFacilities').prop("value");
 	let ts = $('#trainingSchedule').prop("value");
+	let d = $('#description').prop("value");
 	
 	$.ajax({
 	    method: "post",  
@@ -172,7 +173,8 @@ function changeTeamInfo(id){
 	    	teamId: id,
 	    	nextMatchSchedule: nms,
 	    	nextMatchFacilities : nmf,
-	    	trainingSchedule: ts
+	    	trainingSchedule: ts,
+	    	description: d
 	    },
 	    success: (data)=>{
 	    	$('#closeChangeInfo').click();
