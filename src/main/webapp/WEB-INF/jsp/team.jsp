@@ -42,6 +42,7 @@
 	               <li><p><span class="glyphicon glyphicon-calendar one space" ></span> Siguiente partido: ${team.nextMatchSchedule} </p></li>
 	               <li><p><span class="glyphicon glyphicon-map-marker one space"></span> Instalaciones: ${team.nextMatchFacilities} </p></li>
 	               <li><p><span class="glyphicon glyphicon-user one space"></span>Delegado: ${team.deputy.name}</p></li>
+	               <li><p><span class="glyphicon glyphicon-user one space"></span>Descripcion: ${team.description}</p></li>
 	            </ul>
 	            <div>
 	            	<c:if test = "${logged}">
